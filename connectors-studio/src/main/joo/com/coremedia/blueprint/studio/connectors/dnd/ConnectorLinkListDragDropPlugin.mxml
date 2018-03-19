@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connectordnd:ConnectorLinkListDragDropPluginBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:connectordnd="com.coremedia.blueprint.studio.connectors.dnd.*">
+  <fx:Script><![CDATA[
+    private var config:ConnectorLinkListDragDropPlugin;
+
+    public native function ConnectorLinkListDragDropPlugin(config:ConnectorLinkListDragDropPlugin = null);
+    ]]></fx:Script>
+  <fx:Declarations>
+  </fx:Declarations>
+
+</connectordnd:ConnectorLinkListDragDropPluginBase>

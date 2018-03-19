@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns="exml:ext.config"
+        xmlns:toolbar="com.coremedia.blueprint.studio.connectors.search.toolbar.*"
+        itemId="{CONNECTOR_SEARCH_TOOLBAR_ITEM_ID}">
+  <fx:Script><![CDATA[
+    import com.coremedia.ui.data.ValueExpression;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.search.toolbar.connectorSearchToolbarContainer ";
+
+    private var config:ConnectorSearchToolbarContainer;
+    public static const CONNECTOR_SEARCH_TOOLBAR_ITEM_ID:String = "connectorSearchToolbar";
+
+    public native function ConnectorSearchToolbarContainer(config:ConnectorSearchToolbarContainer = null);
+
+    /**
+     * value expression that acts as a model for informing a view of a newly created content object.
+     */
+    [Bindable]
+    public var createdContentValueExpression:ValueExpression;
+
+    /**
+     * value expression for the selected items, either in the list view, or - if the selection there is empty - the
+     * selected folder in the tree view.
+     */
+    [Bindable]
+    public var selectedItemsValueExpression:ValueExpression;
+    ]]></fx:Script>
+
+  <items>
+    <toolbar:ConnectorSearchToolbar selectedItemsValueExpression="{config.selectedItemsValueExpression}">
+      <toolbar:items exml:mode="append">
+        <TbFill/>
+        <!--<editor:SwitchViewButtonsContainer scope="{this}"/>-->
+      </toolbar:items>
+    </toolbar:ConnectorSearchToolbar>
+  </items>
+
+</Container>

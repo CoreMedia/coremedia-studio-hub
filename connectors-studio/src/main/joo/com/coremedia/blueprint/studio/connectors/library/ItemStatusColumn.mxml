@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:ItemStatusColumnBase xmlns:fx="http://ns.adobe.com/mxml/2009"
+                            xmlns:local="com.coremedia.blueprint.studio.connectors.library.*"
+                            xmlns="exml:ext.config"
+                            header="{resourceManager.getString('com.coremedia.cms.editor.sdk.columns.grid.GridColumns', 'icon_header')}"
+                            width="{DEFAULT_WIDTH}"
+                            fixed="true"
+                            stateId="icon"
+                            dataIndex="name"
+                            renderer="{getRenderer}"
+                            tpl="{getXTemplate()}">
+  <fx:Metadata>
+    [PublicApi]
+    [ResourceBundle('com.coremedia.cms.editor.sdk.columns.grid.GridColumns')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    public static const DEFAULT_WIDTH:Number = 24;
+
+    private var config:ItemStatusColumn;
+
+    public native function ItemStatusColumn(config:ItemStatusColumn = null);
+    ]]></fx:Script>
+
+</local:ItemStatusColumnBase>

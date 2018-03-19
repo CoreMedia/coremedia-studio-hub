@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:OpenItemInTabActionBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:local="com.coremedia.blueprint.studio.connectors.actions.*"
+        iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+        tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_OpenItemInTab_tooltip')}"
+        text="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_OpenItemInTab_text')}">
+  <fx:Script><![CDATA[
+    private var config:OpenItemtInTabAction;
+
+    public native function OpenItemtInTabAction(config:OpenItemtInTabAction = null);
+    ]]></fx:Script>
+
+</local:OpenItemInTabActionBase>

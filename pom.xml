@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.coremedia.blueprint</groupId>
+    <artifactId>extensions</artifactId>
+    <version>17-BP-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.coremedia.blueprint.connectors</groupId>
+  <artifactId>connectors</artifactId>
+  <packaging>pom</packaging>
+
+  <properties>
+    <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
+  </properties>
+
+  <modules>
+    <module>connectors-studio-lib</module>
+    <module>connectors-studio</module>
+    <module>connectors-lib</module>
+    <module>connectors-lib-dropbox</module>
+    <module>connectors-lib-filesystem</module>
+    <module>connectors-lib-rss</module>
+    <module>connectors-lib-s3</module>
+    <module>connectors-lib-youtube</module>
+    <module>connectors-api</module>
+    <!--<module>connectors-cae</module>-->
+  </modules>
+
+</project>

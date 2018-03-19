@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
+
+
+  <bean id="connectorEntityResource" abstract="true" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource"/>
+
+  <!-- Service Entity-->
+  <bean id="connectorServiceResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorServiceResource"
+        scope="prototype" parent="connectorEntityResource">
+    <property name="connectorContextProvider" ref="connectorContextProvider"/>
+    <property name="sitesService" ref="sitesService" />
+    <property name="connector" ref="connector" />
+  </bean>
+
+  <!-- Service Entity-->
+  <bean id="connectorContentServiceResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorContentServiceResource"
+        scope="prototype" parent="connectorEntityResource">
+    <property name="connectorContextProvider" ref="connectorContextProvider"/>
+    <property name="sitesService" ref="sitesService" />
+    <property name="connector" ref="connector" />
+    <property name="contentRepository" ref="contentRepository" />
+  </bean>
+
+  <!-- Invalidation -->
+  <bean id="connectorInvalidator" class="com.coremedia.blueprint.studio.connectors.rest.invalidation.ConnectorInvalidator">
+    <property name="connectors" ref="connector" />
+    <property name="linker" ref="linker" />
+    <property name="id" value="connectorInvalidator" />
+    <property name="capacity" value="${studio.rest.eventsCache.capacity:10000}"/>
+    <property name="connectorNotificationService" ref="connectorNotificationService" />
+  </bean>
+
+  <!-- Notifications-->
+  <bean id="connectorNotificationService" class="com.coremedia.blueprint.studio.connectors.rest.notifications.ConnectorNotificationService">
+    <property name="contentRepository" ref="contentRepository" />
+  </bean>
+
+
+  <!-- Model Entities-->
+  <bean id="connectorResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorResource" scope="prototype">
+    <property name="connector" ref="connector" />
+  </bean>
+
+
+  <bean id="connectorItemResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorItemResource" scope="prototype"
+        parent="connectorEntityResource">
+    <property name="connectorPreviewConverters" ref="connectorPreviewConverters" />
+    <property name="connectorMetaDataResolvers" ref="connectorMetaDataResolvers" />
+    <property name="mimeTypeService" ref="mimeTypeService" />
+    <property name="contentRepository" ref="contentRepository" />
+  </bean>
+
+  <bean id="connectorCategoryResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorCategoryResource" scope="prototype"
+        parent="connectorEntityResource"/>
+
+</beans>

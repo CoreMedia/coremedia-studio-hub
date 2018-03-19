@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Toolbar
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns:u="exml:untyped"
+        xmlns="exml:ext.config"
+        xmlns:ext="exml:ext.config"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:connectorAction="com.coremedia.blueprint.studio.connectors.actions.*">
+  <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
+    import com.coremedia.ui.data.ValueExpression;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.search.toolbar.connectorSearchToolbar";
+
+    private var config:ConnectorSearchToolbar;
+
+    [Bindable]
+    public var selectedItemsValueExpression:ValueExpression;
+
+    public native function ConnectorSearchToolbar(config:ConnectorSearchToolbar = null);
+    ]]></fx:Script>
+
+
+  <plugins>
+    <ui:HideObsoleteSeparatorsPlugin/>
+  </plugins>
+  <items>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:CreateConnectorContentAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+      <ui:plugins exml:mode="append">
+        <ui:BindPropertyPlugin componentProperty="disabled"
+                               bindTo="{config.selectedItemsValueExpression}"
+                               transformer="{ContentCreationHelper.disableCreateButton}"
+                               ifUndefined="true"/>
+      </ui:plugins>
+    </ui:IconButton>
+    <TbSeparator/>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:ReloadCategoryAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+    <TbSeparator/>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:DownloadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:UploadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+    <TbSeparator/>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:OpenItemInSystemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+    <TbSeparator/>
+    <ui:IconButton>
+      <ui:baseAction>
+        <connectorAction:DeleteItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </ui:baseAction>
+    </ui:IconButton>
+  </items>
+  <ext:layout>
+    <layout_HBox u:triggerWidth="26"/>
+  </ext:layout>
+
+</Toolbar>

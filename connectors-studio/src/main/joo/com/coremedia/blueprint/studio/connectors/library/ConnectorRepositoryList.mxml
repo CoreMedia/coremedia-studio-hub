@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library:ConnectorRepositoryListBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns:u="exml:untyped"
+        xmlns="exml:ext.config"
+        xmlns:library="com.coremedia.blueprint.studio.connectors.library.*"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
+        selectedItemsValueExpression="{getSelectedItemsValueExpression()}"
+        emptyText="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'CollectionView_emptyFolder_text')}"
+        header="{false}"
+        id_="{ID}"
+        ddGroup="ConnectorDD">
+  <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.connectorRepositoryList";
+    public static const ID:String = "connectorRepositoryList";
+
+    private var config:ConnectorRepositoryList;
+
+    public native function ConnectorRepositoryList(config:ConnectorRepositoryList = null);
+    ]]></fx:Script>
+
+  <fx:Declarations>
+    <!---
+     The named drag drop group to which this grid belong to
+    -->
+    <fx:String id="ddGroup"/>
+
+    <!--
+     A value expression that specifies where to set the multiply selected items. This is mandatory.
+    -->
+    <ui:ValueExpression id="selectedItemsValueExpression"/>
+  </fx:Declarations>
+
+  <library:plugins exml:mode="prepend">
+    <ui:BindListPlugin bindTo="{getConnectorItemsValueExpression()}" lazy="false">
+      <ui:fields>
+        <ui:DataField name="type"
+                      mapping=""
+                      convert_="{ConnectorHelper.getTypeLabel}"/>
+        <ui:DataField name="typeCls"
+                      mapping=""
+                      convert_="{ConnectorHelper.getTypeCls}"/>
+        <ui:DataField name="name"
+                      mapping="displayName"/>
+        <ui:DataField name="id"
+                      mapping="externalId"
+                      convert="{formatExternalId}"/>
+        <ui:DataField name="size"/>
+        <ui:DataField name="status"/>
+        <ui:DataField name="lastModified"
+                      convert="{ConnectorHelper.formatDate}"/>
+      </ui:fields>
+    </ui:BindListPlugin>
+    <ui:ContextMenuPlugin>
+      <ui:contextMenu>
+        <library:ConnectorRepositoryContextMenu selectedFolderValueExpression="{getSelectedNodeExpression()}"
+                                                selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+      </ui:contextMenu>
+    </ui:ContextMenuPlugin>
+  </library:plugins>
+  <library:columns>
+    <editor:TypeIconColumn
+            showTypeName="true"
+            sortable="true"
+            u:sortField="type"
+            width="125"/>
+    <GridColumn stateId="name"
+                width="300"
+                header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'name_header')}"
+                sortable="true"
+                resizable="true"
+                u:defaultSortColumn="true"
+                renderer="{renderTitle}"
+                dataIndex="name"
+                flex="1"/>
+    <GridColumn
+            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header')}"
+            stateId="size"
+            renderer="{ConnectorHelper.fileSizeRenderer}"
+            dataIndex="size"
+            sortable="true"
+            hideable="true"
+            width="80"/>
+    <library:ItemStatusColumn
+            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'status_header')}"
+            stateId="status"
+            dataIndex="status"
+            hidden="true"
+            sortable="true"
+            hideable="true"
+            width="50"/>
+    <GridColumn
+            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header')}"
+            stateId="lastModified"
+            dataIndex="lastModified"
+            sortable="true"
+            hideable="true"
+            width="160"/>
+  </library:columns>
+</library:ConnectorRepositoryListBase>

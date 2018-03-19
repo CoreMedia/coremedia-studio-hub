@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notifications:DefaultNotificationDetails
+        xmlns:notifications="com.coremedia.cms.editor.notification.components.*"
+        xmlns:not="com.coremedia.blueprint.studio.connectors.notifications.*"
+        xmlns:fx="http://ns.adobe.com/mxml/2009">
+  <fx:Script><![CDATA[
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.notifications.connectorInvalidationDetails";
+
+    private var config:ConnectorInvalidationDetails;
+
+    public native function ConnectorInvalidationDetails(config:ConnectorInvalidationDetails = null);
+    ]]></fx:Script>
+
+  <notifications:baseAction>
+    <not:ShowConnectorForNotificationAction/>
+  </notifications:baseAction>
+
+</notifications:DefaultNotificationDetails>

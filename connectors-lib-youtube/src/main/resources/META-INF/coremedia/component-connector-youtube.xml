@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
+
+  <bean id="connectorYouTubeService" class="com.coremedia.blueprint.connectors.youtube.YouTubeConnectorServiceImpl" scope="prototype"/>
+
+  <bean id="connector:youtube" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
+    <property name="connectorService" ref="connectorYouTubeService"/>
+    <property name="connectorContentService" ref="connectorContentService" />
+  </bean>
+
+  <!-- Content Creation-->
+  <bean id="youTubeContentItemWriteInterceptor" class="com.coremedia.blueprint.connectors.youtube.YouTubeContentItemWriteInterceptor" parent="connectorItemWriteInterceptor">
+    <property name="type" value="CMVideo" />
+    <property name="priority" value="0" />
+  </bean>
+
+</beans>

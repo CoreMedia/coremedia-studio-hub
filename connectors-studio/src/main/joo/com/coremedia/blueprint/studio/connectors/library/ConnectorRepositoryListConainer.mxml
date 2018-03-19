@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library2:ConnectorRepositoryListContainerBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns="exml:ext.config"
+        xmlns:library2="com.coremedia.blueprint.studio.connectors.library.*"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
+        xmlns:preview="com.coremedia.blueprint.studio.connectors.library.preview.*"
+        itemId="{VIEW_CONTAINER_ITEM_ID}"
+        activeItemValueExpression="{getActiveViewExpression()}">
+  <fx:Script><![CDATA[
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorRepositoryListContainer";
+
+    private var config:ConnectorRepositoryListConainer;
+    public static const VIEW_CONTAINER_ITEM_ID:String = "connectorRepositoryContainer";
+
+    public native function ConnectorRepositoryListConainer(config:ConnectorRepositoryListConainer = null);
+    ]]></fx:Script>
+
+  <library2:items>
+    <Container>
+      <items>
+        <library2:ConnectorRepositoryList region="center"
+                                          flex="1"
+                                          itemId="connectorRepositoryList"/>
+        <preview:ItemPreviewPanel region="south"
+                                  flex="1"
+                                  selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+      </items>
+      <layout>
+        <editor:ExtendedBorderLayout />
+      </layout>
+    </Container>
+  </library2:items>
+
+</library2:ConnectorRepositoryListContainerBase>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:ShowConnectorForNotificationActionBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:local="com.coremedia.blueprint.studio.connectors.notifications.*">
+  <fx:Script><![CDATA[
+    private var config:ShowConnectorForNotificationAction;
+
+    public native function ShowConnectorForNotificationAction(config:ShowConnectorForNotificationAction = null);
+    ]]></fx:Script>
+
+</local:ShowConnectorForNotificationActionBase>

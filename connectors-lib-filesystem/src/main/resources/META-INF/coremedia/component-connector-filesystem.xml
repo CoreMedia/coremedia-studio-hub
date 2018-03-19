@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
+
+  <bean id="fileSystemConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemEntityCache" scope="singleton"/>
+
+  <bean id="connectorFileSystemService" class="com.coremedia.blueprint.connectors.filesystem.FileSystemConnectorServiceImpl" scope="prototype">
+    <property name="fileCache" ref="fileSystemConnectorCache" />
+  </bean>
+
+  <bean id="connector:filesystem" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
+    <property name="connectorService" ref="connectorFileSystemService"/>
+    <property name="connectorContentService" ref="connectorContentService" />
+  </bean>
+
+
+</beans>

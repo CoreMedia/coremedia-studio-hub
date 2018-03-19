@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:DeleteItemActionBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:local="com.coremedia.blueprint.studio.connectors.actions.*"
+        iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'trash_bin')}"
+        tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_DeleteItem_tooltip')}"
+        text="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_DeleteItem_text')}">
+  <fx:Script><![CDATA[
+    private var config:DeleteItemAction;
+
+    public native function DeleteItemAction(config:DeleteItemAction = null);
+    ]]></fx:Script>
+
+</local:DeleteItemActionBase>

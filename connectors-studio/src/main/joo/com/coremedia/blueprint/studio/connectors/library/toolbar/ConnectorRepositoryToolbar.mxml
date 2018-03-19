@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor:RepositoryToolbar
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns="exml:ext.config"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
+        xmlns:connectorAction="com.coremedia.blueprint.studio.connectors.actions.*">
+  <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
+    import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.toolbar.connectorRepositoryToolbar";
+
+    private var config:ConnectorRepositoryToolbar;
+
+    public native function ConnectorRepositoryToolbar(config:ConnectorRepositoryToolbar = null);
+    ]]></fx:Script>
+
+  <editor:plugins exml:mode="append">
+    <ui:AddItemsPlugin>
+      <ui:items>
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:CreateConnectorContentAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+          <ui:plugins exml:mode="append">
+            <ui:BindPropertyPlugin componentProperty="disabled"
+                                   bindTo="{config.selectedItemsValueExpression}"
+                                   transformer="{ContentCreationHelper.disableCreateButton}"
+                                   ifUndefined="true"/>
+          </ui:plugins>
+        </ui:IconButton>
+        <TbSeparator />
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:ReloadCategoryAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <TbSeparator />
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:DownloadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:UploadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <TbSeparator />
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:OpenItemInSystemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <TbSeparator />
+        <ui:IconButton>
+          <ui:baseAction>
+            <connectorAction:DeleteItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+      </ui:items>
+      <ui:before>
+        <Component itemId="{RepositoryToolbar.REPOSITORY_TOOLBAR_SPACER_THIRD_ITEM_ID}"/>
+      </ui:before>
+    </ui:AddItemsPlugin>
+    <ui:RemoveItemsPlugin>
+      <ui:items>
+        <Component itemId="{RepositoryToolbar.OPEN_BUTTON_ITEM_ID}"/>
+        <Component itemId="{RepositoryToolbar.CUT_BUTTON_ITEM_ID}"/>
+        <Component itemId="{RepositoryToolbar.PASTE_BUTTON_ITEM_ID}"/>
+        <Component itemId="createDocument"/>
+        <Component itemId="createFolder"/>
+      </ui:items>
+    </ui:RemoveItemsPlugin>
+  </editor:plugins>
+
+</editor:RepositoryToolbar>

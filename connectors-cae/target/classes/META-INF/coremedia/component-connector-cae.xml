@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:customize="http://www.coremedia.com/2007/coremedia-spring-beans-customization"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.coremedia.com/2007/coremedia-spring-beans-customization
+                           http://www.coremedia.com/2007/coremedia-spring-beans-customization.xsd">
+
+
+  <import resource="classpath:/com/coremedia/blueprint/base/settings/impl/bpbase-settings-services.xml"/>
+  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
+
+  <bean id="connectorFreemarkerFacade" class="com.coremedia.blueprint.connectors.cae.web.taglib.ConnectorFreemarkerFacade">
+    <property name="settingsService" ref="settingsService"/>
+    <property name="contextProvider" ref="connectorContextProvider" />
+    <property name="connector" ref="connector" />
+  </bean>
+
+  <bean id="connectorLinkSchemes" class="com.coremedia.blueprint.connectors.cae.link.ConnectorLinkScheme"/>
+
+  <customize:append id="connectorFreemarkerSharedVariablesCustomizer" bean="freemarkerSharedVariables">
+    <map>
+      <entry key="connectorFreemarkerFacade" value-ref="connectorFreemarkerFacade"/>
+    </map>
+  </customize:append>
+
+  <customize:append id="connectorFreemarkerConfigurerAutoImportsCustomizer" bean="freemarkerConfigurer" property="autoImports">
+    <map>
+      <entry key="connectors" value="/lib/coremedia.com/connectors.ftl"/>
+    </map>
+  </customize:append>
+
+</beans>
