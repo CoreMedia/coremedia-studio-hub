@@ -2,7 +2,6 @@ package com.coremedia.blueprint.connectors.youtube;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.google.api.services.youtube.model.Playlist;
@@ -29,15 +28,6 @@ public class YouTubeConnectorCategory extends YouTubeConnectorEntity implements 
       return "youtubechannel";
     }
     return "playlist";
-  }
-
-  @Nonnull
-  @Override
-  public List<ConnectorEntity> getChildren() {
-    ArrayList<ConnectorEntity> children = new ArrayList<>();
-    children.addAll(getSubCategories());
-    children.addAll(getItems());
-    return children;
   }
 
   @Nullable

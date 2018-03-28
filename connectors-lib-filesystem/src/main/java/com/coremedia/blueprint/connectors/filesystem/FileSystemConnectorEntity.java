@@ -49,11 +49,6 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
     return new Date(getFile().lastModified());
   }
 
-  @Override
-  public String getConnectorType() {
-    return context.getType();
-  }
-
   @Nonnull
   @Override
   public String getName() {
@@ -89,6 +84,8 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
     return getName();
   }
 
+  @Nonnull
+  @Override
   public ConnectorId getConnectorId() {
     return connectorId;
   }

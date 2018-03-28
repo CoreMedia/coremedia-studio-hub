@@ -37,11 +37,6 @@ public class YouTubeConnectorEntity implements ConnectorEntity {
     return null;
   }
 
-  @Override
-  public String getConnectorType() {
-    return context.getType();
-  }
-
   @Nonnull
   @Override
   public String getName() {
@@ -73,6 +68,8 @@ public class YouTubeConnectorEntity implements ConnectorEntity {
     return getName();
   }
 
+  @Nonnull
+  @Override
   public ConnectorId getConnectorId() {
     return connectorId;
   }

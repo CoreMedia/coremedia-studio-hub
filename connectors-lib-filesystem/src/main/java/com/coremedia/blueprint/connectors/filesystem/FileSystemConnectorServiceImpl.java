@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.connectors.filesystem;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
+import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
@@ -34,6 +35,17 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
   private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemConnectorServiceImpl.class);
 
   private FileSystemConnectorCategory rootCategory;
+
+  @Override
+  public boolean init(@Nonnull ConnectorContext context) {
+    super.init(context);
+    String rootPath = context.getProperty(FOLDER);
+    File file = new File(rootPath);
+    if(!file.exists()) {
+      LOGGER.warn("File Connector folder '" + file.getAbsolutePath() + " does not exist, connector will be ignored.");
+    }
+    return file.exists();
+  }
 
   @Override
   public Boolean refresh(@Nonnull ConnectorCategory category) {

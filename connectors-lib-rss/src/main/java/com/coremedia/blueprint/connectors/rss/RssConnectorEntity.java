@@ -42,11 +42,6 @@ public class RssConnectorEntity implements ConnectorEntity {
     return feed.getPublishedDate();
   }
 
-  @Override
-  public String getConnectorType() {
-    return context.getType();
-  }
-
   @Nonnull
   @Override
   public String getName() {
@@ -82,6 +77,8 @@ public class RssConnectorEntity implements ConnectorEntity {
     return getName();
   }
 
+  @Nonnull
+  @Override
   public ConnectorId getConnectorId() {
     return connectorId;
   }

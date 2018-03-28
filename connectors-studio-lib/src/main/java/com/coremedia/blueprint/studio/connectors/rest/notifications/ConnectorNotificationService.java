@@ -35,6 +35,10 @@ public class ConnectorNotificationService {
    * the connector service invalidation.
    */
   public void sendInvalidationNotification(InvalidationResult result) {
+    if(result.getMessages().isEmpty()) {
+      return;
+    }
+
     Collection<User> notificationUsers = getNotificationUsers(result.getContext());
     int count = 0;
     for (User memberUser : notificationUsers) {

@@ -29,11 +29,6 @@ abstract public class DropboxConnectorEntity implements ConnectorEntity {
     }
   }
 
-  @Override
-  public String getConnectorType() {
-    return context.getType();
-  }
-
   @Nonnull
   @Override
   public String getName() {
@@ -61,6 +56,8 @@ abstract public class DropboxConnectorEntity implements ConnectorEntity {
     return getName();
   }
 
+  @Nonnull
+  @Override
   public ConnectorId getConnectorId() {
     return connectorId;
   }

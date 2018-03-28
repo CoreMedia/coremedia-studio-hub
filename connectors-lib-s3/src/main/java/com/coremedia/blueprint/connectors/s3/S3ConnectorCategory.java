@@ -21,15 +21,6 @@ public class S3ConnectorCategory extends S3ConnectorEntity implements ConnectorC
     super(s3Service, parent, context, summary, id);
   }
 
-  @Nonnull
-  @Override
-  public List<ConnectorEntity> getChildren() {
-    ArrayList<ConnectorEntity> connectorEntitiesBeans = new ArrayList<>();
-    connectorEntitiesBeans.addAll(getSubCategories());
-    connectorEntitiesBeans.addAll(getItems());
-    return connectorEntitiesBeans;
-  }
-
   @Override
   public String getType() {
     if(getConnectorId().isRootId()) {

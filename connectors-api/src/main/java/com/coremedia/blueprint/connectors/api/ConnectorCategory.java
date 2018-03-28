@@ -17,9 +17,6 @@ public interface ConnectorCategory extends ConnectorEntity {
   String DEFAULT_TYPE = "folder";
 
   @Nonnull
-  List<ConnectorEntity> getChildren();
-
-  @Nonnull
   List<ConnectorCategory> getSubCategories();
 
   @Nonnull

@@ -27,15 +27,6 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
     this.folderMetadata = (FolderMetadata) metadata;
   }
 
-  @Nonnull
-  @Override
-  public List<ConnectorEntity> getChildren() {
-    ArrayList<ConnectorEntity> connectorEntitiesBeans = new ArrayList<>();
-    connectorEntitiesBeans.addAll(getSubCategories());
-    connectorEntitiesBeans.addAll(getItems());
-    return connectorEntitiesBeans;
-  }
-
   @Nullable
   @Override
   public String getManagementUrl() {

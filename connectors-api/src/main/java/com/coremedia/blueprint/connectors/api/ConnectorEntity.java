@@ -9,9 +9,8 @@ import java.util.Date;
  */
 public interface ConnectorEntity {
 
+  @Nonnull
   ConnectorId getConnectorId();
-
-  String getConnectorType();
 
   @Nonnull
   String getName();

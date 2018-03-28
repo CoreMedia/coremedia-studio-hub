@@ -125,12 +125,12 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
       String filename = getFilename(item);
       String mimeType = mimeTypeService.detectMimeType(null, filename, MediaType.APPLICATION_OCTET_STREAM);
       //we can't return json as mime type since jersey would try to deserialize it.
-      if(mimeType.equals(MediaType.APPLICATION_JSON)) {
+      if (mimeType.equals(MediaType.APPLICATION_JSON)) {
         mimeType = MediaType.TEXT_PLAIN;
       }
 
       //make sure to encode text as utf8
-      if(mimeType.startsWith("text/")) {
+      if (mimeType.startsWith("text/")) {
         mimeType = mimeType + "; charset=utf-8";
       }
 
@@ -254,7 +254,8 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
 
   private File createTempFile(ConnectorItem asset, InputStream in) throws IOException {
     TempFileService tempFileService = contentRepository.getConnection().getTempFileService();
-    File assetTempFile = tempFileService.createTempFileFor(asset.getConnectorId().getExternalId(), ".asset");
+    ConnectorId id = asset.getConnectorId();
+    File assetTempFile = tempFileService.createTempFileFor(id.getConnectionId() + "-" + id.getExternalId(), ".asset");
 
     FileUtils.copyToFile(in, assetTempFile);
     in.close();

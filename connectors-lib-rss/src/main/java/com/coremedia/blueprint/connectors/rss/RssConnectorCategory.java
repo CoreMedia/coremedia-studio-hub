@@ -2,7 +2,6 @@ package com.coremedia.blueprint.connectors.rss;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -18,15 +17,6 @@ public class RssConnectorCategory extends RssConnectorEntity implements Connecto
 
   RssConnectorCategory(ConnectorContext context, SyndFeed feed, ConnectorId connectorId) {
     super(null, context, feed, connectorId);
-  }
-
-  @Nonnull
-  @Override
-  public List<ConnectorEntity> getChildren() {
-    ArrayList<ConnectorEntity> children = new ArrayList<>();
-    children.addAll(getSubCategories());
-    children.addAll(getItems());
-    return children;
   }
 
   @Override

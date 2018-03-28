@@ -21,15 +21,6 @@ public class FileSystemConnectorCategory extends FileSystemConnectorEntity imple
     super(parent, context, id, file);
   }
 
-  @Nonnull
-  @Override
-  public List<ConnectorEntity> getChildren() {
-    ArrayList<ConnectorEntity> children = new ArrayList<>();
-    children.addAll(getSubCategories());
-    children.addAll(getItems());
-    return children;
-  }
-
   @Nullable
   @Override
   public String getManagementUrl() {

@@ -35,12 +35,6 @@ public class DropboxConnectorItem extends DropboxConnectorEntity implements Conn
 
   @Nullable
   @Override
-  public String getOpenInTabUrl() {
-    return null;
-  }
-
-  @Nullable
-  @Override
   public String getManagementUrl() {
     String managementUrl = parent.getManagementUrl();
     return managementUrl + "?preview=" + fileMetadata.getName();

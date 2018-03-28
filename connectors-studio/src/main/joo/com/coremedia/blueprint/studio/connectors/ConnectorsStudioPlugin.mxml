@@ -57,6 +57,13 @@
         <not:ConnectorInvalidationDetails/>
       </notifications:notificationDetailsComponentConfig>
     </notifications:RegisterNotificationDetailsPlugin>
+
+    <connector:AddConnectorPlugin connectorType="filesystem" />
+    <connector:AddConnectorPlugin connectorType="s3" />
+    <connector:AddConnectorPlugin connectorType="youtube" />
+    <connector:AddConnectorPlugin connectorType="rss" />
+    <connector:AddConnectorPlugin connectorType="dropbox" />
+    <connector:AddConnectorPlugin connectorType="watson" />
   </connector:configuration>
 
 </connector:ConnectorsStudioPluginBase>

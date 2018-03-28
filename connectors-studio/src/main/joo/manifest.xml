@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <componentPackage>
+  <component class="com.coremedia.blueprint.studio.connectors.AddConnectorPlugin"/>
   <component class="com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.CreateConnectorContentAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.DeleteItemAction"/>
