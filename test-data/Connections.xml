@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CMSettings folder="/Settings/Options/Settings/Connectors" name="Connections"
+            xmlns:cmexport="http://www.coremedia.com/2012/cmexport">
+  <locale></locale>
+  <master>
+  </master>
+  <settings>
+    <Struct xmlns="http://www.coremedia.com/2008/struct" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <StructListProperty Name="connections">
+        <Struct>
+          <StringProperty Name="displayName">S3 Bucket</StringProperty>
+          <StringProperty Name="accessKeyId"></StringProperty>
+          <StringProperty Name="secretAccessKey"></StringProperty>
+          <StringProperty Name="region"></StringProperty>
+          <StringProperty Name="bucketName"></StringProperty>
+          <StringProperty Name="connectionId"></StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <IntProperty Name="previewThresholdMB">40</IntProperty>
+          <StringProperty Name="type">s3</StringProperty>
+        </Struct>
+        <Struct>
+          <StringProperty Name="displayName">Dropbox App Folder</StringProperty>
+          <StringProperty Name="accessToken"></StringProperty>
+          <StringProperty Name="folder">/</StringProperty>
+          <StringProperty Name="connectionId">dropbox1</StringProperty>
+          <StringProperty Name="appName"></StringProperty>
+          <IntProperty Name="previewThresholdMB">40</IntProperty>
+          <StringProperty Name="type">dropbox</StringProperty>
+          <IntProperty Name="invalidationInterval">3600</IntProperty>
+          <StringProperty Name="notificationGroups">administratoren</StringProperty>
+        </Struct>
+        <Struct>
+          <StringProperty Name="displayName">Youtube Channel</StringProperty>
+          <StringProperty Name="credentialsJson"></StringProperty>
+          <StringProperty Name="connectionId"></StringProperty>
+          <StringProperty Name="type">youtube</StringProperty>
+          <StringProperty Name="channelId"></StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+        </Struct>
+        <Struct>
+          <StringProperty Name="displayName">Tech Crunch</StringProperty>
+          <StringProperty Name="url">http://feeds.feedburner.com/techcrunch</StringProperty>
+          <StringProperty Name="connectionId">techcrunch</StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <StringProperty Name="type">rss</StringProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+          <BooleanProperty Name="markAsRead">true</BooleanProperty>
+          <IntProperty Name="invalidationInterval">360</IntProperty>
+          <StringProperty Name="notificationGroups">administratoren</StringProperty>
+          <StringProperty Name="notificationUsers">Teresa</StringProperty>
+        </Struct>
+        <Struct>
+          <StringProperty Name="displayName">Wired</StringProperty>
+          <StringProperty Name="url">http://www.wired.co.uk/rss</StringProperty>
+          <StringProperty Name="connectionId">wired</StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <StringProperty Name="type">rss</StringProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+          <BooleanProperty Name="markAsRead">true</BooleanProperty>
+          <IntProperty Name="invalidationInterval">360</IntProperty>
+          <StringProperty Name="notificationGroups">administratoren</StringProperty>
+        </Struct>
+        <Struct>
+          <StringProperty Name="displayName">My Temp</StringProperty>
+          <StringProperty Name="connectionId">tempFolder</StringProperty>
+          <StringProperty Name="type">filesystem</StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <StringProperty Name="folder">/tmp</StringProperty>
+          <IntProperty Name="previewThresholdMB">10</IntProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+        </Struct>
+      </StructListProperty>
+    </Struct>
+  </settings>
+  <identifier></identifier>
+</CMSettings>
