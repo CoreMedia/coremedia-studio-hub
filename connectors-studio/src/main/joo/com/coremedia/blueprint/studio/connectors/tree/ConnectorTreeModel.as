@@ -263,6 +263,10 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
       return null;
     }
 
+    if (!getConnector()) {
+      return undefined;
+    }
+
     if (getConnector().getRootCategories() && getConnector().getRootCategories().length === 0) {
       return null;
     }
