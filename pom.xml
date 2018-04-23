@@ -18,6 +18,13 @@
     <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>contributions-releases</id>
+      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
+    </repository>
+  </distributionManagement>
+
   <modules>
     <module>connectors-studio-lib</module>
     <module>connectors-studio</module>
