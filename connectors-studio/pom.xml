@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>17-BP-SNAPSHOT</version>
+    <version>1.4.1</version>
   </parent>
 
   <artifactId>connectors-studio</artifactId>

@@ -6,17 +6,24 @@
   <parent>
     <groupId>com.coremedia.blueprint</groupId>
     <artifactId>extensions</artifactId>
-    <version>17-BP-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>1-SNAPSHOT</version>
   </parent>
 
   <groupId>com.coremedia.blueprint.connectors</groupId>
   <artifactId>connectors</artifactId>
   <packaging>pom</packaging>
+  <version>1.4.1</version>
 
   <properties>
     <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>contributions-releases</id>
+      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
+    </repository>
+  </distributionManagement>
 
   <modules>
     <module>connectors-studio-lib</module>
