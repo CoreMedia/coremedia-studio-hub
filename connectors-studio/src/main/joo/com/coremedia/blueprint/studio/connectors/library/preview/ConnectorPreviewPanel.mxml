@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preview:ConnectorPreviewPanelBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns="exml:ext.config"
+        xmlns:u="exml:untyped"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:preview="com.coremedia.blueprint.studio.connectors.library.preview.*"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        u:floatable="false"
+        collapsible="false"
+        titleCollapse="true"
+        scrollable="vertical"
+        title="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_preview')}"
+        ui="{PanelSkin.DARK_200.getSkin()}"
+        u:split="{{height: '3px', collapsible: true}}">
+  <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.connectors.model.ConnectorPropertyNames;
+    import com.coremedia.ui.skins.ContainerSkin;
+    import com.coremedia.ui.skins.PanelSkin;
+
+    import com.coremedia.ui.models.bem.BEMBlock;
+    import com.coremedia.ui.models.bem.BEMElement;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.itemPreviewPanel";
+    public static const EMPTY_PREVIEW:String = "emptyItemPreview";
+    public static const PREVIEW:String = "itemPreview";
+
+    public static const PREVIEW_BLOCK:BEMBlock = new BEMBlock("cm-connector-preview-panel");
+    public static const PREVIEW_ELEMENT_WRAPPER:BEMElement = PREVIEW_BLOCK.createElement("wrapper");
+    public static const PREVIEW_ELEMENT_BODY:BEMElement = PREVIEW_BLOCK.createElement("body");
+
+    private var config:ConnectorPreviewPanel;
+
+    public native function ConnectorPreviewPanel(config:ConnectorPreviewPanel = null);
+    ]]></fx:Script>
+
+  <preview:items>
+    <ui:SwitchingContainer itemId="connectorPreviewSwitchingContainer"
+                           style="margin-top: 12px;"
+                           layoutOnCardChange="true"
+                           activeItemValueExpression="{getActivePreviewExpression()}">
+      <ui:items>
+        <DisplayField itemId="{EMPTY_PREVIEW}"
+                      value="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_preview')}"/>
+        <Container itemId="{PREVIEW}">
+          <mixins>
+            <ui:BEMMixin bemElement="{PREVIEW_ELEMENT_WRAPPER}"/>
+          </mixins>
+              <items>
+                <!-- margin is set, because the HorizontalSpacingPlugin does not work here -->
+                <Panel ui="{PanelSkin.CARD_200.getSkin()}"
+                       flex="1"
+                       margin="0 12 0 0"
+                       width="200"
+                       itemId="connectorPreviewCollapsible"
+                       ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'preview_collapsible_title')}"
+                       title="">
+                  <plugins>
+                    <ui:BindPropertyPlugin componentProperty="title"
+                                           bindTo="{getSelectedItemExpression().extendBy(ConnectorPropertyNames.NAME)}"/>
+                    <ui:BindVisibilityPlugin bindTo="{getSelectedItemExpression()}"
+                                             transformer="{isVisibleTransformer}"/>
+                  </plugins>
+                  <items>
+                    <DisplayField itemId="connectorPreviewHtmlField"
+                                  flex="1"/>
+                  </items>
+                  <layout>
+                    <layout_HBox/>
+                  </layout>
+                </Panel>
+                <preview:ConnectorMetadataPanel itemId="connectorMetaDataPanel"
+                                                flex="1"
+                                                collapsible="false"
+                                                metadataChangedExpression="{getMetaDataChangedExpression()}"
+                                                selectedItemValueExpression="{getSelectedItemExpression()}"/>
+          </items>
+          <layout>
+            <layout_HBox/>
+          </layout>
+        </Container>
+      </ui:items>
+    </ui:SwitchingContainer>
+  </preview:items>
+  <preview:layout>
+    <layout_Anchor/>
+  </preview:layout>
+  <preview:plugins>
+    <ui:BEMPlugin block="{PREVIEW_BLOCK}"
+                  bodyElement="{PREVIEW_ELEMENT_BODY}"/>
+  </preview:plugins>
+</preview:ConnectorPreviewPanelBase>

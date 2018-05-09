@@ -1,5 +1,5 @@
 package com.coremedia.blueprint.studio.connectors.model {
-[RestResource(uriTemplate="connector/connector/{connectorType:[^/]+}/{siteId:[^/]+}")]
+[RestResource(uriTemplate="connector/connector/{connectorType:[^/]+}/{locale:[^/]+}/{siteId:[^/]+}")]
 public class ConnectorImpl extends ConnectorObjectImpl implements Connector {
 
   public function ConnectorImpl(uri:String, vars:Object) {
@@ -38,11 +38,6 @@ public class ConnectorImpl extends ConnectorObjectImpl implements Connector {
       }
     }
     return null;
-  }
-
-  public function getContentMappings():ContentMappings {
-    var mapping:Object = get(ConnectorPropertyNames.CONTENT_MAPPINGS);
-    return new ContentMappings(mapping);
   }
 }
 }

@@ -3,6 +3,7 @@ package com.coremedia.blueprint.connectors.api;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The connector context contains all connection information for the external system,
@@ -106,6 +107,19 @@ public interface ConnectorContext {
    * Since the content creation is based on ContentWriteInterceptors, additional content be
    * created, depending on the data of the connector.
    */
-  @Nonnull
+  @Nullable
   ConnectorContentMappings getContentMappings();
+
+  /**
+   * Returns the locale that should be used for this connector.
+   * The locale matches the one that is set for the current Studio user.
+   */
+  @Nonnull
+  Locale getLocale();
+
+  /**
+   * Returns the type of date format that should be used when displayed in the Studio.
+   * Possible values are 'long' and 'short'.
+   */
+  String getDateFormat();
 }

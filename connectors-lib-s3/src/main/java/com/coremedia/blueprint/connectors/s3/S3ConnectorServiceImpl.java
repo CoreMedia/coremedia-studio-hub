@@ -17,7 +17,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.filesystems.CacheItem;
+import com.coremedia.blueprint.connectors.filesystems.FileSystemItem;
 import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import org.apache.commons.io.IOUtils;
@@ -79,17 +79,17 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorCategory category) {
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     if(category.getConnectorId().isRootId()) {
       rootCategory = null;
-      rootCategory = (S3ConnectorCategory) getRootCategory();
+      rootCategory = (S3ConnectorCategory) getRootCategory(context);
     }
-    return super.refresh(category);
+    return super.refresh(context, category);
   }
 
   @Override
-  public void shutdown() throws ConnectorException {
-    super.shutdown();
+  public void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {
+    super.shutdown(context);
     if(s3Client != null) {
       s3Client.shutdown();
     }
@@ -97,7 +97,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   @Nonnull
   @Override
-  public ConnectorCategory getRootCategory() throws ConnectorException {
+  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       String displayName = context.getProperty(DISPLAY_NAME);
 
@@ -105,10 +105,10 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
       rootCategory = new S3ConnectorCategory(this, null, context, null, id);
       rootCategory.setName(displayName);
 
-      List<ConnectorCategory> subCategories = getSubCategories(rootCategory);
+      List<ConnectorCategory> subCategories = getSubCategories(context, rootCategory);
       rootCategory.setSubCategories(subCategories);
 
-      List<ConnectorItem> items = getItems(rootCategory);
+      List<ConnectorItem> items = getItems(context, rootCategory);
       rootCategory.setItems(items);
     }
     return rootCategory;
@@ -116,32 +116,32 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorId itemId) throws ConnectorException {
+  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId itemId) throws ConnectorException {
     ConnectorId parentFolderId = getFolderId(itemId);
-    S3ObjectSummary file = getCachedFileOrFolderEntity(itemId);
-    return new S3ConnectorItem(this, getCategory(parentFolderId), context, file, itemId);
+    S3ObjectSummary file = getCachedFileOrFolderEntity(context, itemId);
+    return new S3ConnectorItem(this, getCategory(context, parentFolderId), context, file, itemId);
   }
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorId categoryId) throws ConnectorException {
-    ConnectorCategory parentCategory = getParentCategory(categoryId);
+  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId categoryId) throws ConnectorException {
+    ConnectorCategory parentCategory = getParentCategory(context, categoryId);
     if (parentCategory == null) {
-      return getRootCategory();
+      return getRootCategory(context);
     }
 
-    S3ObjectSummary object = getCachedFileOrFolderEntity(categoryId);
+    S3ObjectSummary object = getCachedFileOrFolderEntity(context, categoryId);
     S3ConnectorCategory subCategory = new S3ConnectorCategory(this, parentCategory, context, object, categoryId);
-    subCategory.setItems(getItems(subCategory));
-    subCategory.setSubCategories(getSubCategories(subCategory));
+    subCategory.setItems(getItems(context, subCategory));
+    subCategory.setSubCategories(getSubCategories(context, subCategory));
     return subCategory;
   }
 
   @Override
-  public ConnectorItem upload(ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
       String bucketName = context.getProperty(BUCKET_NAME);
-      String uniqueObjectName = createUniqueFilename(category.getConnectorId(), itemName);
+      String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
       //no leading slashes for s3
       if(uniqueObjectName.startsWith("/")) {
         uniqueObjectName = uniqueObjectName.substring(1, uniqueObjectName.length());
@@ -169,8 +169,8 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
         throw new ConnectorException("Failed to delete s3 upload temp file");
       }
 
-      refresh(category);
-      return getItem(newItemId);
+      refresh(context, category);
+      return getItem(context, newItemId);
     } catch (IOException e) {
       LOGGER.error("Failed to upload " + itemName + ": " + e.getMessage(), e);
       throw new ConnectorException(e);
@@ -179,30 +179,30 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   @Nonnull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
     if(query.equals("*")) {
       query = "";
     }
 
     if(searchType == null && query.equals("")) {
-      results.addAll(getSubCategories(category));
-      results.addAll(getItems(category));
+      results.addAll(getSubCategories(context, category));
+      results.addAll(getItems(context, category));
     }
     else {
-      CacheItem<S3ObjectSummary> cacheItem = listCachedEntities(category.getConnectorId());
+      FileSystemItem<S3ObjectSummary> cacheItem = listCachedEntities(context, category.getConnectorId());
       List<S3ObjectSummary> categoryList = cacheItem.getFolderItemsData();
       for (S3ObjectSummary objectSummary : categoryList) {
         if (!isFile(objectSummary)) {
           ConnectorId id = ConnectorId.createCategoryId(context.getConnectionId(), getPath(objectSummary));
-          ConnectorCategory cat = getCategory(id);
+          ConnectorCategory cat = getCategory(context, id);
           if ((searchType == null || searchType.equals(ConnectorCategory.DEFAULT_TYPE)) && cat.getDisplayName().toLowerCase().contains(query.toLowerCase())) {
             results.add(cat);
           }
         }
         else {
           ConnectorId id = ConnectorId.createItemId(context.getConnectionId(), getPath(objectSummary));
-          ConnectorItem item = getItem(id);
+          ConnectorItem item = getItem(context, id);
           if (item.isMatchingWithItemType(searchType) && item.getDisplayName().toLowerCase().contains(query.toLowerCase()) && item.getParent().getConnectorId().equals(category.getConnectorId())) {
             results.add(item);
           }
@@ -217,7 +217,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     String bucketName = item.getBucketName();
     String key = item.getKey();
     s3Client.deleteObject(new DeleteObjectRequest(bucketName, key));
-    refresh(rootCategory);
+    refresh(null, rootCategory);
     return true;
   }
 
@@ -293,24 +293,24 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   //----------------------------- Helper -------------------------------------------------------------------------------
 
-  private List<ConnectorCategory> getSubCategories(@Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorCategory> getSubCategories(ConnectorContext context, @Nonnull ConnectorCategory category) throws ConnectorException {
     List<ConnectorCategory> subCategories = new ArrayList<>();
 
-    List<S3ObjectSummary> subfolders = getSubfolderEntities(category.getConnectorId());
+    List<S3ObjectSummary> subfolders = getSubfolderEntities(context, category.getConnectorId());
     for (S3ObjectSummary entry : subfolders) {
       ConnectorId connectorId = ConnectorId.createCategoryId(context.getConnectionId(), getPath(entry));
       S3ConnectorCategory subCategory = new S3ConnectorCategory(this, category, context, entry, connectorId);
-      subCategory.setItems(getItems(subCategory));
+      subCategory.setItems(getItems(context, subCategory));
       subCategories.add(subCategory);
     }
 
     return subCategories;
   }
 
-  private List<ConnectorItem> getItems(@Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorItem> getItems(ConnectorContext context, @Nonnull ConnectorCategory category) throws ConnectorException {
     List<ConnectorItem> items = new ArrayList<>();
 
-    List<S3ObjectSummary> fileEntities = getFileEntities(category.getConnectorId());
+    List<S3ObjectSummary> fileEntities = getFileEntities(context, category.getConnectorId());
     for (S3ObjectSummary entry : fileEntities) {
       ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), getPath(entry));
       S3ConnectorItem item = new S3ConnectorItem(this, category, context, entry, itemId);

@@ -11,6 +11,7 @@ import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.RateLimitException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
@@ -64,16 +65,16 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorCategory category) {
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     if (category.getConnectorId().isRootId()) {
       rootCategory = null;
-      rootCategory = (DropboxConnectorCategory) getRootCategory();
+      rootCategory = (DropboxConnectorCategory) getRootCategory(context);
     }
-    return super.refresh(category);
+    return super.refresh(context, category);
   }
 
   @Override
-  public InvalidationResult invalidate() {
+  public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
     InvalidationResult invalidationResult = new InvalidationResult(context);
 
     int added = 0;
@@ -102,11 +103,11 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
       for (String dirtyItem : dirtyItems) {
         ConnectorId id = ConnectorId.createItemId(context.getConnectionId(), dirtyItem);
         ConnectorId folderId = getFolderId(id);
-        ConnectorCategory category = getCategory(folderId);
+        ConnectorCategory category = getCategory(context, folderId);
         invalidationResult.addEntity(category);
       }
 
-      refresh(getRootCategory());
+      refresh(context, getRootCategory(context));
       invalidationResult.addMessage("dropbox", rootCategory, Arrays.asList(rootCategory.getName(), added, deleted));
       invalidationResult.addEntity(rootCategory);
     }
@@ -117,7 +118,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
 
   @Nonnull
   @Override
-  public ConnectorCategory getRootCategory() throws ConnectorException {
+  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       String displayName = context.getProperty(DISPLAY_NAME);
 
@@ -136,25 +137,25 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorId itemId) throws ConnectorException {
+  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId itemId) throws ConnectorException {
     ConnectorId parentFolderId = getFolderId(itemId);
-    Metadata file = getCachedFileOrFolderEntity(itemId);
+    Metadata file = getCachedFileOrFolderEntity(context, itemId);
     if(file == null) {
       LOGGER.warn("Dropbox item not found for connector id " + itemId);
       return null;
     }
-    return new DropboxConnectorItem(this, getCategory(parentFolderId), context, file, itemId);
+    return new DropboxConnectorItem(this, getCategory(context, parentFolderId), context, file, itemId);
   }
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorId categoryId) throws ConnectorException {
-    ConnectorCategory parentCategory = getParentCategory(categoryId);
+  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId categoryId) throws ConnectorException {
+    ConnectorCategory parentCategory = getParentCategory(context, categoryId);
     if (parentCategory == null) {
-      return getRootCategory();
+      return getRootCategory(context);
     }
 
-    Metadata metadata = getCachedFileOrFolderEntity(categoryId);
+    Metadata metadata = getCachedFileOrFolderEntity(context, categoryId);
     DropboxConnectorCategory subCategory = new DropboxConnectorCategory(this, parentCategory, context, metadata, categoryId);
     subCategory.setItems(getItems(subCategory));
     subCategory.setSubCategories(getSubCategories(subCategory));
@@ -163,7 +164,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
 
   @Nonnull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
     String path = category.getConnectorId().getExternalId();
     if (category.getConnectorId().isRootId()) {
@@ -194,14 +195,14 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
 
           if (metadata instanceof FolderMetadata) {
             ConnectorId id = ConnectorId.createCategoryId(context.getConnectionId(), getPath(metadata));
-            ConnectorCategory cat = getCategory(id);
+            ConnectorCategory cat = getCategory(context, id);
             if (searchType == null || searchType.equals(ConnectorCategory.DEFAULT_TYPE)) {
               results.add(cat);
             }
           }
           else {
             ConnectorId id = ConnectorId.createItemId(context.getConnectionId(), getPath(metadata));
-            ConnectorItem item = getItem(id);
+            ConnectorItem item = getItem(context, id);
             if (item.isMatchingWithItemType(searchType) && item.getParent().getConnectorId().equals(category.getConnectorId())) {
               results.add(item);
             }
@@ -216,13 +217,13 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   }
 
   @Override
-  public ConnectorItem upload(ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
-      String uniqueObjectName = createUniqueFilename(category.getConnectorId(), itemName);
+      String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
       ConnectorId newItemId = ConnectorId.createItemId(context.getConnectionId(), uniqueObjectName);
       client.files().uploadBuilder(newItemId.getExternalId()).uploadAndFinish(inputStream);
       inputStream.close();
-      return getItem(newItemId);
+      return getItem(context, newItemId);
     } catch (Exception e) {
       LOGGER.error("Failed to upload " + itemName + ": " + e.getMessage(), e);
       throw new ConnectorException(e);
@@ -233,7 +234,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
     try {
       String path = item.getConnectorId().getExternalId();
       client.files().deleteV2(path);
-      refresh(item.getParent());
+      refresh(context, item.getParent());
       return true;
     } catch (DbxException e) {
       throw new ConnectorException(e);
@@ -263,6 +264,9 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
     try {
       ListFolderResult listFolderResult = client.files().listFolder(path);
       return listFolderResult.getEntries();
+    } catch (RateLimitException rle) {
+      LOGGER.error("Failed to list dropbox file list for path '" + path + "': rate limit exceeded.");
+      throw new ConnectorException(rle);
     } catch (DbxException e) {
       LOGGER.error("Failed to list dropbox file list for path '" + path + "': " + e.getMessage());
       throw new ConnectorException(e);
@@ -315,7 +319,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   private List<ConnectorCategory> getSubCategories(@Nonnull ConnectorCategory category) throws ConnectorException {
     List<ConnectorCategory> subCategories = new ArrayList<>();
 
-    List<Metadata> subfolders = getSubfolderEntities(category.getConnectorId());
+    List<Metadata> subfolders = getSubfolderEntities(context, category.getConnectorId());
     for (Metadata entry : subfolders) {
       ConnectorId connectorId = ConnectorId.createCategoryId(context.getConnectionId(), getPath(entry));
       DropboxConnectorCategory subCategory = new DropboxConnectorCategory(this, category, context, entry, connectorId);
@@ -329,7 +333,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   private List<ConnectorItem> getItems(@Nonnull ConnectorCategory category) throws ConnectorException {
     List<ConnectorItem> items = new ArrayList<>();
 
-    List<Metadata> fileEntities = getFileEntities(category.getConnectorId());
+    List<Metadata> fileEntities = getFileEntities(context, category.getConnectorId());
     for (Metadata entry : fileEntities) {
       ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), getPath(entry));
       DropboxConnectorItem item = new DropboxConnectorItem(this, category, context, entry, itemId);

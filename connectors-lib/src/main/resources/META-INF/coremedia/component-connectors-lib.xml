@@ -2,9 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <context:annotation-config/>
+  <context:component-scan base-package="com.coremedia.blueprint.connectors.filesystems"/>
 
   <import resource="classpath:/com/coremedia/cap/common/uapi-services.xml"/>
   <import resource="classpath:/com/coremedia/cap/multisite/multisite-services.xml"/>
@@ -72,6 +78,11 @@
   <bean id="connectorPageGridCreator" class="com.coremedia.blueprint.connectors.content.PageGridCreator">
     <property name="sitesService" ref="sitesService" />
     <property name="placementPaths" value="Options/Settings/Pagegrid/Placements" />
+  </bean>
+
+  <!-- Temp Service-->
+  <bean id="tempFileCacheService" class="com.coremedia.blueprint.connectors.caching.TempFileCacheService" scope="singleton">
+    <property name="cacheSize" value="${connectors.preview.cacheSize:100}" />
   </bean>
 
 </beans>

@@ -10,5 +10,13 @@ public class ConnectorContext {
   public function isMarkAsReadEnabled():Boolean {
     return values.markAsRead;
   }
+
+  public function getContentScope():String {
+    return values.contentScope;
+  }
+
+  public function getDateFormat():String {
+    return values.dateFormat || "long";
+  }
 }
 }

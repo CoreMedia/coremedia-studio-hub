@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.connectors.content;
 
+import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.cap.common.Blob;
@@ -31,14 +32,14 @@ import java.util.Map;
  * The default ConnectorItemWriteInterceptor used for the content creation of connector items.
  * Since the content creation is based on ContentWriteInterceptors, additional interceptors may
  * have already been executed before this interceptor which is why this one should come first and has a priority of 0.
- *
+ * <p>
  * The ContentWriteInterceptors for connector item based content creation can access the request parameters
  * 'connectorItem' and 'content' to access the connector item the content has been created for and the default content
  * that has already been created before the interceptors is executed.
  */
 public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorItemWriteInterceptor.class);
-  public final static String CONNECTOR_ITEM = "connectorItem";
+  public final static String CONNECTOR_ENTITY = "connectorEntity";
   public final static String CONTENT_ITEM = "content";
   public final static String CONNECTOR_CONTEXT = "connectorContext";
   public static final String PICTURE_DOC_TYPE = "CMPicture";
@@ -54,18 +55,28 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   @Override
   public void intercept(ContentWriteRequest request) {
     Map<String, Object> properties = request.getProperties();
-    if (properties.containsKey(CONNECTOR_ITEM)) {
-      ConnectorItem item = (ConnectorItem) properties.get(CONNECTOR_ITEM);
+    if (properties.containsKey(CONNECTOR_ENTITY)) {
+      ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
 
-      properties.put("title", item.getDisplayName());
-      properties.put("url", item.getOpenInTabUrl());
-      properties.put("teaserText", createMarkup(item.getDescription()));
-      properties.put("data", createBlob(item.stream(), item.getDisplayName(), null));
+      if (entity instanceof ConnectorItem) {
+        properties.put("title", entity.getDisplayName());
+        ConnectorItem item = (ConnectorItem) entity;
+        properties.put("url", item.getOpenInTabUrl());
+        properties.put("teaserText", createMarkup(item.getDescription()));
+        properties.put("data", createBlob(item.stream(), item.getName(), null));
+      }
     }
   }
 
   // ---------------------- Helper -------------------------------------------------------------------------------------
 
+  protected void clearDefaultProperties(ContentWriteRequest request) {
+    Map<String, Object> properties = request.getProperties();
+    properties.remove("title");
+    properties.remove("url");
+    properties.remove("teaserText");
+    properties.remove("data");
+  }
 
   protected Markup createMarkup(@Nullable String description) {
     if (description != null) {
@@ -80,7 +91,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   protected Blob createBlob(InputStream in, String name, String mimeType) {
     try {
       if (in != null) {
-        if(mimeType == null) {
+        if (mimeType == null) {
           mimeType = mimeTypeService.getMimeTypeForResourceName(name);
         }
         MimeType mt = new MimeType(mimeType);
@@ -118,9 +129,8 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
       return picture;
     } catch (Exception e) {
       LOG.error("Failed to create image content: " + e.getMessage(), e);
-    }
-    finally {
-      if(picture != null) {
+    } finally {
+      if (picture != null) {
         picture.checkIn();
       }
     }
@@ -129,15 +139,16 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
 
   /**
    * Creates the content for the given attributes
-   * @param folder the folder to create the new content for
-   * @param name the name of the new content
+   *
+   * @param folder      the folder to create the new content for
+   * @param name        the name of the new content
    * @param contentType the content type of the new content
    * @return the newly created content
    */
   protected Content createContent(@Nonnull String folder, @Nonnull String name, @Nonnull String contentType) {
     ContentType ct = contentRepository.getContentType(contentType);
     Content folderContent = contentRepository.getChild(folder);
-    if(ct != null) {
+    if (ct != null) {
       return ct.createByTemplate(folderContent, name, "{3} ({1})", new HashMap<>());
     }
     throw new ConnectorException("No content type '" + contentType + "' found for connector item content creation");
@@ -145,6 +156,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
 
   /**
    * Tries to resolve a meaningful image name out of an image URL.
+   *
    * @param imageUrl the URL to extract the name from
    */
   protected String extractNameFromUrl(String imageUrl) {

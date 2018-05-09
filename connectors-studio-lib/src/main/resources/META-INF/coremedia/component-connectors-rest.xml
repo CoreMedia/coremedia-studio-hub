@@ -53,9 +53,12 @@
     <property name="connectorMetaDataResolvers" ref="connectorMetaDataResolvers" />
     <property name="mimeTypeService" ref="mimeTypeService" />
     <property name="contentRepository" ref="contentRepository" />
+    <property name="tempFileCacheService" ref="tempFileCacheService" />
   </bean>
 
   <bean id="connectorCategoryResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorCategoryResource" scope="prototype"
-        parent="connectorEntityResource"/>
+        parent="connectorEntityResource">
+    <property name="tempFileCacheService" ref="tempFileCacheService" />
+  </bean>
 
 </beans>

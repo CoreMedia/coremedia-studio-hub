@@ -39,6 +39,19 @@
           <BooleanProperty Name="enabled">true</BooleanProperty>
         </Struct>
         <Struct>
+          <StringProperty Name="displayName">CoreMedia</StringProperty>
+          <StringProperty Name="connectionId">coremedia1</StringProperty>
+          <StringProperty Name="type">coremedia</StringProperty>
+          <StringProperty Name="username">admin</StringProperty>
+          <StringProperty Name="password"></StringProperty>
+          <StringProperty Name="mediaType">CMMedia</StringProperty>
+          <StringProperty Name="ignoredTypes">CMFolderProperties,Dictionary,Preferences,Query,CMSymbol,CMTheme,CMTemplateSet,CMSite,EditorPreferences</StringProperty>
+          <StringProperty Name="path">/Sites</StringProperty>
+          <StringProperty Name="ior"></StringProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+        </Struct>
+        <Struct>
           <StringProperty Name="displayName">Tech Crunch</StringProperty>
           <StringProperty Name="url">http://feeds.feedburner.com/techcrunch</StringProperty>
           <StringProperty Name="connectionId">techcrunch</StringProperty>

@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,8 +20,20 @@ public interface ConnectorCategory extends ConnectorEntity {
   @Nonnull
   List<ConnectorCategory> getSubCategories();
 
+  /**
+   * Returns a list of child items for this category.
+   */
   @Nonnull
   List<ConnectorItem> getItems();
+
+  /**
+   * Optional method that can be implemented to provide a custom column model inside the Studio library.
+   * The given column models will be shown in the the order they are added to the list.
+   */
+  @Nonnull
+  default List<ConnectorColumn> getColumns() {
+    return Collections.emptyList();
+  }
 
   /**
    * Indicates if bulk uploads are supported.

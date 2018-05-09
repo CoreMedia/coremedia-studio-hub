@@ -4,7 +4,7 @@ public class ConnectorChildRepresentation {
   private String displayName;
   private Object child;
 
-  public ConnectorChildRepresentation(){
+  public ConnectorChildRepresentation() {
   }
 
   public ConnectorChildRepresentation(String displayName, Object child) {

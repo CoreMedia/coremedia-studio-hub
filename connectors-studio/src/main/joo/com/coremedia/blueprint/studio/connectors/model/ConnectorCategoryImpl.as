@@ -2,6 +2,8 @@ package com.coremedia.blueprint.studio.connectors.model {
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 
+import ext.JSON;
+
 [RestResource(uriTemplate="connector/category/{externalId:.+}")]
 public class ConnectorCategoryImpl extends ConnectorEntityImpl implements ConnectorCategory {
   public function ConnectorCategoryImpl(uri:String, vars:Object) {
@@ -34,8 +36,30 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     return get(ConnectorPropertyNames.WRITEABLE);
   }
 
+  public function getColumns():Array {
+    return get(ConnectorPropertyNames.COLUMNS);
+  }
+
   public function getType():String {
     return get(ConnectorPropertyNames.TYPE);
+  }
+
+  override public function preview(callback:Function):void {
+    var method:RemoteServiceMethod = new RemoteServiceMethod(getPreviewUri(), 'GET');
+    method.request(
+            {},
+            function (response:RemoteServiceMethodResponse):void {
+              var result:String = response.response.responseText;
+              if (result) {
+                var previewRepresentation:Object = JSON.decode(result);
+                var html:String = previewRepresentation.html;
+              }
+              callback(html, previewRepresentation[ConnectorPropertyNames.META_DATA]);
+            },
+            function (response:RemoteServiceMethodResponse):void {
+              callback(response.getError());
+            }
+    );
   }
 
   public function refresh(callback:Function = null):void {

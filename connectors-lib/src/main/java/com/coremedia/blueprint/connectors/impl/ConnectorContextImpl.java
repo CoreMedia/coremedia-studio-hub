@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ConnectorContextImpl implements ConnectorContext {
@@ -21,6 +22,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   public static final String CONTENT_SCOPE= "contentScope";
   public static final String TYPE = "type";
   public static final String CONNECTION_ID = "connectionId";
+  public static final String DATE_FORMAT = "dateFormat";
 
   private static final String ENABLED = "enabled";
 
@@ -44,6 +46,7 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   private boolean dirty;
   private String siteId;
+  private Locale locale;
 
   public ConnectorContextImpl(Map<String, Object> properties) {
     this.properties = new HashMap<>(properties);
@@ -120,6 +123,11 @@ public class ConnectorContextImpl implements ConnectorContext {
   }
 
   @Override
+  public String getDateFormat() {
+    return (String) properties.get(DATE_FORMAT);
+  }
+
+  @Override
   public boolean isEnabled() {
     if (properties.containsKey(ENABLED)) {
       return (Boolean) properties.get(ENABLED);
@@ -154,12 +162,11 @@ public class ConnectorContextImpl implements ConnectorContext {
     return previewTemplates;
   }
 
-  @Nonnull
+  @Nullable
   @Override
   public ConnectorContentMappings getContentMappings() {
     return contentMapping;
   }
-
 
   public Map<String, Object> getProperties() {
     return properties;
@@ -191,5 +198,18 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public void setSiteId(String siteId) {
     this.siteId = siteId;
+  }
+
+  @Nonnull
+  @Override
+  public Locale getLocale() {
+    if(locale == null) {
+      return Locale.getDefault();
+    }
+    return locale;
+  }
+
+  public void setLocale(Locale locale) {
+    this.locale = locale;
   }
 }

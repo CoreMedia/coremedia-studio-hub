@@ -1,0 +1,17 @@
+/**
+ * @var {color}
+ *
+ * Sets the background color of the component body.
+ *
+ * @member com.coremedia.blueprint.studio.connectors.library.preview.ConnectorPreviewPanel
+ */
+$cm-include-preview-panel-body-background-color: dynamic($cm-grey-0);
+
+/**
+ * @var {boolean}
+ *
+ * Enables styles for the ConnectorPreviewPanel.
+ *
+ * @member com.coremedia.blueprint.studio.connectors.library.preview.ConnectorPreviewPanel
+ */
+$cm-include-connector-preview-panel: dynamic(true);

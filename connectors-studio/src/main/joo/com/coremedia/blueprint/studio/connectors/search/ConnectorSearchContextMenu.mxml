@@ -26,6 +26,12 @@
   <items>
     <MenuItem>
       <baseAction>
+        <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </baseAction>
+    </MenuItem>
+    <MenuSeparator/>
+    <MenuItem>
+      <baseAction>
         <connectorAction:CreateConnectorContentAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </baseAction>
       <plugins exml:mode="append">
@@ -36,11 +42,6 @@
       </plugins>
     </MenuItem>
     <MenuSeparator/>
-    <MenuItem>
-      <baseAction>
-        <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
-      </baseAction>
-    </MenuItem>
     <MenuItem>
       <baseAction>
         <connectorAction:OpenItemInSystemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>

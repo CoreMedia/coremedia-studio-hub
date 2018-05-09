@@ -50,6 +50,10 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
   }
 
   public function upload(files:Array, folder:Object, settings:UploadSettings):void {
+    if(files.length === 0) {
+      return;
+    }
+
     var category:ConnectorCategory = folder as ConnectorCategory;
     //update upload path
     var uri:String = category.getUploadUri();

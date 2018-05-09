@@ -5,12 +5,12 @@ import java.util.List;
 /**
  * The item to cache for a remote file system.
  */
-public class CacheItem<T> {
+public class FileSystemItem<T> {
 
   private T folderData;
   private List<T> folderItemsData;
 
-  public CacheItem(T folderData, List<T> folderItemsData) {
+  public FileSystemItem(T folderData, List<T> folderItemsData) {
     this.folderData = folderData;
     this.folderItemsData = folderItemsData;
   }

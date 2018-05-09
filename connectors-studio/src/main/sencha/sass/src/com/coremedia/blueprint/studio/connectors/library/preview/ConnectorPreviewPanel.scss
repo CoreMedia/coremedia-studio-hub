@@ -1,0 +1,17 @@
+@if $cm-include-connector-preview-panel {
+  $_block: "cm-connector-preview-panel";
+  $_element: $_block + "__wrapper";
+  $_body: $_block + "__body";
+
+  .#{$_block} {
+    .#{$_body} {
+      background-color: $cm-include-preview-panel-body-background-color;
+    }
+    .#{$_element} {
+      overflow: visible;
+      .#{$prefix}box-inner {
+        overflow: visible;
+      }
+    }
+  }
+}

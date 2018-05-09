@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
+import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor;
 import com.coremedia.cap.content.Content;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
@@ -18,12 +18,15 @@ public class RssContentItemWriteInterceptor extends ConnectorItemWriteIntercepto
   @Override
   public void intercept(ContentWriteRequest request) {
     Map<String, Object> properties = request.getProperties();
-    if (properties.containsKey(CONNECTOR_ITEM)) {
-      ConnectorItem item = (ConnectorItem) properties.get(CONNECTOR_ITEM);
+    if (properties.containsKey(CONNECTOR_ENTITY)) {
+      ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
+
+      //not used here, just as an example how to access the current context
+      //ConnectorContext context = (ConnectorContext) properties.get(CONNECTOR_CONTEXT);
 
       //the intercepts is only applicable when the content was created for an RSS item
-      if (item instanceof RssConnectorItem) {
-        RssConnectorItem rssAsset = (RssConnectorItem) item;
+      if (entity instanceof RssConnectorItem) {
+        RssConnectorItem rssAsset = (RssConnectorItem) entity;
         List<String> imageUrls = rssAsset.getImageUrls();
 
         List<Content> images = new ArrayList<>();

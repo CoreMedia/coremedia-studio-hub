@@ -6,9 +6,9 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
+import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
-import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSearchResultRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSuggestionRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSuggestionResultRepresentation;
@@ -131,12 +131,13 @@ public class ConnectorServiceResource {
       }
 
       ConnectorService connectorService = connection.getConnectorService();
-      ConnectorCategory category = connectorService.getRootCategory();
+      ConnectorContext context = connection.getContext();
+      ConnectorCategory category = connectorService.getRootCategory(context);
       if (categoryId != null) {
-        category = connectorService.getCategory(categoryId);
+        category = connectorService.getCategory(context, categoryId);
       }
 
-      ConnectorSearchResult<ConnectorEntity> connectorResult = connectorService.search(category, query, searchType, Collections.emptyMap());
+      ConnectorSearchResult<ConnectorEntity> connectorResult = connectorService.search(context, category, query, searchType, Collections.emptyMap());
       searchResult.merge(connectorResult);
     }
 

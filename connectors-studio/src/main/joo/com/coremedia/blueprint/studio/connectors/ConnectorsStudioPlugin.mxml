@@ -58,12 +58,12 @@
       </notifications:notificationDetailsComponentConfig>
     </notifications:RegisterNotificationDetailsPlugin>
 
-    <connector:AddConnectorPlugin connectorType="filesystem" />
-    <connector:AddConnectorPlugin connectorType="s3" />
-    <connector:AddConnectorPlugin connectorType="youtube" />
-    <connector:AddConnectorPlugin connectorType="rss" />
+    <connector:AddConnectorPlugin connectorType="coremedia" defaultColumns="type,name,lastModified"/>
     <connector:AddConnectorPlugin connectorType="dropbox" />
-    <connector:AddConnectorPlugin connectorType="watson" />
+    <connector:AddConnectorPlugin connectorType="filesystem" />
+    <connector:AddConnectorPlugin connectorType="rss" defaultColumns="type,name,lastModified" />
+    <connector:AddConnectorPlugin connectorType="s3" />
+    <connector:AddConnectorPlugin connectorType="youtube" defaultColumns="type,name,lastModified" />
   </connector:configuration>
 
 </connector:ConnectorsStudioPluginBase>

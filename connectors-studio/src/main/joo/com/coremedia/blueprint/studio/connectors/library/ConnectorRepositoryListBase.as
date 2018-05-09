@@ -1,10 +1,9 @@
 package com.coremedia.blueprint.studio.connectors.library {
 import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
-import com.coremedia.blueprint.studio.connectors.model.Connector;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorId;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.context.ComponentContextManager;
 import com.coremedia.cms.editor.sdk.editorContext;
@@ -24,7 +23,6 @@ import ext.grid.column.Column;
 import mx.resources.ResourceManager;
 
 public class ConnectorRepositoryListBase extends AbstractConnectorList {
-  private static const READ_MARKER:Array = [];
   private var selectedNodeExpression:ValueExpression;
   private var selectedItemsExpression:ValueExpression;
 
@@ -46,6 +44,30 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
     loadMaskCfg.msg = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'refreshing_message');
     loadMask = new LoadMask(loadMaskCfg);
     loadMask.disable();
+
+    getStore().on('load', storeDataChanged);
+  }
+
+  private function storeDataChanged():void {
+    var connectorObject:ConnectorObject = getSelectedNodeExpression().getValue() as ConnectorObject;
+    if(!connectorObject) {
+      return;
+    }
+
+    ConnectorHelper.refreshColumns(this, connectorObject, function (markAsRead:Boolean):void {
+      markAsReadEnabled = markAsRead;
+
+      getView()['emptyText'] = resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_selection');
+      getView().refresh();
+
+      getHeaderContainer().itemCollection.each(function (col:Column):void {
+        if (col['sortState']) {
+          var direction:String = col['sortState'];
+          var dataIndex = col.dataIndex;
+          getStore().sort(dataIndex, direction);
+        }
+      });
+    });
   }
 
   override public function setDisabled(disabled:Boolean):void {
@@ -75,10 +97,14 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
     });
   }
 
+  protected function formatDate(date:Object):String {
+    return ConnectorHelper.formatDate(getSelectedNodeExpression().getValue(), date);
+
+  }
+
   internal function getSelectedNodeExpression():ValueExpression {
     if (!selectedNodeExpression) {
       selectedNodeExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_FOLDER_VARIABLE_NAME);
-      selectedNodeExpression.addChangeListener(selectedCategoryChanged);
     }
 
     return selectedNodeExpression;
@@ -93,80 +119,27 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
   }
 
   internal function markAsRead():void {
-    if(!markAsReadEnabled) {
+    if (!markAsReadEnabled) {
       return;
     }
 
     var selection:Array = getSelectionModel().getSelection();
-    if(selection.length > 0) {
+    if (selection.length > 0) {
       for each(var item:Model in selection) {
-        READ_MARKER.push(item.data.id);
-        item.commit(false);
+        ConnectorHelper.READ_MARKER.push(item.data.id);
+        item.commit(false, ['name']);
       }
     }
-  }
-
-  private function selectedCategoryChanged():void {
-    getView()['emptyText'] = resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_selection');
-    getView().refresh();
-
-    var columns:Array = getColumns();
-    var category:ConnectorCategory = getSelectedNodeExpression().getValue() as ConnectorCategory;
-    if (category) {
-      category.getConnector().load(function():void {
-        markAsReadEnabled = category.getContext().isMarkAsReadEnabled();
-      });
-
-      if(category.getItems().length > 0) {
-        var item:ConnectorItem = category.getItems()[0];
-        item.load(function ():void {
-          for each(var c:Column in columns) {
-            if(c.dataIndex === "status" || c.dataIndex === "size") {
-              c.setHidden(true);
-            }
-
-            if(c.dataIndex === "status" && item.getStatus()) {
-              c.setHidden(false);
-            }
-            else if(c.dataIndex === "size" && item.getSize()) {
-              c.setHidden(false);
-            }
-          }
-        });
-      }
-    }
-  }
-
-
-  /**
-   * Rendered for the title column, remove the bold format of
-   * an entry is this was already selected.
-   * @param value the name of the item
-   * @param metaData the metadata that contains the state of the record
-   * @param record the actual bean record
-   * @return the string to be rendered
-   */
-  protected function renderTitle(value:*, metaData:*, record:BeanRecord):String {
-    if(value === undefined) {
-      return "...";
-    }
-
-    var item:ConnectorEntity = record.getBean() as ConnectorEntity;
-    if(item is ConnectorItem) {
-      if (markAsReadEnabled && isUnread(record.data.id)) {
-        return '<b>' + value + '<b/>';
-      }
-    }
-    return value;
   }
 
   internal function getConnectorItemsValueExpression():ValueExpression {
     return ValueExpressionFactory.createFromFunction(function ():Array {
       var category:ConnectorCategory = getSelectedNodeExpression().getValue() as ConnectorCategory;
-      if(category && !category.getConnector().isLoaded()) {
+      if (category && !category.getConnector().isLoaded()) {
         category.getConnector().load();
         return undefined;
       }
+
       return ConnectorHelper.getChildren(getSelectedNodeExpression().getValue());
     });
   }
@@ -191,22 +164,6 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
   internal static function formatExternalId(externalId:String):String {
     var url:Object = Ext.urlDecode(externalId);
     return externalId;
-  }
-
-
-
-  /**
-   * Returns true if the given id was already selected by the user.
-   * @param id
-   * @return
-   */
-  internal static function isUnread(id:*):Boolean {
-    for (var i:int = 0; i < READ_MARKER.length; i++) {
-      if (READ_MARKER[i] === id) {
-        return false;
-      }
-    }
-    return true;
   }
 }
 }

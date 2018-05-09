@@ -22,7 +22,8 @@
       <ui:items>
         <ui:IconButton>
           <ui:baseAction>
-            <connectorAction:CreateConnectorContentAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+            <connectorAction:CreateConnectorContentAction
+                    selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
           </ui:baseAction>
           <ui:plugins exml:mode="append">
             <ui:BindPropertyPlugin componentProperty="disabled"
@@ -31,13 +32,13 @@
                                    ifUndefined="true"/>
           </ui:plugins>
         </ui:IconButton>
-        <TbSeparator />
+        <TbSeparator/>
         <ui:IconButton>
           <ui:baseAction>
             <connectorAction:ReloadCategoryAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
           </ui:baseAction>
         </ui:IconButton>
-        <TbSeparator />
+        <TbSeparator/>
         <ui:IconButton>
           <ui:baseAction>
             <connectorAction:DownloadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
@@ -48,7 +49,7 @@
             <connectorAction:UploadItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
           </ui:baseAction>
         </ui:IconButton>
-        <TbSeparator />
+        <TbSeparator/>
         <ui:IconButton>
           <ui:baseAction>
             <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
@@ -56,10 +57,11 @@
         </ui:IconButton>
         <ui:IconButton>
           <ui:baseAction>
-            <connectorAction:OpenItemInSystemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+            <connectorAction:OpenItemInSystemAction
+                    selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
           </ui:baseAction>
         </ui:IconButton>
-        <TbSeparator />
+        <TbSeparator/>
         <ui:IconButton>
           <ui:baseAction>
             <connectorAction:DeleteItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
@@ -79,6 +81,7 @@
         <Component itemId="createFolder"/>
       </ui:items>
     </ui:RemoveItemsPlugin>
+    <ui:HideObsoleteSeparatorsPlugin/>
   </editor:plugins>
 
 </editor:RepositoryToolbar>

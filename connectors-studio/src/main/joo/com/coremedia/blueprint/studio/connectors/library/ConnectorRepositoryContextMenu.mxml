@@ -29,6 +29,12 @@
   </plugins>
 
   <items>
+    <MenuItem itemId="{CollectionRepositoryContextMenu.OPEN_MENU_ITEM_ID}">
+      <baseAction>
+        <editor:OpenInTreeAction selectedFolderValueExpression="{config.selectedFolderValueExpression}"/>
+      </baseAction>
+    </MenuItem>
+    <MenuSeparator/>
     <MenuItem>
       <baseAction>
         <connectorAction:CreateConnectorContentAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
@@ -44,12 +50,6 @@
     <MenuItem>
       <baseAction>
         <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
-      </baseAction>
-    </MenuItem>
-    <MenuSeparator/>
-    <MenuItem itemId="{CollectionRepositoryContextMenu.OPEN_MENU_ITEM_ID}">
-      <baseAction>
-        <editor:OpenInTreeAction selectedFolderValueExpression="{config.selectedFolderValueExpression}"/>
       </baseAction>
     </MenuItem>
     <MenuSeparator/>

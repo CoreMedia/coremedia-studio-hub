@@ -9,7 +9,8 @@ public class ConnectorSuggestionResultRepresentation {
   public ConnectorSuggestionResultRepresentation(List<ConnectorSuggestionRepresentation> suggestions) {
     if (suggestions == null) {
       throw new IllegalArgumentException("parameter is null: suggestions");
-    } else {
+    }
+    else {
       this.suggestions = suggestions;
     }
   }

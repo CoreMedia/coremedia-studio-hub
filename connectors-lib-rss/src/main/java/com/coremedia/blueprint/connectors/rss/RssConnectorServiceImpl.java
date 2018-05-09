@@ -9,6 +9,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.api.invalidation.InvalidationResult;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.cap.content.ContentType;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -45,19 +46,19 @@ public class RssConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorCategory category) {
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     rootCategory = getRootCategory(true);
     return true;
   }
 
   @Override
-  public ConnectorItem upload(ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     return null;
   }
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
     List<ConnectorItem> items = getRootCategory(false).getItems();
     for (ConnectorItem item : items) {
       if (item.getConnectorId().equals(connectorId)) {
@@ -69,7 +70,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
     //only 1x category which is root
     if (rootCategory == null) {
       rootCategory = getRootCategory(true);
@@ -79,15 +80,15 @@ public class RssConnectorServiceImpl implements ConnectorService {
 
   @Nonnull
   @Override
-  public ConnectorCategory getRootCategory() throws ConnectorException {
+  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
     return getRootCategory(true);
   }
 
   @Nonnull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
-    if (searchType == null || searchType.equals(ConnectorItem.DEFAULT_TYPE)) {
+    if (searchType == null || searchType.equals(ConnectorItem.DEFAULT_TYPE) || searchType.equals(ContentType.CONTENT)) {
 
       RssConnectorCategory rootCategory = getRootCategory(false);
       SyndFeed feed = rootCategory.getFeed();
@@ -112,21 +113,21 @@ public class RssConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
-  public InvalidationResult invalidate() {
+  public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
     InvalidationResult result = new InvalidationResult(context);
 
-    if(this.rootCategory != null) {
+    if (this.rootCategory != null) {
       List<String> oldTitles = this.rootCategory.getItems().stream().map(ConnectorItem::getName).collect(Collectors.toList());
       List<SyndEntry> entries = getFeed().getEntries();
       int count = 0;
       for (SyndEntry entry : entries) {
         ConnectorItem item = createRssAsset(entry);
-        if(!oldTitles.contains(item.getName())) {
+        if (!oldTitles.contains(item.getName())) {
           count++;
         }
       }
 
-      if(count > 0) {
+      if (count > 0) {
         getRootCategory(true);
         result.addMessage("rss", rootCategory, Arrays.asList(rootCategory.getName(), count));
         result.addEntity(rootCategory);

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class ConnectorPreviewRepresentation {
   private String html;
-  private Map<String,Object> metaData = new HashMap<>();
+  private Map<String, Object> metaData = new HashMap<>();
 
   @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
   public String getHtml() {
@@ -22,12 +22,12 @@ public class ConnectorPreviewRepresentation {
     this.html = html;
   }
 
-  public Map<String,Object> getMetaData() {
+  public Map<String, Object> getMetaData() {
     return metaData;
   }
 
   public void addMetaData(ConnectorMetaData mt) {
-    if(mt != null) {
+    if (mt != null) {
       this.metaData.putAll(mt.getMetadata());
     }
   }

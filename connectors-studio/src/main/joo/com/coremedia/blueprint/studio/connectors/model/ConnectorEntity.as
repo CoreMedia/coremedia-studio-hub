@@ -11,11 +11,19 @@ public interface ConnectorEntity extends ConnectorObject {
 
   function getContext():ConnectorContext;
 
+  function getColumnValues():Array;
+
   /**
    * Deletes this entity
    * @param callback optional callback called with the refreshed parent entity.
    * @param errorHandler optional callback called when an error has occured
    */
   function deleteEntity(callback:Function = null, errorHandler:Function = null):void;
+
+  /**
+   * Creates the preview HTML and metadata for this item
+   * @param callback with preview HTML and metadata object
+   */
+  function preview(callback:Function):void;
 }
 }

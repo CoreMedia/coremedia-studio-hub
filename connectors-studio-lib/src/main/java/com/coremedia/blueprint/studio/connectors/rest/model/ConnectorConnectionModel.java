@@ -15,12 +15,12 @@ public class ConnectorConnectionModel {
   private String connectorType;
   private String connectionId;
   private ConnectorCategory rootCategory;
-  private Map<String,Object> context = new HashMap<>();
+  private Map<String, Object> context = new HashMap<>();
 
   public ConnectorConnectionModel(ConnectorConnection connection) {
     connectorType = connection.getConnectorType();
     connectionId = connection.getContext().getConnectionId();
-    rootCategory = connection.getConnectorService().getRootCategory();
+    rootCategory = connection.getConnectorService().getRootCategory(connection.getContext());
 
     //we do create a private context here since we only want to reveal client relevant information
     ConnectorContext privateContext = connection.getContext();
@@ -30,6 +30,7 @@ public class ConnectorConnectionModel {
     context.put(ConnectorContextImpl.MARK_AS_READ, privateContext.isMarkAsReadEnabled());
     context.put(ConnectorContextImpl.PREVIEW_THRESHOLD, privateContext.getPreviewThresholdMB());
     context.put(ConnectorContextImpl.TYPE, privateContext.getType());
+    context.put(ConnectorContextImpl.DATE_FORMAT, privateContext.getDateFormat());
   }
 
   public String getConnectorType() {
@@ -40,7 +41,7 @@ public class ConnectorConnectionModel {
     return rootCategory;
   }
 
-  public Map<String,Object> getContext() {
+  public Map<String, Object> getContext() {
     return context;
   }
 

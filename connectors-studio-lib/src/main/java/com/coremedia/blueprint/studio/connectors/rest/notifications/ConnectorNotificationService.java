@@ -35,7 +35,7 @@ public class ConnectorNotificationService {
    * the connector service invalidation.
    */
   public void sendInvalidationNotification(InvalidationResult result) {
-    if(result.getMessages().isEmpty()) {
+    if (result.getMessages().isEmpty()) {
       return;
     }
 
@@ -47,7 +47,7 @@ public class ConnectorNotificationService {
         count++;
         List<Object> values = new ArrayList<>();
         values.add(message.getEntity().getConnectorId().toString());
-        if(message.getValues() != null) {
+        if (message.getValues() != null) {
           values.addAll(message.getValues());
         }
         notificationService.createNotification(MESSAGE_TYPE_INVALIDATION, memberUser, message.getKey(), values);
@@ -65,10 +65,10 @@ public class ConnectorNotificationService {
     List<User> users = new ArrayList<>();
     for (String group : groups) {
       Group userGroup = contentRepository.getConnection().getUserRepository().getGroupByName(group);
-      if(userGroup != null) {
+      if (userGroup != null) {
         Collection<User> memberUsers = userGroup.getMemberUsers();
         for (User memberUser : memberUsers) {
-          if(!users.contains(memberUser)) {
+          if (!users.contains(memberUser)) {
             users.add(memberUser);
           }
         }
@@ -78,7 +78,7 @@ public class ConnectorNotificationService {
     List<String> userList = context.getNotificationsUsers();
     for (String user : userList) {
       User userByName = contentRepository.getConnection().getUserRepository().getUserByName(user);
-      if(userByName != null && !users.contains(userByName)) {
+      if (userByName != null && !users.contains(userByName)) {
         users.add(userByName);
       }
     }

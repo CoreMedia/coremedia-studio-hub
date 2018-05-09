@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<preview:ItemMetadataPanelBase
+<preview:ConnectorMetadataPanelBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
         xmlns:ui="exml:com.coremedia.ui.config"
@@ -13,9 +13,9 @@
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorMetadataPanel";
 
-    private var config:ItemMetadataPanel;
+    private var config:ConnectorMetadataPanel;
 
-    public native function ItemMetadataPanel(config:ItemMetadataPanel = null);
+    public native function ConnectorMetadataPanel(config:ConnectorMetadataPanel = null);
     ]]></fx:Script>
 
 
@@ -47,9 +47,9 @@
             labelAlign="left">
       <plugins>
         <ui:BindPropertyPlugin componentProperty="value"
-                               transformer="{ConnectorHelper.formatDate}"
+                               transformer="{formatDate}"
                                bindTo="{config.selectedItemValueExpression.extendBy(ConnectorPropertyNames.LAST_MODIFIED)}" />
       </plugins>
     </DisplayField>
   </preview:items>
-</preview:ItemMetadataPanelBase>
+</preview:ConnectorMetadataPanelBase>

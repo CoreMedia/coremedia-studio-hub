@@ -11,6 +11,8 @@ public interface ConnectorCategory extends ConnectorEntity {
 
   function isWriteable():Boolean;
 
+  function getColumns():Array;
+
   /**
    * Refreshes the given category
    * @param callback the callback invoked with the invalidated category when refresh is finished

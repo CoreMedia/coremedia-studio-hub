@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.content;
 
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
+import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
@@ -32,19 +32,19 @@ class ConnectorContentCallable implements Callable<Void> {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentCallable.class);
 
   private final ConnectorContext context;
-  private final ConnectorItem item;
+  private final ConnectorEntity entity;
   private List<ContentWriteInterceptor> contentWriteInterceptors;
   private SolrSearchService solrSearchService;
   private final Content content;
 
   ConnectorContentCallable(ConnectorContext context,
                            Content content,
-                           ConnectorItem item,
+                           ConnectorEntity entity,
                            List<ContentWriteInterceptor> contentWriteInterceptors,
                            SolrSearchService solrSearchService) {
     this.content = content;
     this.context = context;
-    this.item = item;
+    this.entity = entity;
     this.contentWriteInterceptors = contentWriteInterceptors;
     this.solrSearchService = solrSearchService;
   }
@@ -52,8 +52,8 @@ class ConnectorContentCallable implements Callable<Void> {
   @Override
   public Void call() {
     try {
-      Thread.currentThread().setName("Connector Content Service Callable for " + item);
-      if (!content.isCheckedOut()) {
+      Thread.currentThread().setName("Connector Content Service Callable for " + entity);
+      if (content.isDocument() && !content.isCheckedOut()) {
         content.checkOut();
       }
 
@@ -64,7 +64,7 @@ class ConnectorContentCallable implements Callable<Void> {
       //create a dummy write request which collects the data of all applicable write interceptors
       Issues issues = new IssuesImpl<>(content, Collections.emptyList());
       Map<String, Object> properties = new HashMap<>();
-      properties.put(ConnectorItemWriteInterceptor.CONNECTOR_ITEM, item);
+      properties.put(ConnectorItemWriteInterceptor.CONNECTOR_ENTITY, entity);
       properties.put(ConnectorItemWriteInterceptor.CONTENT_ITEM, content);
       properties.put(ConnectorItemWriteInterceptor.CONNECTOR_CONTEXT, context);
       ContentWriteRequest request = new ContentWriteRequestImpl(content, content.getParent(), content.getName(), content.getType(), properties, issues);
@@ -77,7 +77,7 @@ class ConnectorContentCallable implements Callable<Void> {
     } catch (Exception e) {
       LOG.error("Error creating item data for content " + content.getPath() + ": " + e.getMessage(), e);
     } finally {
-      if (content.isCheckedOut()) {
+      if (content.isDocument() && content.isCheckedOut()) {
         content.checkIn();
       }
     }

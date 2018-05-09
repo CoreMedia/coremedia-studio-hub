@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<library2:AbstractConnectorList
+<search:ConnectorSearchListBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns:u="exml:untyped"
         xmlns="exml:ext.config"
         xmlns:ui="exml:com.coremedia.ui.config"
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
-        xmlns:library2="com.coremedia.blueprint.studio.connectors.library.*"
         xmlns:search="com.coremedia.blueprint.studio.connectors.search.*"
         emptyText="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'CollectionView_emptySearch_text')}"
         header="{false}"
@@ -25,7 +24,7 @@
     public var searchResultHitsValueExpression:ValueExpression;
     ]]></fx:Script>
 
-  <library2:plugins exml:mode="prepend">
+  <search:plugins exml:mode="prepend">
     <ui:BindListPlugin lazy="true"
                        bindTo="{config.searchResultHitsValueExpression}"
                        initialViewLimit="50"
@@ -40,7 +39,7 @@
         <ui:DataField name="size"
                       convert="{ConnectorHelper.formatFileSize}"/>
         <ui:DataField name="lastModified"
-                      convert="{ConnectorHelper.formatDate}"/>
+                      convert="{formatDate}"/>
         <ui:DataField name="name"
                       mapping="displayName"/>
       </ui:fields>
@@ -51,8 +50,8 @@
                 selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </ui:contextMenu>
     </ui:ContextMenuPlugin>
-  </library2:plugins>
-  <library2:columns>
+  </search:plugins>
+  <search:columns>
     <editor:TypeIconColumn
             showTypeName="true"
             sortable="true"
@@ -70,17 +69,10 @@
             header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header')}"
             stateId="size"
             dataIndex="size"
+            renderer="{ConnectorHelper.fileSizeRenderer}"
             sortable="false"
             hideable="true"
             width="80"/>
-    <library2:ItemStatusColumn
-            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'status_header')}"
-            stateId="size"
-            dataIndex="status"
-            sortable="true"
-            hidden="true"
-            hideable="true"
-            width="50"/>
     <GridColumn
             header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header')}"
             stateId="lastModified"
@@ -88,5 +80,5 @@
             sortable="true"
             hideable="true"
             width="160"/>
-  </library2:columns>
-</library2:AbstractConnectorList>
+  </search:columns>
+</search:ConnectorSearchListBase>

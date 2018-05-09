@@ -4,6 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
+import com.coremedia.blueprint.connectors.impl.ConnectorContextImpl;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
@@ -12,8 +13,11 @@ import com.coremedia.rest.linking.EntityResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -24,11 +28,13 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.Locale;
 
 abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> implements EntityResource<Entity> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorEntityResource.class);
 
   private static final String ID = "id";
+  static final String SESSION_ATTRIBUTE_LOCALE = "studio-locale";
 
   private String decodedId;
   private ConnectorContextProvider connectorContextProvider;
@@ -97,7 +103,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     representation.setDeleteable(entity.isDeleteable());
 
     //fill dam data
-    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), Collections.emptyList());
+    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), getLocale(), Collections.emptyList());
     representation.setConnector(model);
     representation.setConnectorType(model.getConnectorType());
 
@@ -110,17 +116,23 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     representation.setManagementUrl(entity.getManagementUrl());
   }
 
+  protected Locale getLocale() {
+    ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    HttpServletRequest req = sra.getRequest();
+    return (Locale) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_LOCALE);
+  }
+
   protected abstract ConnectorEntityRepresentation getRepresentation() throws URISyntaxException;
 
   protected ConnectorContext getContext(ConnectorId id) {
-    return connectorContextProvider.createContext(id.getConnectionId());
+    ConnectorContext context = connectorContextProvider.createContext(id.getConnectionId());
+    ((ConnectorContextImpl)context).setLocale(getLocale());
+    return context;
   }
 
-  @Nullable
   protected ConnectorConnection getConnection(ConnectorId id) {
     return connector.getConnection(getContext(id));
   }
-
 
   @Autowired
   public void setConnector(Connectors connector) {
@@ -130,6 +142,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   public Connectors getConnector() {
     return connector;
   }
+
   public ConnectorContextProvider getConnectorContextProvider() {
     return connectorContextProvider;
   }

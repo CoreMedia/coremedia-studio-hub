@@ -10,11 +10,10 @@
   <component class="com.coremedia.blueprint.studio.connectors.actions.UploadItemAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.DownloadItemAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryList"/>
-  <component class="com.coremedia.blueprint.studio.connectors.library.ItemStatusColumn"/>
   <component class="com.coremedia.blueprint.studio.connectors.dnd.ConnectorLinkListDragDropPlugin"/>
   <component class="com.coremedia.blueprint.studio.connectors.dnd.ConnectorContentTreeDragDropPlugin"/>
-  <component class="com.coremedia.blueprint.studio.connectors.library.preview.ItemPreviewPanel"/>
-  <component class="com.coremedia.blueprint.studio.connectors.library.preview.ItemMetadataPanel"/>
+  <component class="com.coremedia.blueprint.studio.connectors.library.preview.ConnectorPreviewPanel"/>
+  <component class="com.coremedia.blueprint.studio.connectors.library.preview.ConnectorMetadataPanel"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryListConainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbarContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbar"/>

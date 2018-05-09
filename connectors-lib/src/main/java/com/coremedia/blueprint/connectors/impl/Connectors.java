@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     return connections.get(connectionId);
   }
 
-  public List<ConnectorConnection> getConnectionsByType(String siteId, String type) {
+  public List<ConnectorConnection> getConnectionsByType(String siteId, Locale locale, String type) {
     if(siteId == null) {
       return Collections.emptyList();
     }
@@ -59,7 +60,13 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
         filtered.add(context);
       }
     }
-    return getConnections(filtered);
+
+    //apply current locale to the actual used connections
+    List<ConnectorConnection> connections = getConnections(filtered);
+    for (ConnectorConnection connection : connections) {
+      ((ConnectorContextImpl)connection.getContext()).setLocale(locale);
+    }
+    return connections;
   }
 
   public boolean isValid(ConnectorConnection connection) {
@@ -83,7 +90,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
             //so we know that we have to recreate the connection
             ConnectorConnection connectorConnection = connections.get(connectionId);
             connections.remove(context.getConnectionId());
-            connectorConnection.getConnectorService().shutdown();
+            connectorConnection.getConnectorService().shutdown(connectorConnection.getContext());
             connectionListeners.forEach(l -> l.terminated(connectorConnection));
 
             //recreate connection

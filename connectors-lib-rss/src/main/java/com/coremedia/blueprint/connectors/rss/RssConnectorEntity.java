@@ -35,7 +35,7 @@ public class RssConnectorEntity implements ConnectorEntity {
 
   @Override
   public Boolean delete() {
-      return false;
+    return false;
   }
 
   public Date getLastModified() {

@@ -5,7 +5,7 @@
 
   <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
 
-  <bean id="s3ConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemEntityCache" scope="singleton"/>
+  <bean id="s3ConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemService" scope="singleton"/>
 
   <bean id="connectorS3Service" class="com.coremedia.blueprint.connectors.s3.S3ConnectorServiceImpl" scope="prototype">
     <property name="fileCache" ref="s3ConnectorCache" />

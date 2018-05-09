@@ -1,15 +1,10 @@
 package com.coremedia.blueprint.studio.connectors.rest.representation;
 
-import java.net.URI;
-
 public class ConnectorItemRepresentation extends ConnectorEntityRepresentation {
-  private URI previewUri;
-
   private boolean downloadable;
   private long size;
-  private String contentType;
+  private String targetContentType;
   private String itemType;
-  private String status;
 
   private String openInTabUrl;
   private String downloadUrl;
@@ -23,14 +18,6 @@ public class ConnectorItemRepresentation extends ConnectorEntityRepresentation {
     this.size = size;
   }
 
-  public String getContentType() {
-    return contentType;
-  }
-
-  public void setContentType(String contentType) {
-    this.contentType = contentType;
-  }
-
   public String getItemType() {
     return itemType;
   }
@@ -39,28 +26,12 @@ public class ConnectorItemRepresentation extends ConnectorEntityRepresentation {
     this.itemType = itemType;
   }
 
-  public URI getPreviewUri() {
-    return previewUri;
-  }
-
-  public void setPreviewUri(URI previewUri) {
-    this.previewUri = previewUri;
-  }
-
   public boolean isDownloadable() {
     return downloadable;
   }
 
   public void setDownloadable(boolean downloadable) {
     this.downloadable = downloadable;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
   }
 
   public String getOpenInTabUrl() {
@@ -85,5 +56,13 @@ public class ConnectorItemRepresentation extends ConnectorEntityRepresentation {
 
   public void setStreamUrl(String streamUrl) {
     this.streamUrl = streamUrl;
+  }
+
+  public String getTargetContentType() {
+    return targetContentType;
+  }
+
+  public void setTargetContentType(String targetContentType) {
+    this.targetContentType = targetContentType;
   }
 }

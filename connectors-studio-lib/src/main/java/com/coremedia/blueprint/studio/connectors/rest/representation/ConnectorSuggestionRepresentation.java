@@ -8,7 +8,8 @@ public class ConnectorSuggestionRepresentation {
   public ConnectorSuggestionRepresentation(String value, long count) {
     if (value == null) {
       throw new IllegalArgumentException("parameter is null: value");
-    } else {
+    }
+    else {
       this.value = value;
       this.count = count;
     }

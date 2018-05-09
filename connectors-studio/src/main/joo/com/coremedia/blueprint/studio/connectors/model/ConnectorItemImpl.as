@@ -23,10 +23,6 @@ public class ConnectorItemImpl extends ConnectorEntityImpl implements ConnectorI
     return get(ConnectorPropertyNames.OPEN_IN_TAB_URL);
   }
 
-  public function getStatus():String {
-    return get(ConnectorPropertyNames.STATUS);
-  }
-
   public function getSize():Number {
     return get(ConnectorPropertyNames.SIZE);
   }
@@ -39,6 +35,10 @@ public class ConnectorItemImpl extends ConnectorEntityImpl implements ConnectorI
     return get(ConnectorPropertyNames.DOWNLOADABLE);
   }
 
+  public function getTargetContentType():String {
+    return get(ConnectorPropertyNames.TARGET_CONTENT_TYPE);
+  }
+
   public function download():void {
     var url:String = getDownloadUrl();
     window.open(url, "_blank");
@@ -49,7 +49,7 @@ public class ConnectorItemImpl extends ConnectorEntityImpl implements ConnectorI
     window.open(url, "_blank");
   }
 
-  public function preview(callback:Function):void {
+  override public function preview(callback:Function):void {
     var method:RemoteServiceMethod = new RemoteServiceMethod(getPreviewUri(), 'GET');
     method.request(
             {},
@@ -91,10 +91,6 @@ public class ConnectorItemImpl extends ConnectorEntityImpl implements ConnectorI
 
   public function getDownloadUrl():String {
     return get(ConnectorPropertyNames.DOWNLOAD_URL);
-  }
-
-  private function getPreviewUri():String {
-    return get(ConnectorPropertyNames.PREVIEW_URI);
   }
 }
 }

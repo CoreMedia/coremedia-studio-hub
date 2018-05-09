@@ -24,9 +24,14 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
   //assume that all file based connectors have set the property 'folder' in the connection settings
   private static final String FOLDER_PROPERTY = "folder";
 
-  private FileSystemEntityCache<T> fileCache;
   protected boolean ensureSeparatorSuffix = false;
   protected ConnectorContext context;
+  private FileSystemService fileSystemService;
+
+  @Required
+  public void setFileCache(FileSystemService connectorFileSystemService) {
+    this.fileSystemService = connectorFileSystemService;
+  }
 
   /**
    * Returns the list of remote system objects for the given category, files and folders.
@@ -72,13 +77,13 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
   }
 
   @Override
-  public void shutdown() throws ConnectorException {
-    fileCache.invalidate();
+  public void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {
+    fileSystemService.invalidate();
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorCategory category) {
-    fileCache.invalidate();
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    fileSystemService.invalidate();
     return true;
   }
 
@@ -88,8 +93,8 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    * @param categoryId the category id that contains the remote folder
    * @return the list of remote system folder entities, depending on the implementing API
    */
-  protected List<T> getSubfolderEntities(ConnectorId categoryId) {
-    List<T> entries = listCachedEntities(categoryId).getFolderItemsData();
+  protected List<T> getSubfolderEntities(ConnectorContext context, ConnectorId categoryId) {
+    List<T> entries = listCachedEntities(context, categoryId).getFolderItemsData();
     return entries.stream().filter(this::isFolder).collect(Collectors.toList());
   }
 
@@ -98,8 +103,8 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    *
    * @param categoryId the category id that contains the remove folder name
    */
-  protected List<T> getFileEntities(ConnectorId categoryId) {
-    List<T> entries = listCachedEntities(categoryId).getFolderItemsData();
+  protected List<T> getFileEntities(ConnectorContext context, ConnectorId categoryId) {
+    List<T> entries = listCachedEntities(context, categoryId).getFolderItemsData();
     return entries.stream().filter(this::isFile).collect(Collectors.toList());
   }
 
@@ -108,35 +113,28 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    * Ensure that the result is cached or an already cached result is used.
    * @param categoryId the category/folder to retrieve the children for.
    */
-  protected CacheItem<T> listCachedEntities(ConnectorId categoryId) {
-    if (!fileCache.contains(categoryId)) {
-      List<T> items = list(categoryId);
-      T folderData = getFile(categoryId);
-      CacheItem<T> cacheItem = new CacheItem<>(folderData, items);
-      fileCache.cache(categoryId, cacheItem);
-    }
-
-    return fileCache.get(categoryId);
+  protected FileSystemItem<T> listCachedEntities(ConnectorContext context, ConnectorId categoryId) {
+    return fileSystemService.listItems(this, context, categoryId);
   }
 
   /**
    * Returns the cached item for the given id.
    * The id may be a category or item id.
    */
-  protected T getCachedFileOrFolderEntity(ConnectorId id) {
+  protected T getCachedFileOrFolderEntity(ConnectorContext context, ConnectorId id) {
     if (id.isItemId()) {
       ConnectorId categoryId = getFolderId(id);
-
-      T cachedItem = getCachedItem(categoryId, id);
-      if (cachedItem == null) {
-        //entry was not found, so assume we have to invalidate
-        fileCache.invalidate(categoryId);
-        cachedItem = getCachedItem(categoryId, id);
+      List<T> entries = listCachedEntities(context, categoryId).getFolderItemsData();
+      for (T entry : entries) {
+        ConnectorId entryId = ConnectorId.createItemId(context.getConnectionId(), getPath(entry));
+        if (entryId.equals(id)) {
+          return entry;
+        }
       }
-      return cachedItem;
+      return null;
     }
 
-    return listCachedEntities(id).getFolderData();
+    return listCachedEntities(context, id).getFolderData();
   }
 
   /**
@@ -145,8 +143,8 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    *
    * @param categoryId the categoryId to retrieve the parent for
    */
-  protected ConnectorCategory getParentCategory(ConnectorId categoryId) {
-    if(isRootCategoryId(categoryId)) {
+  protected ConnectorCategory getParentCategory(@Nonnull ConnectorContext context, ConnectorId categoryId) {
+    if(isRootCategoryId(context, categoryId)) {
       return null;
     }
 
@@ -165,7 +163,7 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
     }
 
     ConnectorId parentId = ConnectorId.createCategoryId(context.getConnectionId(), parentPath);
-    return getCategory(parentId);
+    return getCategory(context, parentId);
   }
 
   /**
@@ -175,9 +173,9 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    * @param name       the default name of the file which might be renamed
    * @return a unique filename for the category folder
    */
-  protected String createUniqueFilename(ConnectorId categoryId, String name) {
+  protected String createUniqueFilename(ConnectorContext context, ConnectorId categoryId, String name) {
     int index = 0;
-    List<T> files = listCachedEntities(categoryId).getFolderItemsData();
+    List<T> files = listCachedEntities(context, categoryId).getFolderItemsData();
     List<String> names = files.stream().map(this::getName).collect(Collectors.toList());
 
     while (names.contains(name)) {
@@ -223,8 +221,8 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
 
   //--------------------- Helper ---------------------------------------------------------------------------------------
 
-  private boolean isRootCategoryId(ConnectorId categoryId) {
-    ConnectorId rootCategoryId = getRootCategory().getConnectorId();
+  private boolean isRootCategoryId(@Nonnull ConnectorContext context, ConnectorId categoryId) {
+    ConnectorId rootCategoryId = getRootCategory(context).getConnectorId();
     if (rootCategoryId.getId().equals(categoryId.getId())) {
       return true;
     }
@@ -250,17 +248,6 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
     return false;
   }
 
-  private T getCachedItem(ConnectorId categoryId, ConnectorId itemId) {
-    List<T> entries = listCachedEntities(categoryId).getFolderItemsData();
-    for (T entry : entries) {
-      ConnectorId entryId = ConnectorId.createItemId(context.getConnectionId(), getPath(entry));
-      if (entryId.equals(itemId)) {
-        return entry;
-      }
-    }
-    return null;
-  }
-
   private boolean isFolder(T t) {
     return !isFile(t);
   }
@@ -276,8 +263,4 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
     return path.replaceAll("\\\\", "/");
   }
 
-  @Required
-  public void setFileCache(FileSystemEntityCache<T> fileCache) {
-    this.fileCache = fileCache;
-  }
 }

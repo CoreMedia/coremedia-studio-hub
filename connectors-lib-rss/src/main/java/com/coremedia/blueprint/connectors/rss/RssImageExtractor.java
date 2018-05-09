@@ -16,6 +16,7 @@ class RssImageExtractor {
 
   /**
    * Evaluates the HTML and the metadata for the RSS entry to find images
+   *
    * @param entry the RSS entry to evaluate
    * @return the list of image URLs
    */
@@ -24,15 +25,15 @@ class RssImageExtractor {
 
     for (Object module : entry.getModules()) {
       if (module instanceof MediaEntryModule) {
-        MediaEntryModule media = (MediaEntryModule)module;
+        MediaEntryModule media = (MediaEntryModule) module;
         for (Thumbnail thumb : media.getMetadata().getThumbnail()) {
           String url = thumb.getUrl().toString();
           duplicateCheck(result, url);
         }
-        for (MediaGroup group: media.getMediaGroups()) {
+        for (MediaGroup group : media.getMediaGroups()) {
           MediaContent[] contents = group.getContents();
           for (MediaContent content : contents) {
-            if(content.getType().startsWith("image") && content.getReference() != null) {
+            if (content.getType().startsWith("image") && content.getReference() != null) {
               String url = content.getReference().toString();
               duplicateCheck(result, url);
             }
@@ -44,11 +45,11 @@ class RssImageExtractor {
   }
 
   private static void duplicateCheck(List<String> result, String url) {
-    if(url.contains("?")) {
+    if (url.contains("?")) {
       url = url.substring(0, url.indexOf("?"));
     }
 
-    if(!result.contains(url)) {
+    if (!result.contains(url)) {
       result.add(url);
     }
   }

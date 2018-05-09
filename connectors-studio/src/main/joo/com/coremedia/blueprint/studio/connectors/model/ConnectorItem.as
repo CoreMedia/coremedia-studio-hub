@@ -11,8 +11,6 @@ public interface ConnectorItem extends ConnectorEntity {
 
   function getMetadata():Object;
 
-  function getStatus():String;
-
   function getSize():Number;
 
   function isDownloadable():Boolean;
@@ -21,10 +19,6 @@ public interface ConnectorItem extends ConnectorEntity {
 
   function openInTab():void;
 
-  /**
-   * Creates the preview HTML and metadata for this item
-   * @param callback with preview HTML and metadata object
-   */
-  function preview(callback:Function):void;
+  function getTargetContentType():String;
 }
 }

@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.studio.connectors.rest.representation;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
+import com.coremedia.blueprint.connectors.api.ConnectorColumn;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 
@@ -16,6 +17,7 @@ public class ConnectorCategoryRepresentation extends ConnectorEntityRepresentati
   private List<ConnectorCategory> subCategories;
   private List<ConnectorItem> items;
   private List<ConnectorEntity> children;
+  private List<ConnectorColumn> columns;
   private Map<String, ConnectorChildRepresentation> childrenByName;
   private boolean writeable;
   private String type;
@@ -82,5 +84,13 @@ public class ConnectorCategoryRepresentation extends ConnectorEntityRepresentati
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public List<ConnectorColumn> getColumns() {
+    return columns;
+  }
+
+  public void setColumns(List<ConnectorColumn> columns) {
+    this.columns = columns;
   }
 }

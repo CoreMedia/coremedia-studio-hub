@@ -22,12 +22,12 @@
         <library2:ConnectorRepositoryList region="center"
                                           flex="1"
                                           itemId="connectorRepositoryList"/>
-        <preview:ItemPreviewPanel region="south"
-                                  flex="1"
-                                  selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+        <preview:ConnectorPreviewPanel region="south"
+                                       flex="1"
+                                       selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
       </items>
       <layout>
-        <editor:ExtendedBorderLayout />
+        <editor:ExtendedBorderLayout/>
       </layout>
     </Container>
   </library2:items>

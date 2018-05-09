@@ -39,7 +39,9 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
     this.linkListWrapper = linkListWrapper;
     this.boundView = boundView;
 
-    llOwner = linkListWrapper.bindTo.getValue();
+    linkListWrapper.bindTo.loadValue(function(value:Content):void {
+      llOwner = value;
+    });
 
     var loadMaskCfg:LoadMask = LoadMask({
       target: dropArea,
@@ -69,7 +71,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
         continue;
       }
       var itemType:String = item.getItemType();
-      var targetContentType:String = item.getConnector().getContentMappings().getMapping(itemType);
+      var targetContentType:String = item.getTargetContentType();
       if (!targetContentType) {
         return false;
       }
@@ -123,7 +125,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
   }
 
   private function handleDrop(items:Array):void {
-    setBusy(true);
+//    setBusy(true);
     var itemsToCreate:Array = [];
     for each(var item:ConnectorItem in items) {
       if (!item) {
@@ -141,24 +143,24 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
 
       if(count > 0) {
         for each(var result:ConnectorContentCreationResult in createdContents) {
-          ConnectorContentService.processContent(result.content, result.connectorItem, function ():void {
+          ConnectorContentService.processContent(result.content, result.connectorEntity, function ():void {
             count--;
             if(count === 0) {
-              findAndLinkContents(itemsToCreate);
+              findAndLinkContents(folder, itemsToCreate);
             }
           }, true);
         }
       }
       else {
-        findAndLinkContents(itemsToCreate);
+        findAndLinkContents(folder, itemsToCreate);
       }
     }, folder);
   }
 
-  private function findAndLinkContents(itemsToCreate:Array):void {
+  private function findAndLinkContents(folder:String, itemsToCreate:Array):void {
     var contents:Array = [];
     for each(var item:ConnectorItem in itemsToCreate) {
-      ConnectorContentService.findContent(item, function(content:Content):void {
+      ConnectorContentService.findContent(item, folder, function(content:Content):void {
         if(content) {
           content.load(function():void {
             contents.push(content);

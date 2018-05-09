@@ -45,7 +45,6 @@ public interface ConnectorItem extends ConnectorEntity {
     return "/api/connector/item/" + id.toUri() + "/data?mode=download";
   }
 
-
   /**
    * The description of the item.
    * The returned String may contain HTML that can be used to render the preview.
@@ -60,13 +59,6 @@ public interface ConnectorItem extends ConnectorEntity {
    */
   @Nullable
   InputStream stream();
-
-  /**
-   * Optional additional metadata that will be used for the metadata-preview-panel in the library.
-   * @return the metadata of the item or null if no additional metadata is available.
-   */
-  @Nullable
-  ConnectorMetaData getMetaData();
 
   /**
    * Returns true if the item is downloadable to the users disc.
@@ -91,6 +83,17 @@ public interface ConnectorItem extends ConnectorEntity {
       }
     }
     return DEFAULT_TYPE;
+  }
+
+  @Nonnull
+  default String getTargetContentType() {
+    ConnectorContext context = getContext();
+    ConnectorContentMappings contentMappings = context.getContentMappings();
+    if(contentMappings != null) {
+      return contentMappings.get(getItemType());
+    }
+    throw new UnsupportedOperationException("No content mappings found for " + this + ". " +
+            "Either define a content mapping for '" + getItemType()+  "' or implement 'getTargetContentType()'");
   }
 
   /**
@@ -127,12 +130,12 @@ public interface ConnectorItem extends ConnectorEntity {
   }
 
   /**
-   * Optional status field for connector items.
-   * The value may be used to fill the additional 'status' column in the library
-   * @return null or a status string
+   * Default implementation for the mime type of a connector item.
+   * Usually the mime type is detected automatically, using the item name.
+   * This some system this information may not be available so the mime type has to be determined programmatically.
+   * @return the mime type of the item data or null if the mime type should be detected automatically.
    */
-  @Nullable
-  default String getStatus() {
+  default String getMimeType() {
     return null;
   }
 }

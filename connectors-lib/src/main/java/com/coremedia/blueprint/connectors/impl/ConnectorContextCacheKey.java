@@ -112,10 +112,7 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
         context.setPreviewTemplates(new ConnectorPreviewTemplatesImpl(struct.getLink(ConnectorContextImpl.PREVIEW_TEMPLATES)));
       }
 
-      if (struct.get(ConnectorContextImpl.CONTENT_MAPPING) == null) {
-        LOGGER.error("Connector type " + connectorContext.getType() + " does not define a content mapping, check the 'Connector Types.xml'.");
-      }
-      else {
+      if (struct.get(ConnectorContextImpl.CONTENT_MAPPING) != null) {
         context.setContentMapping(new ConnectorContentMappingsImpl(struct.getLink(ConnectorContextImpl.CONTENT_MAPPING)));
       }
 

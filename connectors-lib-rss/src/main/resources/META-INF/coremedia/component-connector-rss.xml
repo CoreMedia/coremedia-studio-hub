@@ -10,13 +10,15 @@
 
   <bean id="connector:rss" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
     <property name="connectorService" ref="connectorRssService"/>
-    <property name="connectorContentService" ref="connectorContentService" />
+    <property name="connectorContentService" ref="connectorContentService"/>
   </bean>
 
   <!-- Content Creation-->
-  <bean id="rssContentItemWriteInterceptor" class="com.coremedia.blueprint.connectors.rss.RssContentItemWriteInterceptor" parent="connectorItemWriteInterceptor">
-    <property name="type" value="CMArticle" />
-    <property name="priority" value="0" />
+  <bean id="rssContentItemWriteInterceptor"
+        class="com.coremedia.blueprint.connectors.rss.RssContentItemWriteInterceptor"
+        parent="connectorItemWriteInterceptor">
+    <property name="type" value="CMArticle"/>
+    <property name="priority" value="0"/>
   </bean>
 
 </beans>

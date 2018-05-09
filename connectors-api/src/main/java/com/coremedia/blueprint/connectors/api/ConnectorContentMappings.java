@@ -1,5 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
+import org.springframework.lang.NonNull;
+
 import javax.annotation.Nonnull;
 import java.util.Map;
 
@@ -21,4 +23,11 @@ public interface ConnectorContentMappings {
    */
   @Nonnull
   String get(String type);
+
+  /**
+   * Returns the value that is defined as default target content type
+   * for any connector item's type that is not in the mapping list.
+   */
+  @NonNull
+  String getDefaultMapping();
 }

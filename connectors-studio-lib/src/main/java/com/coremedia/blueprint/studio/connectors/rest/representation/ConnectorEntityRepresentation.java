@@ -1,15 +1,17 @@
 package com.coremedia.blueprint.studio.connectors.rest.representation;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
+import com.coremedia.blueprint.connectors.api.ConnectorColumnValue;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 public class ConnectorEntityRepresentation {
-
+  private URI previewUri;
   private URI deleteUri;
 
   private ConnectorModel connector;
@@ -21,6 +23,7 @@ public class ConnectorEntityRepresentation {
   private ConnectorCategory parent;
   private String managementUrl;
   private boolean deleteable;
+  private List<ConnectorColumnValue> columnValues;
 
   @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
   public Date getLastModified() {
@@ -101,5 +104,21 @@ public class ConnectorEntityRepresentation {
 
   public void setDeleteable(boolean deleteable) {
     this.deleteable = deleteable;
+  }
+
+  public List<ConnectorColumnValue> getColumnValues() {
+    return columnValues;
+  }
+
+  public void setColumnValues(List<ConnectorColumnValue> columnValues) {
+    this.columnValues = columnValues;
+  }
+
+  public URI getPreviewUri() {
+    return previewUri;
+  }
+
+  public void setPreviewUri(URI previewUri) {
+    this.previewUri = previewUri;
   }
 }

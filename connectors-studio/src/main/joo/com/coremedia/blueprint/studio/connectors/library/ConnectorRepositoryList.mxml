@@ -10,6 +10,7 @@
         selectedItemsValueExpression="{getSelectedItemsValueExpression()}"
         emptyText="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'CollectionView_emptyFolder_text')}"
         header="{false}"
+        border="false"
         id_="{ID}"
         ddGroup="ConnectorDD">
   <fx:Script><![CDATA[
@@ -36,7 +37,8 @@
   </fx:Declarations>
 
   <library:plugins exml:mode="prepend">
-    <ui:BindListPlugin bindTo="{getConnectorItemsValueExpression()}" lazy="false">
+    <ui:BindListPlugin bindTo="{getConnectorItemsValueExpression()}"
+                       lazy="false">
       <ui:fields>
         <ui:DataField name="type"
                       mapping=""
@@ -52,7 +54,7 @@
         <ui:DataField name="size"/>
         <ui:DataField name="status"/>
         <ui:DataField name="lastModified"
-                      convert="{ConnectorHelper.formatDate}"/>
+                      convert="{formatDate}"/>
       </ui:fields>
     </ui:BindListPlugin>
     <ui:ContextMenuPlugin>
@@ -63,42 +65,30 @@
     </ui:ContextMenuPlugin>
   </library:plugins>
   <library:columns>
-    <editor:TypeIconColumn
-            showTypeName="true"
-            sortable="true"
-            u:sortField="type"
-            width="125"/>
+    <editor:TypeIconColumn showTypeName="true"
+                           sortable="true"
+                           u:sortField="type"
+                           width="125"/>
     <GridColumn stateId="name"
                 width="300"
                 header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'name_header')}"
                 sortable="true"
                 resizable="true"
                 u:defaultSortColumn="true"
-                renderer="{renderTitle}"
                 dataIndex="name"
                 flex="1"/>
-    <GridColumn
-            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header')}"
-            stateId="size"
-            renderer="{ConnectorHelper.fileSizeRenderer}"
-            dataIndex="size"
-            sortable="true"
-            hideable="true"
-            width="80"/>
-    <library:ItemStatusColumn
-            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'status_header')}"
-            stateId="status"
-            dataIndex="status"
-            hidden="true"
-            sortable="true"
-            hideable="true"
-            width="50"/>
-    <GridColumn
-            header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header')}"
-            stateId="lastModified"
-            dataIndex="lastModified"
-            sortable="true"
-            hideable="true"
-            width="160"/>
+    <GridColumn header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header')}"
+                stateId="size"
+                renderer="{ConnectorHelper.fileSizeRenderer}"
+                dataIndex="size"
+                sortable="true"
+                hideable="true"
+                width="80"/>
+    <GridColumn header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header')}"
+                stateId="lastModified"
+                dataIndex="lastModified"
+                sortable="true"
+                hideable="true"
+                width="160"/>
   </library:columns>
 </library:ConnectorRepositoryListBase>

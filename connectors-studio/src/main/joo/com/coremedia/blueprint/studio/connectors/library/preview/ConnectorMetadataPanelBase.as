@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.studio.connectors.library.preview {
 import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.cms.editor.sdk.premular.CollapsiblePanel;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.mixins.OverflowBehaviour;
@@ -7,7 +8,7 @@ import com.coremedia.ui.mixins.OverflowBehaviour;
 import ext.StringUtil;
 import ext.form.field.DisplayField;
 
-public class ItemMetadataPanelBase extends CollapsiblePanel {
+public class ConnectorMetadataPanelBase extends CollapsiblePanel {
 
   [Bindable]
   public var selectedItemValueExpression:ValueExpression;
@@ -17,7 +18,7 @@ public class ItemMetadataPanelBase extends CollapsiblePanel {
 
   private var fields:Array = [];
 
-  public function ItemMetadataPanelBase(config:ItemMetadataPanel = null) {
+  public function ConnectorMetadataPanelBase(config:ConnectorMetadataPanel = null) {
     super(config);
     config.metadataChangedExpression.addChangeListener(selectionChanged);
   }
@@ -46,7 +47,7 @@ public class ItemMetadataPanelBase extends CollapsiblePanel {
         }
 
         if (value is Date) {
-          value = ConnectorHelper.formatDate(value);
+          value = ConnectorHelper.formatDate(selectedItemValueExpression.getValue(), value);
         }
         else if(value is String) {
           var valueString:String = value as String;
@@ -70,6 +71,10 @@ public class ItemMetadataPanelBase extends CollapsiblePanel {
         addMetadata(label, value);
       }
     }
+  }
+
+  protected function formatDate(date:Object):String {
+    return ConnectorHelper.formatDate(selectedItemValueExpression.getValue(), date);
   }
 
   private function addMetadata(label:String, value:Object):void {

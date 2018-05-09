@@ -5,7 +5,7 @@
 
   <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
 
-  <bean id="fileSystemConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemEntityCache" scope="singleton"/>
+  <bean id="fileSystemConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemService" scope="singleton"/>
 
   <bean id="connectorFileSystemService" class="com.coremedia.blueprint.connectors.filesystem.FileSystemConnectorServiceImpl" scope="prototype">
     <property name="fileCache" ref="fileSystemConnectorCache" />
@@ -13,7 +13,7 @@
 
   <bean id="connector:filesystem" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
     <property name="connectorService" ref="connectorFileSystemService"/>
-    <property name="connectorContentService" ref="connectorContentService" />
+    <property name="connectorContentService" ref="connectorContentService"/>
   </bean>
 
 

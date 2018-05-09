@@ -251,7 +251,7 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
 
   private function computeStoreText():String {
     var connectorName:String = getConnector().getName();
-    if(!connectorName) {
+    if (!connectorName) {
       connectorName = ConnectorHelper.getTypeLabel(getConnector());
     }
     return connectorName;
@@ -285,6 +285,14 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
 
     //must not have been loaded yet since the type is an immediate property
     var thisConnector:Connector = getConnectorExpression().getValue();
+    if(!thisConnector) {
+      return null;
+    }
+
+    if (!connectorObject.getConnector()) {
+      return null;
+    }
+
     if (thisConnector.getConnectorType() !== connectorObject.getConnector().getConnectorType()) {
       return null;
     }

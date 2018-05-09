@@ -9,8 +9,6 @@ public interface Connector extends ConnectorObject {
 
   function getItemTypes():Array;
 
-  function getContentMappings():ContentMappings;
-
   function getConnection(connectionId:String):Connection;
 }
 }

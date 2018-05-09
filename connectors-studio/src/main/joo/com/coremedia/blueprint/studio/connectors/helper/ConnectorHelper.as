@@ -1,24 +1,45 @@
 package com.coremedia.blueprint.studio.connectors.helper {
+import com.coremedia.blueprint.studio.connectors.model.Connection;
 import com.coremedia.blueprint.studio.connectors.model.Connector;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorContext;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntityImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorPropertyNames;
+import com.coremedia.cms.editor.sdk.columns.grid.TypeIconColumn;
 import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.sites.SitesService;
+import com.coremedia.ui.bem.IconWithTextBEMEntities;
 import com.coremedia.ui.data.Bean;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.beanFactory;
+import com.coremedia.ui.store.BeanRecord;
+import com.coremedia.ui.util.EventUtil;
 
 import ext.DateUtil;
+import ext.Ext;
 import ext.data.Model;
+import ext.grid.GridPanel;
+import ext.grid.column.Column;
+
+import joo.localeSupport;
 
 import mx.resources.ResourceManager;
 
 public class ConnectorHelper {
+  public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
+  private static var defaultColumns:Bean = beanFactory.createLocalBean();
+
+
+  public static function setDefaultColumns(connectorType:String, columns:Array):void {
+    defaultColumns.set(connectorType, columns);
+  }
 
   public static function getChildren(item:ConnectorObject):Array {
     if (item is ConnectorCategory) {
@@ -35,11 +56,12 @@ public class ConnectorHelper {
       var ve:ValueExpression = ValueExpressionFactory.createFromFunction(function ():Connector {
         var siteService:SitesService = editorContext.getSitesService();
         var preferredSite:Site = siteService.getPreferredSite();
+        var locale:String = localeSupport.getLocale();
         if (preferredSite) {
-          return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + preferredSite.getId()) as Connector;
+          return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/" + preferredSite.getId()) as Connector;
         }
 
-        return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/all") as Connector;
+        return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/all") as Connector;
       });
       connectorExpressions.set(connectorType, ve);
     }
@@ -51,7 +73,7 @@ public class ConnectorHelper {
     if (connectorObject is Connector) {
       var connector:Connector = connectorObject as Connector;
       var connectorLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'connector_type_' + connector.getConnectorType() + "_name");
-      if(!connectorLabel) {
+      if (!connectorLabel) {
         connectorLabel = connector.getConnectorType();
       }
       return connectorLabel;
@@ -71,8 +93,8 @@ public class ConnectorHelper {
       var item:ConnectorItem = connectorObject as ConnectorItem;
       if (item.getItemType()) {
         var itemKey:String = item.getItemType();
-        if(itemKey.indexOf('/') !== -1) {
-          itemKey = itemKey.substr(itemKey.indexOf('/')+1, itemKey.length);
+        if (itemKey.indexOf('/') !== -1) {
+          itemKey = itemKey.substr(itemKey.indexOf('/') + 1, itemKey.length);
         }
         var itemLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'item_type_' + itemKey + '_name');
         if (itemLabel) {
@@ -94,11 +116,11 @@ public class ConnectorHelper {
         return undefined;
       }
 
-      if(connectorObject is Connector) {
+      if (connectorObject is Connector) {
         var connector:Connector = connectorObject as Connector;
         var connectorType:String = connector.getConnectorType();
         icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "connector_type_" + connectorType + "_icon");
-        if(!icon) {
+        if (!icon) {
           icon = ResourceManager.getInstance().getString('com.coremedia.icons.CoreIcons', 'folder_open');
         }
 
@@ -107,8 +129,8 @@ public class ConnectorHelper {
 
       if (connectorObject is ConnectorItem) {
         var itemKey:String = (connectorObject as ConnectorItem).getItemType();
-        if(itemKey.indexOf('/') !== -1) {
-          itemKey = itemKey.substr(itemKey.indexOf('/')+1, itemKey.length);
+        if (itemKey.indexOf('/') !== -1) {
+          itemKey = itemKey.substr(itemKey.indexOf('/') + 1, itemKey.length);
         }
 
         icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + itemKey + "_icon");
@@ -132,22 +154,37 @@ public class ConnectorHelper {
         return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_icon');
       }
 
-      if(connectorObject is ConnectorCategory) {
+      if (connectorObject is ConnectorCategory) {
         var category:ConnectorCategory = connectorObject as ConnectorCategory;
-        var categoryType:String =  category.getType();
-        return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + categoryType  + '_icon');
+        var categoryType:String = category.getType();
+        return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + categoryType + '_icon');
       }
     }
   }
 
   public static function camelizeWithWhitespace(str:String):String {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter:*, index:*):String {
       return letter.toUpperCase();
     }).replace(/\s+/g, ' ');
   }
 
-  public static function formatDate(date:*):String {
-    if (date) {
+  public static function formatDate(entity:*, date:*):String {
+    var context:ConnectorContext = null;
+    if (entity is ConnectorEntity) {
+      context = entity.getContext();
+    }
+    else if (entity is Connector) {
+      var connectionData:Object = (entity as ConnectorImpl).get(ConnectorPropertyNames.CONNECTIONS)[0];
+      var connection:Connection = new Connection(connectionData);
+      context = connection.getContext();
+    }
+
+    if (date && context) {
+      var format:String = context.getDateFormat();
+      if (format === "short") {
+        return DateUtil.format(date, ResourceManager.getInstance().getString('com.coremedia.cms.editor.Editor', 'shortDateFormat'));
+      }
+
       return DateUtil.format(date, ResourceManager.getInstance().getString('com.coremedia.cms.editor.Editor', 'dateFormat'));
     } else {
       return "";
@@ -157,16 +194,218 @@ public class ConnectorHelper {
   public static function formatFileSize(size:Number):String {
     if (size) {
       var i:int = Math.floor(Math.log(size) / Math.log(1024));
-      return Number(( size / Math.pow(1024, i) ).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+      return Number((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     }
     return "";
   }
 
   public static function fileSizeRenderer(value:*, _:*, record:Model):String {
-    if(value) {
+    if (value) {
+      if (value && value is String) {
+        return value;
+      }
       return formatFileSize(value);
     }
     return "";
+  }
+
+  //--------------------- Column stuff ---------------------------------------------------------------------------------
+  public static function createColumns(connectorObject:ConnectorObject, markAsRead:Boolean = false):Array {
+    var connector:ConnectorImpl = connectorObject.getConnector() as ConnectorImpl;
+    var category:ConnectorCategory = connectorObject as ConnectorCategory;
+    var cols:Array = [];
+
+    var typeCol:Column = Ext.create(TypeIconColumn, {
+      width: 125,
+      sortField: 'type',
+      showTypeName: true,
+      resizable: true
+    });
+    cols.push(typeCol);
+
+    var title:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'name_header');
+    if (markAsRead) {
+      var markableColumn:Column = Ext.create(Column, {
+        width: 300,
+        hidden: isColumnHidden(connector.getConnectorType(), 'name'),
+        dataIndex: 'name',
+        header: title,
+        resizable: true,
+        defaultSortColumn: true,
+        renderer: renderTitle,
+        flex: 1
+      });
+      cols.push(markableColumn);
+    }
+    else {
+      var nameCol:Column = Ext.create(Column, {
+        width: 300,
+        hidden: isColumnHidden(connector.getConnectorType(), 'name'),
+        dataIndex: 'name',
+        header: title,
+        resizable: true,
+        defaultSortColumn: true,
+        flex: 1
+      });
+      cols.push(nameCol);
+    }
+
+
+    title = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header');
+    var sizeCol:Column = Ext.create(Column, {
+      width: 80,
+      hidden: isColumnHidden(connector.getConnectorType(), 'size'),
+      stateId: 'size',
+      dataIndex: 'size',
+      header: title,
+      resizable: true,
+      sortable: true,
+      hideable: true,
+      renderer: ConnectorHelper.fileSizeRenderer
+    });
+    cols.push(sizeCol);
+
+    //******* Custom columns ***************/
+    if (category) {
+      var columns:Array = category.getColumns();
+      for each(var c:Object in columns) {
+        var customTitle:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', c.title);
+        if (!customTitle) {
+          customTitle = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', c.title + "_header");
+          if (!customTitle) {
+            customTitle = c.title;
+          }
+        }
+
+        var customColumn:Column = Ext.create(Column, {
+          width: c.width, stateId: c.dataIndex, dataIndex: c.dataIndex,
+          header: customTitle, resizable: c.resizable, sortable: c.sortable, hideable: c.hideable,
+          renderer: ConnectorHelper.customColumnRenderer
+        });
+        if (c.index >= 0) {
+          cols.splice(c.index, 0, customColumn);
+        }
+        else {
+          cols.push(customColumn);
+        }
+      }
+    }
+
+    title = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header');
+    var modCol:Column = Ext.create(Column, {
+      width: 160,
+      hidden: isColumnHidden(connector.getConnectorType(), 'lastModified'),
+      stateId: 'lastModified',
+      dataIndex: 'lastModified',
+      header: title,
+      resizable: true,
+      sortable: true,
+      hideable: true
+    });
+    cols.push(modCol);
+
+    return cols;
+  }
+
+
+  /**
+   * Rendered for the title column, remove the bold format of
+   * an entry is this was already selected.
+   * @param value the name of the item
+   * @param metaData the metadata that contains the state of the record
+   * @param record the actual bean record
+   * @return the string to be rendered
+   */
+  public static function renderTitle(value:*, metaData:*, record:BeanRecord):String {
+    if (value === undefined) {
+      return "...";
+    }
+
+    var item:ConnectorEntity = record.getBean() as ConnectorEntity;
+    if (item is ConnectorItem) {
+      if (isUnread(record.data.id)) {
+        return '<b>' + value + '<b/>';
+      }
+    }
+    return value;
+  }
+
+  private static function isColumnHidden(connectorType:String, columnName:String):Boolean {
+    var columns:Array = defaultColumns.get(connectorType);
+    if (!columns || !columns.length === 0) {
+      return false;
+    }
+
+    return columns.indexOf(columnName) === -1;
+  }
+
+  private static function customColumnRenderer(value:*, metaData:Object, record:Model):String {
+    var item:ConnectorEntityImpl = (record as BeanRecord).getBean() as ConnectorEntityImpl;
+    if(!item) {
+      return "";
+    }
+
+    var dataIndex:String = metaData.column.dataIndex;
+    var columnValue:Object = item.getColumnValue(dataIndex);
+    if (columnValue === undefined) {
+      return undefined;
+    }
+
+    if (columnValue === null) {
+      return "";
+    }
+
+    if (columnValue.icon) {
+      var iconText:String = columnValue.iconText || "";
+      var iconTooltip:String = columnValue.iconTooltip || "";
+      var iconCls:String = ResourceManager.getInstance().getString('com.coremedia.icons.CoreIcons', columnValue.value);
+      var html:String = '<div aria-label="' + iconText + '" class="' + IconWithTextBEMEntities.BLOCK + '" data-qtip="' + iconTooltip + '">' +
+              '<span class="' + IconWithTextBEMEntities.ELEMENT_ICON + ' ' + iconCls + '"></span>' +
+              '<span style="width: 0px;position:absolute;overflow:hidden;">' + iconTooltip + '</span>' +
+              '<span class="' + IconWithTextBEMEntities.ELEMENT_TEXT + '">' + iconText + '</span>' +
+              '</div>';
+      return html;
+    }
+
+    if (columnValue) {
+      return columnValue.value;
+    }
+    return "";
+  }
+
+  /**
+   * Returns true if the given id was already selected by the user.
+   * @param id
+   * @return
+   */
+  internal static function isUnread(id:*):Boolean {
+    for (var i:int = 0; i < READ_MARKER.length; i++) {
+      if (READ_MARKER[i] === id) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static function refreshColumns(grid:GridPanel, connectorObject:ConnectorObject, callback:Function):void {
+    ValueExpressionFactory.createFromFunction(function ():Boolean {
+      if (!connectorObject.isLoaded()) {
+        return undefined;
+      }
+      if (!connectorObject.getConnector().isLoaded()) {
+        return undefined;
+      }
+      return true;
+    }).loadValue(function ():void {
+      //mmmh, yes, I know, but this ensures that the folder selection is completed before updating the column model
+      EventUtil.invokeLater(function():void {
+        grid.getHeaderContainer()['_usedIDs'] = {};//ignore warnings
+        var category:ConnectorCategory = connectorObject as ConnectorCategory;
+        var markAsRead:Boolean = category && category.getContext().isMarkAsReadEnabled();
+        grid.reconfigure(grid.getStore(), ConnectorHelper.createColumns(connectorObject, markAsRead));
+        callback(markAsRead);
+      });
+    });
   }
 }
 }

@@ -16,7 +16,7 @@ public class ConnectorRepresentation {
   private String connectorType;
   private List<ConnectorConnectionModel> connections;
   private List<String> itemTypes;
-  private Map<String,String> contentMappings = new HashMap<>();
+  private Map<String, String> contentMappings = new HashMap<>();
 
   public List<String> getItemTypes() {
     return itemTypes;
@@ -73,7 +73,7 @@ public class ConnectorRepresentation {
   }
 
   public void setContentMappings(ConnectorContentMappings mappings) {
-    if(mappings != null) {
+    if (mappings != null) {
       Set<Map.Entry<String, Object>> entries = mappings.getProperties().entrySet();
       for (Map.Entry<String, Object> entry : entries) {
         Object value = entry.getValue();

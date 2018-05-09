@@ -2,7 +2,6 @@ package com.coremedia.blueprint.connectors.dropbox;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.dropbox.core.v2.files.FolderMetadata;
@@ -25,6 +24,14 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
   DropboxConnectorCategory(DropboxConnectorServiceImpl service, ConnectorCategory parent, ConnectorContext context, Metadata metadata, ConnectorId id) {
     super(service, parent, context, metadata, id);
     this.folderMetadata = (FolderMetadata) metadata;
+  }
+
+  @Override
+  public String getType() {
+    if(getConnectorId().isRootId()) {
+      return "dropbox";
+    }
+    return ConnectorCategory.super.getType();
   }
 
   @Nullable

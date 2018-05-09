@@ -5,12 +5,13 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.blueprint.connectors.caching.TempFile;
+import com.coremedia.blueprint.connectors.caching.TempFileCacheService;
 import com.coremedia.blueprint.connectors.metadataresolver.ConnectorMetaDataResolver;
 import com.coremedia.blueprint.connectors.previewconverters.ConnectorPreviewConverter;
 import com.coremedia.blueprint.connectors.previewconverters.PreviewConversionResult;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorItemRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorPreviewRepresentation;
-import com.coremedia.cap.common.TempFileService;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.mimetype.MimeTypeService;
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +52,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   private List<ConnectorMetaDataResolver> connectorMetaDataResolvers;
   private MimeTypeService mimeTypeService;
   private ContentRepository contentRepository;
+  private TempFileCacheService tempFileCacheService;
 
   private enum QueryMode {
     STREAM, DOWNLOAD, OPEN
@@ -60,7 +63,8 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     ConnectorId id = ConnectorId.toId(getDecodedId());
     ConnectorConnection connection = getConnection(id);
     if (connection != null) {
-      return connection.getConnectorService().getItem(id);
+      ConnectorContext context = getContext(id);
+      return connection.getConnectorService().getItem(context, id);
     }
     return null;
   }
@@ -123,7 +127,10 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     try {
       ConnectorItem item = getEntity();
       String filename = getFilename(item);
-      String mimeType = mimeTypeService.detectMimeType(null, filename, MediaType.APPLICATION_OCTET_STREAM);
+      String mimeType = item.getMimeType();
+      if (mimeType == null) {
+        mimeType = mimeTypeService.detectMimeType(null, filename, MediaType.APPLICATION_OCTET_STREAM);
+      }
       //we can't return json as mime type since jersey would try to deserialize it.
       if (mimeType.equals(MediaType.APPLICATION_JSON)) {
         mimeType = MediaType.TEXT_PLAIN;
@@ -139,11 +146,11 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
 
       //do not set for open in tab
       if (setFilename) {
-        response.setHeader("content-disposition", "attachment; filename = " + item.getName());
+        response.setHeader("content-disposition", "attachment; filename = " + filename);
       }
 
+      InputStream is = getStreamInpuStream(item);
       if (streamResponse) {
-        InputStream is = item.stream();
         if (is != null) {
           StreamingOutput stream = output -> {
             try {
@@ -155,7 +162,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
           return Response.ok(stream).build();
         }
       }
-      return Response.ok(item.stream()).type(mimeType).build();
+      return Response.ok(is).type(mimeType).build();
     } catch (IOException e) {
       throw new WebApplicationException(e);
     }
@@ -169,7 +176,8 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     representation.setOpenInTabUrl(entity.getOpenInTabUrl());
     representation.setDownloadUrl(entity.getDownloadUrl());
     representation.setStreamUrl(entity.getStreamUrl());
-    representation.setStatus(entity.getStatus());
+    representation.setColumnValues(entity.getColumnValues());
+    representation.setTargetContentType(entity.getTargetContentType());
     representation.setDeleteUri(new URI("connector/item/" + entity.getConnectorId().toUri() + "/delete"));
     representation.setPreviewUri(new URI("connector/item/" + entity.getConnectorId().toUri() + "/preview"));
     fillRepresentation(representation);
@@ -183,6 +191,17 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   }
 
   //------------------------------------- Helper -----------------------------------------------------------------------
+  private InputStream getStreamInpuStream(ConnectorItem item) throws FileNotFoundException {
+    InputStream is = null;
+    TempFile tempFile = tempFileCacheService.findTempFile(item);
+    if (tempFile != null) {
+      is = tempFile.stream();
+    }
+    else {
+      is = item.stream();
+    }
+    return is;
+  }
 
   private void fillItemRepresentation(ConnectorItem entity, ConnectorItemRepresentation representation) {
     representation.setSize(entity.getSize());
@@ -193,27 +212,27 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   /**
    * Additional preview processing such as preview formatting and additional metadata retrieval
    */
-  private void formatPreview(ConnectorPreviewRepresentation representation, ConnectorItem asset) throws IOException {
-    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.include(asset)).collect(Collectors.toList());
-    List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.include(asset)).collect(Collectors.toList());
+  private void formatPreview(ConnectorPreviewRepresentation representation, ConnectorItem item) throws IOException {
+    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
+    List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
 
     if (!applicableConverters.isEmpty() || !applicableMetaDataResolvers.isEmpty()) {
       //check threshold before creating a temp file
-      ConnectorContext context = getContext(asset.getConnectorId());
+      ConnectorContext context = getContext(item.getConnectorId());
       int previewThresholdMB = context.getPreviewThresholdMB();
       int thresholdBytes = previewThresholdMB * 1024 * 1024;
-      if (previewThresholdMB != -1 && asset.getSize() > 0 && asset.getSize() > thresholdBytes) {
+      if (previewThresholdMB != -1 && item.getSize() > 0 && item.getSize() > thresholdBytes) {
         representation.setHtml(null);
         return;
       }
 
-      InputStream in = asset.stream();
-      if (in != null) {
-        File assetTempFile = createTempFile(asset, in);
+      TempFile tempFile = tempFileCacheService.createTempFile(contentRepository, item);
+      if (tempFile != null && tempFile.getFile() != null) {
+        File itemTempFile = tempFile.getFile();
 
         //convert the preview based on the temp file
         for (ConnectorPreviewConverter converter : applicableConverters) {
-          PreviewConversionResult conversionResult = converter.convert(context, asset, assetTempFile);
+          PreviewConversionResult conversionResult = converter.convert(context, item, itemTempFile);
           if (conversionResult != null && conversionResult.getResult() != null) {
             representation.setHtml(conversionResult.getResult());
             representation.addMetaData(conversionResult::getMetaData);
@@ -223,13 +242,13 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
 
         //read metadata based on the temp file
         for (ConnectorMetaDataResolver metaDataResolver : applicableMetaDataResolvers) {
-          ConnectorMetaData metaData = metaDataResolver.resolveMetaData(asset, assetTempFile);
+          ConnectorMetaData metaData = metaDataResolver.resolveMetaData(item, itemTempFile);
           representation.addMetaData(metaData);
         }
 
         //finally return plain stream
         if (representation.getHtml() == null) {
-          representation.setHtml(FileUtils.readFileToString(assetTempFile, Charset.defaultCharset()));
+          representation.setHtml(FileUtils.readFileToString(itemTempFile, Charset.defaultCharset()));
         }
       }
     }
@@ -249,17 +268,9 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     } catch (IOException e) {
       //may happen when the selection changes during streaming
       is.close();
+    } finally {
+      is.close();
     }
-  }
-
-  private File createTempFile(ConnectorItem asset, InputStream in) throws IOException {
-    TempFileService tempFileService = contentRepository.getConnection().getTempFileService();
-    ConnectorId id = asset.getConnectorId();
-    File assetTempFile = tempFileService.createTempFileFor(id.getConnectionId() + "-" + id.getExternalId(), ".asset");
-
-    FileUtils.copyToFile(in, assetTempFile);
-    in.close();
-    return assetTempFile;
   }
 
   /**
@@ -268,13 +279,22 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   private String getFilename(ConnectorItem item) {
     String name = item.getName();
     if (!name.contains(".")) {
-      name = item.getConnectorId().getExternalId() + "." + item.getItemType();
+      String mimeType = item.getMimeType();
+      String suffix = item.getItemType();
+      if(mimeType != null) {
+        suffix = mimeType.split("/")[1];
+      }
+      name = name + "." + suffix;
     }
 
     return name;
   }
 
   //------------------------------------- Spring -----------------------------------------------------------------------
+  @Required
+  public void setTempFileCacheService(TempFileCacheService tempFileCacheService) {
+    this.tempFileCacheService = tempFileCacheService;
+  }
 
   @Required
   public void setMimeTypeService(MimeTypeService mimeTypeService) {

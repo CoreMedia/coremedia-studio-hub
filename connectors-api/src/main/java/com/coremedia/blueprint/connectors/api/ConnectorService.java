@@ -26,46 +26,46 @@ public interface ConnectorService {
    * Terminates the connector connection, ensures a clean refresh
    * when the context properties of a connection have changed.
    */
-  default void shutdown() throws ConnectorException {}
+  default void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {}
 
   /**
    * Returns the ConnectorItemObject for the given id
    * @param id the ConnectorId which includes the external id
    */
   @Nullable
-  ConnectorItem getItem(@Nonnull ConnectorId id) throws ConnectorException;
+  ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException;
 
   /**
    * Returns the complete category, including the children.
    */
   @Nullable
-  ConnectorCategory getCategory(@Nonnull ConnectorId id) throws ConnectorException;
+  ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException;
 
   /**
    * Returns the root category of the connected system which is used
    * as entry point for the Studio library.
    */
   @Nonnull
-  ConnectorCategory getRootCategory() throws ConnectorException;
+  ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException;
 
   /**
    * Returns the list of items to be invalidated by the client.
    * If not invalidation interval is configured, the method will be ignored.
    * @return the list of items that should be ignored.
    */
-  default InvalidationResult invalidate() {
+  default InvalidationResult invalidate(@Nonnull ConnectorContext context) {
     //no default invalidation
     return null;
   }
 
   @Nonnull
-  ConnectorSearchResult<ConnectorEntity> search(ConnectorCategory category, String query, String searchType, Map<String, String> params);
+  ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params);
 
   /**
    * Called to refresh the service
    * @return true if the operation was successful
    */
-  Boolean refresh(@Nonnull ConnectorCategory category);
+  Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category);
 
   /**
    * Uses the given InputStream and name to create a new connector item in
@@ -76,5 +76,5 @@ public interface ConnectorService {
    * @return the newly created item created from the stream or null if not upload is provided
    */
   @Nullable
-  ConnectorItem upload(ConnectorCategory category, String itemName, InputStream inputStream);
+  ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream);
 }

@@ -3,8 +3,9 @@ public class ConnectorPropertyNames {
 
   public static const NAME:String = 'name';
   public static const SIZE:String = 'size';
-  public static const STATUS:String = 'status';
   public static const LAST_MODIFIED:String = 'lastModified';
+  public static const COLUMNS:String = 'columns';
+  public static const COLUMN_VALUES:String = 'columnValues';
   public static const CONNECTOR_ID:String = 'connectorId';
   public static const CONNECTIONS:String = 'connections';
   public static const SITE_ID:String = 'siteId';
@@ -32,7 +33,6 @@ public class ConnectorPropertyNames {
   public static const STREAM_URL:String = 'streamUrl';
 
 
-
   //URIs
   public static const REFRESH_URI:String = "refreshUri";
   public static const DELETE_URI:String = "deleteUri";
@@ -40,7 +40,7 @@ public class ConnectorPropertyNames {
   public static const UPLOAD_URI:String = "uploadUri";
 
   //Content Mapping Properties
-  public static const CONTENT_MAPPINGS:String = 'contentMappings';
+  public static const TARGET_CONTENT_TYPE:String = 'targetContentType';
   public static const DEFAULT_MAPPING:String = 'default';
 
 }

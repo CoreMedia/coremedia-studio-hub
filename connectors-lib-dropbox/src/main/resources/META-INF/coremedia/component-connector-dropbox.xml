@@ -9,7 +9,7 @@
     <property name="fileCache" ref="dropboxFileCache" />
   </bean>
 
-  <bean id="dropboxFileCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemEntityCache" scope="singleton"/>
+  <bean id="dropboxFileCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemService" scope="singleton"/>
 
   <bean id="connector:dropbox" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
     <property name="connectorService" ref="connectorDropboxService"/>

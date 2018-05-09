@@ -33,13 +33,12 @@
                                      region="center"
                                      searchResultHitsValueExpression="{config.searchResultHitsValueExpression}"
                                      selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
-
-        <preview:ItemPreviewPanel region="south"
-                                  height="350"
-                                  selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+        <preview:ConnectorPreviewPanel region="south"
+                                       height="350"
+                                       selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </items>
       <layout>
-        <editor:ExtendedBorderLayout />
+        <editor:ExtendedBorderLayout/>
       </layout>
     </Container>
   </search2:items>

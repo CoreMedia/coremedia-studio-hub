@@ -54,8 +54,7 @@ public class ContentCreationHelper {
       if (selection && selection.length > 0) {
         var item:ConnectorItem = selection[0] as ConnectorItem;
         if (item) {
-          var mappings:ContentMappings = item.getConnector().getContentMappings();
-          return mappings.getMapping(item.getItemType());
+          return item.getTargetContentType();
         }
       }
       return null;

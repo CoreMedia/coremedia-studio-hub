@@ -3,8 +3,8 @@ package com.coremedia.blueprint.studio.connectors.rest;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorContentService;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
+import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
@@ -32,7 +32,6 @@ public class ConnectorContentServiceResource {
   private static final String ID_PARAM = "id";
   private static final String FOLDER_PARAM = "folder";
   private static final String CONTENT_ID_PARAM = "contentId";
-  private static final String WAIT_PARAM = "wait";
   private static final String SITE_ID_PARAM = "siteId";
 
   private Connectors connector;
@@ -44,15 +43,26 @@ public class ConnectorContentServiceResource {
   @Path("content/{siteId:[^/]+}")
   @Produces(MediaType.APPLICATION_JSON)
   public Content findContent(@PathParam(SITE_ID_PARAM) String siteId,
-                             @FormParam(ID_PARAM) String itemId) {
+                             @FormParam(FOLDER_PARAM) String folder,
+                             @FormParam(ID_PARAM) String entityId) {
     try {
-      ConnectorId connectorId = ConnectorId.toId(itemId);
+      ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
       ConnectorContentService connectorContentService = connection.getConnectorContentService();
+      ConnectorContext context = connection.getContext();
       Site site = sitesService.getSite(siteId);
-      return connectorContentService.findContent(connectorId, site);
+
+      ConnectorEntity entity = null;
+      if(connectorId.isItemId()) {
+        entity = connection.getConnectorService().getItem(context, connectorId);
+      }
+      else {
+        entity = connection.getConnectorService().getCategory(context, connectorId);
+      }
+
+      return connectorContentService.findContent(entity, folder, site);
     } catch (Exception e) {
-      LOGGER.error("Failed to lookup content for connector item " + itemId + ": " + e.getMessage(), e);
+      LOGGER.error("Failed to lookup content for connector item " + entityId + ": " + e.getMessage(), e);
     }
     return null;
   }
@@ -62,15 +72,15 @@ public class ConnectorContentServiceResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Content create(@PathParam(SITE_ID_PARAM) String siteId,
                         @FormParam(FOLDER_PARAM) String folder,
-                        @FormParam(ID_PARAM) String itemId) {
+                        @FormParam(ID_PARAM) String entityId) {
     try {
-      ConnectorId connectorId = ConnectorId.toId(itemId);
+      ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
       ConnectorContentService connectorContentService = connection.getConnectorContentService();
       Site site = sitesService.getSite(siteId);
       return connectorContentService.createContent(connectorId, folder, site);
     } catch (Exception e) {
-      LOGGER.error("Failed to create content for connector item " + itemId + ": " + e.getMessage(), e);
+      LOGGER.error("Failed to create content for connector item " + entityId + ": " + e.getMessage(), e);
     }
     return null;
   }
@@ -78,23 +88,31 @@ public class ConnectorContentServiceResource {
   @POST
   @Path("process/{siteId:[^/]+}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String process(@FormParam(ID_PARAM) String itemId,
+  public String process(@FormParam(ID_PARAM) String entityId,
                         @FormParam(CONTENT_ID_PARAM) String contentId) {
     try {
-      ConnectorId connectorId = ConnectorId.toId(itemId);
+      ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
       ConnectorService connectorService = connection.getConnectorService();
-      ConnectorItem item = connectorService.getItem(connectorId);
-      if (item != null) {
+      ConnectorContext context = connection.getContext();
+      ConnectorEntity entity = null;
+      if(connectorId.isItemId()) {
+        entity = connectorService.getItem(context, connectorId);
+      }
+      else {
+        entity = connectorService.getCategory(context, connectorId);
+      }
+
+      if (entity != null) {
         Content content = contentRepository.getContent(contentId);
         //note that this method is only called when the quick create was uses,
         //therefore we have to set the connector id which has not been set by the dialog
         connection.getConnectorContentService().setConnectorId(content, connectorId);
-        connection.getConnectorContentService().processContent(content, item, false);
+        connection.getConnectorContentService().processContent(content, entity, false);
       }
       return null;
     } catch (Exception e) {
-      LOGGER.error("Failed to post process connector item " + itemId + ": " + e.getMessage(), e);
+      LOGGER.error("Failed to post process connector item " + entityId + ": " + e.getMessage(), e);
       return "Error in connector item processing: " + e.getMessage();
     }
   }

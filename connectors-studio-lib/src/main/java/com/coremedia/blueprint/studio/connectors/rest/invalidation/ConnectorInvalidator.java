@@ -114,7 +114,7 @@ public class ConnectorInvalidator extends SimpleInvalidationSource implements Co
         try {
           long start = System.currentTimeMillis();
           LOGGER.info("Invalidating connector connection '" + connection.getContext().getConnectionId() + "'");
-          InvalidationResult invalidationResult = connectorService.invalidate();
+          InvalidationResult invalidationResult = connectorService.invalidate(connection.getContext());
 
           //build links to the RemoteBeans to invalidationResult
           if (invalidationResult != null) {

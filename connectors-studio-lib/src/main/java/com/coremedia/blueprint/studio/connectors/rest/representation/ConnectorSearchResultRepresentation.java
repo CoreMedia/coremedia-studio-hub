@@ -13,7 +13,7 @@ public class ConnectorSearchResultRepresentation {
 
 
   @JsonCreator
-  public ConnectorSearchResultRepresentation(@JsonProperty("hits") List<ConnectorEntity> hits, @JsonProperty("total")long total) {
+  public ConnectorSearchResultRepresentation(@JsonProperty("hits") List<ConnectorEntity> hits, @JsonProperty("total") long total) {
     this.hits = hits;
     this.total = total;
   }

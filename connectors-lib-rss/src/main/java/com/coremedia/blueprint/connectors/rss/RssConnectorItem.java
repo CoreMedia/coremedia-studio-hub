@@ -2,16 +2,19 @@ package com.coremedia.blueprint.connectors.rss;
 
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
+import com.coremedia.blueprint.connectors.api.ConnectorColumnValue;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.blueprint.connectors.library.DefaultConnectorColumnValue;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +42,11 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
   }
 
   @Override
+  public List<ConnectorColumnValue> getColumnValues() {
+    return Arrays.asList(new DefaultConnectorColumnValue(rssEntry.getAuthor(), "author"));
+  }
+
+  @Override
   public long getSize() {
     return 0;
   }
@@ -46,10 +54,10 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
   @Override
   public Date getLastModified() {
     Date date = rssEntry.getUpdatedDate();
-    if(date == null) {
+    if (date == null) {
       date = rssEntry.getPublishedDate();
     }
-    if(date == null) {
+    if (date == null) {
       date = getFeed().getPublishedDate();
     }
     return date;
@@ -74,7 +82,7 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
   @Override
   public String getPreviewHtml() {
     String value = getDescription();
-    if(value != null) {
+    if (value != null) {
       value = value.replaceAll("\\<.*?>", "");
     }
     else {

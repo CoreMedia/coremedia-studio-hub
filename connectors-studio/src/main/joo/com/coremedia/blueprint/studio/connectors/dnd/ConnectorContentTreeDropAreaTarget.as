@@ -1,4 +1,5 @@
 package com.coremedia.blueprint.studio.connectors.dnd {
+import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentCreationResult;
@@ -72,7 +73,7 @@ public class ConnectorContentTreeDropAreaTarget extends DropTarget {
 
     var items:Array = dragInfo.getContents();
     for each(var item:ConnectorEntity in items) {
-      if (!(item is ConnectorItem)) {
+      if (!(item is ConnectorItem) && !(item is ConnectorCategory)) {
         return false;
       }
     }
@@ -137,7 +138,7 @@ public class ConnectorContentTreeDropAreaTarget extends DropTarget {
 
       for each(var result:ConnectorContentCreationResult in createdContents) {
         //fire write interceptors
-        ConnectorContentService.processContent(result.content, result.connectorItem, function ():void {
+        ConnectorContentService.processContent(result.content, result.connectorEntity, function ():void {
           setBusy(false);
         });
       }

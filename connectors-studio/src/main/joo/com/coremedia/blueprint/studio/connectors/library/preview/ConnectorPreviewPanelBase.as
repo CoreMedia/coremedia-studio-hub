@@ -1,6 +1,9 @@
 package com.coremedia.blueprint.studio.connectors.library.preview {
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
+import com.coremedia.cms.editor.sdk.context.ComponentContextManager;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.skins.LoadMaskSkin;
@@ -9,7 +12,7 @@ import ext.LoadMask;
 import ext.form.field.DisplayField;
 import ext.panel.Panel;
 
-public class ItemPreviewPanelBase extends Panel {
+public class ConnectorPreviewPanelBase extends Panel {
   private var activePreviewExpression:ValueExpression;
   private var loadMask:LoadMask;
   private const videoDelayMillis:Number = 500;
@@ -19,9 +22,10 @@ public class ItemPreviewPanelBase extends Panel {
   public var selectedItemsValueExpression:ValueExpression;
 
   public var selectedItemValueExpression:ValueExpression;
+  public var selectedNodeExpression:ValueExpression;
   public var metadataValueExpression:ValueExpression;
 
-  public function ItemPreviewPanelBase(config:ItemPreviewPanel = null) {
+  public function ConnectorPreviewPanelBase(config:ConnectorPreviewPanel = null) {
     super(config);
   }
 
@@ -38,6 +42,15 @@ public class ItemPreviewPanelBase extends Panel {
     loadMask.hide();
 
     selectedItemsValueExpression.addChangeListener(selectionChanged);
+    getSelectedNodeExpression().addChangeListener(selectionChanged);
+  }
+
+  internal function getSelectedNodeExpression():ValueExpression {
+    if (!selectedNodeExpression) {
+      selectedNodeExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_FOLDER_VARIABLE_NAME);
+    }
+
+    return selectedNodeExpression;
   }
 
   protected function getSelectedItemExpression():ValueExpression {
@@ -48,36 +61,50 @@ public class ItemPreviewPanelBase extends Panel {
   }
 
   private function selectionChanged(ve:ValueExpression):void {
-    var selection:ConnectorObject = ve.getValue()[0];
+    var selection:Object = ve.getValue();
+    if((!selection || selection.length === 0) && getSelectedNodeExpression().getValue()) {
+      selection = getSelectedNodeExpression().getValue();
+    }
+
+    if (selection is Array) {
+      selection = selection[0];
+    }
+
     getSelectedItemExpression().setValue(selection);
     getDisplayField().setValue('<i>' + resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'preview_loading') + '...</i>');
 
-    var previewItemId:String = resolvePreviewPanel(selection);
-    getActivePreviewExpression().setValue(previewItemId);
+    if (selection is ConnectorEntity) {
+      getActivePreviewExpression().setValue(ConnectorPreviewPanel.PREVIEW);
+      var entity:ConnectorEntity = selection as ConnectorEntity;
+      loadMask.setVisible(true);
 
-    var value:ConnectorObject = ve.getValue()[0];
-    if (value is ConnectorItem) {
-      var item:ConnectorItem = value as ConnectorItem;
-      var itemType:String = item.getItemType();
-      if (itemType) {
-        loadMask.setVisible(true);
-
-        var dom:* = queryById('connectorPreviewSwitchingContainer').el.dom;
-        item.preview(function (result:String, metadata:Object):void {
-          loadMask.setVisible(false);
-          if (result) {
+      var dom:* = queryById('connectorPreviewSwitchingContainer').el.dom;
+      entity.preview(function (result:String, metadata:Object):void {
+        loadMask.setVisible(false);
+        if (result || metadata) {
+          if (metadata) {
             metadataValueExpression.setValue(metadata);
-            getDisplayField().setValue(result);
-            refreshLayout();
           }
           else {
-            getActivePreviewExpression().setValue(ItemPreviewPanel.EMPTY_PREVIEW);
+            metadataValueExpression.setValue({});
           }
-        });
-      }
-      else {
-        getActivePreviewExpression().setValue(ItemPreviewPanel.EMPTY_PREVIEW);
-      }
+
+          if (result) {
+            getDisplayField().setValue(result);
+          }
+          else {
+            getDisplayField().setValue(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_preview'));
+          }
+
+          refreshLayout();
+        }
+        else {
+          getActivePreviewExpression().setValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
+        }
+      });
+    }
+    else {
+      getActivePreviewExpression().setValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
     }
   }
 
@@ -98,7 +125,6 @@ public class ItemPreviewPanelBase extends Panel {
       var embed:* = getDisplayField().el.dom['querySelector']('embed');
       if (embed) {
         embed.addEventListener('load', refreshPreviewLayout);
-        return;
       }
     }
   }
@@ -126,21 +152,13 @@ public class ItemPreviewPanelBase extends Panel {
     queryById('connectorMetaDataPanel').updateLayout();
   }
 
-  /**
-   * Returns the itemId of the panel to use for the preview.
-   * @param selection the current selection
-   */
-  private static function resolvePreviewPanel(selection:ConnectorObject):String {
-    if (!selection || !(selection is ConnectorItem)) {
-      return ItemPreviewPanel.EMPTY_PREVIEW;
-    }
-
-    return ItemPreviewPanel.PREVIEW;
+  protected function isVisibleTransformer(entity:ConnectorEntity):Boolean {
+    return entity is ConnectorItem;
   }
 
   protected function getActivePreviewExpression():ValueExpression {
     if (!activePreviewExpression) {
-      activePreviewExpression = ValueExpressionFactory.createFromValue(ItemPreviewPanel.EMPTY_PREVIEW);
+      activePreviewExpression = ValueExpressionFactory.createFromValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
     }
     return activePreviewExpression;
   }
