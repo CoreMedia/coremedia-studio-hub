@@ -1,6 +1,10 @@
 package com.coremedia.blueprint.studio.connectors.model {
 public class ConnectorPropertyNames {
 
+  public static const TYPE_CONNECTOR:String = 'Connector';
+  public static const TYPE_CONNECTOR_CATEGORY:String = 'ConnectorCategory';
+  public static const TYPE_CONNECTOR_ITEM:String = 'ConnectorItem';
+
   public static const NAME:String = 'name';
   public static const SIZE:String = 'size';
   public static const LAST_MODIFIED:String = 'lastModified';
@@ -29,13 +33,13 @@ public class ConnectorPropertyNames {
 
   public static const OPEN_IN_TAB_URL:String = 'openInTabUrl';
   public static const MANAGEMENT_URL:String = 'managementUrl';
+  public static const THUMBNAIL_URL:String = 'thumbnailUrl';
   public static const DOWNLOAD_URL:String = 'downloadUrl';
   public static const STREAM_URL:String = 'streamUrl';
 
 
   //URIs
   public static const REFRESH_URI:String = "refreshUri";
-  public static const DELETE_URI:String = "deleteUri";
   public static const PREVIEW_URI:String = "previewUri";
   public static const UPLOAD_URI:String = "uploadUri";
 

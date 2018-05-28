@@ -1,6 +1,5 @@
 package com.coremedia.blueprint.studio.connectors.library {
-import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.ui.util.DraggableItemsUtils;
 
 import ext.StringUtil;
@@ -9,7 +8,12 @@ import ext.XTemplate;
 
 import mx.resources.ResourceManager;
 
+/**
+ * A helper class to create drag and drop visual feedback HTML
+ */
+[ResourceBundle('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin')]
 public class ConnectorDragDropVisualFeedback {
+
   private static var simpleDragDropTemplate:Template = new XTemplate(
           '<span>{text:htmlEncode}</span>').compile();
 
@@ -19,11 +23,10 @@ public class ConnectorDragDropVisualFeedback {
     }
 
     if (items.length === 1) {
-      //the item can be a CatalogObject or a BeanRecord
-      var catalogObject:ConnectorObject = (items[0] is ConnectorObject) ? items[0] : items[0].getBean();
+      var entity:ConnectorEntity = (items[0] is ConnectorEntity) ? items[0] : items[0].getBean();
       return DraggableItemsUtils.DRAG_GHOST_TEMPLATE.apply({
-        title: catalogObject.getName(),
-        icon: ConnectorHelper.getTypeCls(catalogObject)
+        title: entity.getName(),
+        icon: null
       });
     } else {
       return simpleDragDropTemplate.apply({

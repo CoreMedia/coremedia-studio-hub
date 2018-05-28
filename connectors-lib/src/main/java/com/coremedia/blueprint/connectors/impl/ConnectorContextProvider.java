@@ -54,7 +54,7 @@ public class ConnectorContextProvider {
     return result;
   }
 
-  private List<ConnectorContext> getContexts() {
+  public List<ConnectorContext> getContexts() {
     List<ConnectorContext> allContexts = new ArrayList<>();
 
     ConnectorContextCacheKey cacheKey = new ConnectorContextCacheKey(contentRepository, settingsService, sitesService, getSiteConfigPath(), getGlobalConfigPath());

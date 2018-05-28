@@ -118,7 +118,12 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     else {
       String capId = connectorId.getExternalId();
       content = repository.getContent(capId);
-      String parentCapId = repository.getContent(capId).getParent().getId();
+      if(content == null) {
+        LOGGER.error("No content found for content id " + capId);
+        return null;
+      }
+      Content parent = content.getParent();
+      String parentCapId = parent.getId();
       parentId = ConnectorId.createCategoryId(context.getConnectionId(), parentCapId);
     }
 

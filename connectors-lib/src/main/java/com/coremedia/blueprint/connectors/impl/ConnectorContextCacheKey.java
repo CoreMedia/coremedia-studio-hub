@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +115,12 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
 
       if (struct.get(ConnectorContextImpl.CONTENT_MAPPING) != null) {
         context.setContentMapping(new ConnectorContentMappingsImpl(struct.getLink(ConnectorContextImpl.CONTENT_MAPPING)));
+      }
+
+      if (struct.get(ConnectorContextImpl.DEFAULT_COLUMNS) != null) {
+        String defaultColumnsString = struct.getString(ConnectorContextImpl.DEFAULT_COLUMNS);
+        List<String> defaultColumns = Arrays.asList(defaultColumnsString.split(","));
+        context.setDefaultColumns(defaultColumns);
       }
 
       filteredList.add(connectorContext);

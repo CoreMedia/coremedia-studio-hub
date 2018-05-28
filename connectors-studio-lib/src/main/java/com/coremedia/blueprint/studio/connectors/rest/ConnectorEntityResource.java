@@ -18,8 +18,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -89,8 +89,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   }
 
 
-  @GET
-  @Path("delete")
+  @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   public Boolean delete() {
     ConnectorEntity entity = getEntity();
@@ -98,8 +97,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   }
 
 
-  protected void fillRepresentation(ConnectorEntityRepresentation representation) {
-    ConnectorEntity entity = getEntity();
+  protected void fillRepresentation(ConnectorEntity entity, ConnectorEntityRepresentation representation) {
     representation.setDeleteable(entity.isDeleteable());
 
     //fill dam data
@@ -114,6 +112,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     representation.setParent(entity.getParent());
     representation.setLastModified(entity.getLastModified());
     representation.setManagementUrl(entity.getManagementUrl());
+    representation.setThumbnailUrl(entity.getThumbnailUrl());
   }
 
   protected Locale getLocale() {

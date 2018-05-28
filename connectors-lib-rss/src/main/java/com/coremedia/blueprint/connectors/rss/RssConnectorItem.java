@@ -46,6 +46,16 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
     return Arrays.asList(new DefaultConnectorColumnValue(rssEntry.getAuthor(), "author"));
   }
 
+  @Nullable
+  @Override
+  public String getThumbnailUrl() {
+    List<String> imageUrls = getImageUrls();
+    if(!imageUrls.isEmpty()) {
+      return imageUrls.get(0);
+    }
+    return null;
+  }
+
   @Override
   public long getSize() {
     return 0;

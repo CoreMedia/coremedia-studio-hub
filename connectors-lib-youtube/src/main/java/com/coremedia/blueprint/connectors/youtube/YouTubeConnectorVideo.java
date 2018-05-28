@@ -38,6 +38,17 @@ public class YouTubeConnectorVideo extends YouTubeConnectorEntity implements Con
     return new Date(snippet.getPublishedAt().getValue() + snippet.getPublishedAt().getTimeZoneShift() * 60000L);
   }
 
+  @Nullable
+  @Override
+  public String getThumbnailUrl() {
+    ThumbnailDetails thumbnails = video.getSnippet().getThumbnails();
+    if(thumbnails != null && thumbnails.getMedium() != null) {
+      return thumbnails.getMedium().getUrl();
+    }
+
+    return null;
+  }
+
   @Nonnull
   @Override
   public String getItemType() {

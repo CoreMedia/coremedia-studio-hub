@@ -5,6 +5,7 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cms.editor.sdk.editorContext;
+import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtilInternal;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.util.EventUtil;
@@ -38,7 +39,8 @@ public class CreateConnectorContentActionBase extends Action {
     if (selection && selection.length > 0) {
       var item:ConnectorItem = selection[0] as ConnectorItem;
       if (item) {
-        ConnectorContentService.findContent(item, null, function (c:Content):void {
+        var site:Site = editorContext.getSitesService().getPreferredSite();
+        ConnectorContentService.findContent(item, null, site, function (c:Content):void {
           if (c) {
             var msg:String = StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'create_duplicate_exists_message'), c.getName());
             MessageBoxUtilInternal.show(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_title'), msg, null, {

@@ -15,6 +15,7 @@ import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.sites.SitesService;
 import com.coremedia.ui.bem.IconWithTextBEMEntities;
 import com.coremedia.ui.data.Bean;
+import com.coremedia.ui.data.RemoteBean;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.beanFactory;
@@ -34,11 +35,20 @@ import mx.resources.ResourceManager;
 public class ConnectorHelper {
   public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
-  private static var defaultColumns:Bean = beanFactory.createLocalBean();
 
+  public static function getType(entity:ConnectorObject):String {
+    if (entity is Connector) {
+      return ConnectorPropertyNames.TYPE_CONNECTOR;
+    }
 
-  public static function setDefaultColumns(connectorType:String, columns:Array):void {
-    defaultColumns.set(connectorType, columns);
+    if (entity is ConnectorCategory) {
+      return ConnectorPropertyNames.TYPE_CONNECTOR_CATEGORY;
+    }
+
+    if (entity is ConnectorItem) {
+      return ConnectorPropertyNames.TYPE_CONNECTOR_ITEM;
+    }
+    return null;
   }
 
   public static function getChildren(item:ConnectorObject):Array {
@@ -67,6 +77,18 @@ public class ConnectorHelper {
     }
 
     return connectorExpressions.get(connectorType);
+  }
+
+  public static function getConnectorTypesExpression():ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():Array {
+      var typesBean:RemoteBean = beanFactory.getRemoteBean("connector/connectors/types");
+      if (!typesBean.isLoaded()) {
+        typesBean.load();
+        return undefined;
+      }
+
+      return typesBean.get("items");
+    });
   }
 
   public static function getTypeLabel(connectorObject:ConnectorObject):String {
@@ -213,6 +235,12 @@ public class ConnectorHelper {
   public static function createColumns(connectorObject:ConnectorObject, markAsRead:Boolean = false):Array {
     var connector:ConnectorImpl = connectorObject.getConnector() as ConnectorImpl;
     var category:ConnectorCategory = connectorObject as ConnectorCategory;
+    var context:ConnectorContext = new ConnectorContext({});
+    if(category) {
+      var connection:Connection = connector.getConnection(category.getConnectionId());
+      context = connection.getContext();
+    }
+
     var cols:Array = [];
 
     var typeCol:Column = Ext.create(TypeIconColumn, {
@@ -227,7 +255,7 @@ public class ConnectorHelper {
     if (markAsRead) {
       var markableColumn:Column = Ext.create(Column, {
         width: 300,
-        hidden: isColumnHidden(connector.getConnectorType(), 'name'),
+        hidden: context.isColumnHidden('name'),
         dataIndex: 'name',
         header: title,
         resizable: true,
@@ -240,7 +268,7 @@ public class ConnectorHelper {
     else {
       var nameCol:Column = Ext.create(Column, {
         width: 300,
-        hidden: isColumnHidden(connector.getConnectorType(), 'name'),
+        hidden: context.isColumnHidden('name'),
         dataIndex: 'name',
         header: title,
         resizable: true,
@@ -254,7 +282,7 @@ public class ConnectorHelper {
     title = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header');
     var sizeCol:Column = Ext.create(Column, {
       width: 80,
-      hidden: isColumnHidden(connector.getConnectorType(), 'size'),
+      hidden: context.isColumnHidden('size'),
       stateId: 'size',
       dataIndex: 'size',
       header: title,
@@ -294,7 +322,7 @@ public class ConnectorHelper {
     title = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'modified_header');
     var modCol:Column = Ext.create(Column, {
       width: 160,
-      hidden: isColumnHidden(connector.getConnectorType(), 'lastModified'),
+      hidden: context.isColumnHidden('lastModified'),
       stateId: 'lastModified',
       dataIndex: 'lastModified',
       header: title,
@@ -330,18 +358,9 @@ public class ConnectorHelper {
     return value;
   }
 
-  private static function isColumnHidden(connectorType:String, columnName:String):Boolean {
-    var columns:Array = defaultColumns.get(connectorType);
-    if (!columns || !columns.length === 0) {
-      return false;
-    }
-
-    return columns.indexOf(columnName) === -1;
-  }
-
   private static function customColumnRenderer(value:*, metaData:Object, record:Model):String {
     var item:ConnectorEntityImpl = (record as BeanRecord).getBean() as ConnectorEntityImpl;
-    if(!item) {
+    if (!item) {
       return "";
     }
 
@@ -398,7 +417,7 @@ public class ConnectorHelper {
       return true;
     }).loadValue(function ():void {
       //mmmh, yes, I know, but this ensures that the folder selection is completed before updating the column model
-      EventUtil.invokeLater(function():void {
+      EventUtil.invokeLater(function ():void {
         grid.getHeaderContainer()['_usedIDs'] = {};//ignore warnings
         var category:ConnectorCategory = connectorObject as ConnectorCategory;
         var markAsRead:Boolean = category && category.getContext().isMarkAsReadEnabled();
@@ -407,5 +426,6 @@ public class ConnectorHelper {
       });
     });
   }
+
 }
 }

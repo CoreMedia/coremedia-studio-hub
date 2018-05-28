@@ -8,7 +8,9 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.collectionview.tree.LibraryTree;
 import com.coremedia.cms.editor.sdk.dragdrop.DragInfo;
+import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.premular.fields.plugins.LibraryTreeViewDragDropPlugin;
+import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.util.AccessControlUtil;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
 import com.coremedia.ui.data.beanFactory;
@@ -129,31 +131,43 @@ public class ConnectorContentTreeDropAreaTarget extends DropTarget {
   private function handleDrop(items:Array, e:Event):void {
     setBusy(true);
 
-    var folder:String = getDropTarget(e).getPath();
+    var targetFolder:Content = getDropTarget(e);
+    var folder:String = targetFolder.getPath();
+    var site:Site = editorContext.getSitesService().getSiteFor(targetFolder);
     //create the content first
-    ConnectorContentService.createContentsForDrop(items, function (createdContents:Array):void {
+    ConnectorContentService.createContentsForDrop(items, site, function (createdContents:Array):void {
       if (createdContents.length === 0) {
         setBusy(false);
+        return;
       }
 
       for each(var result:ConnectorContentCreationResult in createdContents) {
-        //fire write interceptors
-        ConnectorContentService.processContent(result.content, result.connectorEntity, function ():void {
-          setBusy(false);
-        });
+        //fire write interceptors for new contents
+        if(result.isNew) {
+          ConnectorContentService.processContent(result.content, result.connectorEntity, function ():void {
+            setBusy(false);
+          });
+        }
       }
 
-      var skippedCreations:Boolean = items.length !== createdContents.length;
-      if (skippedCreations) {
-        var title:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_title');
-        var msg:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_create_canceled_message');
-        MessageBoxUtil.showInfo(title, msg);
+      setBusy(false);
+      for each(var cr:ConnectorContentCreationResult in createdContents) {
+        if (!cr.isNew) {
+          var title:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_title');
+          var msg:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_create_canceled_message');
+          MessageBoxUtil.showInfo(title, msg);
+          return;
+        }
       }
     }, folder);
   }
 
   private function getDropTarget(e:Event):Content {
     var targetNode:HTMLElement = HTMLElement(treeDnDPlugin.dropZone.getTargetFromEvent(e));
+    if(!targetNode) {
+      return null;
+    }
+
     var recordId:String = targetNode.getAttribute("data-recordindex") as String;
     var beanId:String = libraryTree.getStore().getAt(Number(recordId)).getId();
     return beanFactory.getRemoteBean(beanId) as Content;

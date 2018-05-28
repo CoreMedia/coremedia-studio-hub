@@ -27,12 +27,24 @@
     ]]></fx:Script>
 
   <search2:items>
-    <Container>
+    <Container itemId="{CollectionViewConstants.LIST_VIEW}">
       <items>
-        <search2:ConnectorSearchList itemId="{CollectionViewConstants.LIST_VIEW}"
-                                     region="center"
+        <search2:ConnectorSearchList region="center"
                                      searchResultHitsValueExpression="{config.searchResultHitsValueExpression}"
                                      selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+        <preview:ConnectorPreviewPanel region="south"
+                                       height="350"
+                                       selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+      </items>
+      <layout>
+        <editor:ExtendedBorderLayout/>
+      </layout>
+    </Container>
+    <Container itemId="{CollectionViewConstants.THUMBNAILS_VIEW}">
+      <items>
+        <search2:ConnectorSearchThumbnails region="center"
+                                           searchResultHitsValueExpression="{config.searchResultHitsValueExpression}"
+                                           selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
         <preview:ConnectorPreviewPanel region="south"
                                        height="350"
                                        selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>

@@ -7,6 +7,7 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
 import com.coremedia.cms.editor.sdk.dragdrop.DragInfo;
 import com.coremedia.cms.editor.sdk.editorContext;
+import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.util.ContentLinkListWrapper;
 import com.coremedia.ui.skins.LoadMaskSkin;
 
@@ -125,7 +126,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
   }
 
   private function handleDrop(items:Array):void {
-//    setBusy(true);
+    setBusy(true);
     var itemsToCreate:Array = [];
     for each(var item:ConnectorItem in items) {
       if (!item) {
@@ -135,32 +136,43 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
     }
 
     var folder:String = llOwner.getParent().getPath();
-    //create the content first
-    ConnectorContentService.createContentsForDrop(itemsToCreate, function (createdContents:Array):void {
-      //link it to the content...
-      var count:Number = createdContents.length;
-      //..and trigger the server side post processing
+    var site:Site = editorContext.getSitesService().getSiteFor(llOwner);
 
+    //create the content first
+    ConnectorContentService.createContentsForDrop(itemsToCreate, site, function (createdAndExistingContents:Array):void {
+      //link it to the content...
+      var count:Number = createdAndExistingContents.length;
+
+      //..and trigger the server side post processing if the content was newly created
       if(count > 0) {
-        for each(var result:ConnectorContentCreationResult in createdContents) {
-          ConnectorContentService.processContent(result.content, result.connectorEntity, function ():void {
+        for each(var result:ConnectorContentCreationResult in createdAndExistingContents) {
+          triggerPostProcessingForNewContent(result, function ():void {
             count--;
             if(count === 0) {
-              findAndLinkContents(folder, itemsToCreate);
+              findAndLinkContents(folder, site, itemsToCreate);
             }
-          }, true);
+          });
         }
       }
       else {
-        findAndLinkContents(folder, itemsToCreate);
+        findAndLinkContents(folder, site, itemsToCreate);
       }
     }, folder);
   }
 
-  private function findAndLinkContents(folder:String, itemsToCreate:Array):void {
+  private function triggerPostProcessingForNewContent(result:ConnectorContentCreationResult, callback:Function):void {
+    if(result.isNew) {
+      ConnectorContentService.processContent(result.content, result.connectorEntity, callback, true);
+    }
+    else {
+      callback();
+    }
+  }
+
+  private function findAndLinkContents(folder:String, site:Site, itemsToCreate:Array):void {
     var contents:Array = [];
     for each(var item:ConnectorItem in itemsToCreate) {
-      ConnectorContentService.findContent(item, folder, function(content:Content):void {
+      ConnectorContentService.findContent(item, folder, site, function(content:Content):void {
         if(content) {
           content.load(function():void {
             contents.push(content);
@@ -173,6 +185,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
         }
         else {
           trace('[ERROR]', "Failed to find content for item "+ item.getConnectorId());
+          setBusy(false);
         }
       });
     }

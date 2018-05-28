@@ -39,26 +39,30 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
   @Override
   public int getPriority() {
     //ensure execution after the default ConnectorItemWriteInterceptor
-    return super.getPriority()+1;
+    return super.getPriority() + 1;
   }
 
   @Override
   public void intercept(ContentWriteRequest request) {
-    super.clearDefaultProperties(request);
-
     Map<String, Object> properties = request.getProperties();
     if (properties.containsKey(CONNECTOR_ENTITY)) {
       ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
-      Content content = (Content) properties.get(ConnectorItemWriteInterceptor.CONTENT_ITEM);
+      if (entity instanceof CoreMediaConnectorEntity) {
+        super.clearDefaultProperties(request);
+        Content content = (Content) properties.get(ConnectorItemWriteInterceptor.CONTENT_ITEM);
 
-      if (entity instanceof CoreMediaConnectorItem) {
-        Content parent = content.getParent();
-        CoreMediaConnectorItem item = (CoreMediaConnectorItem) entity;
-        copyItem(parent, item, content);
-      }
-      else if (entity instanceof CoreMediaConnectorCategory) {
-        CoreMediaConnectorCategory category = (CoreMediaConnectorCategory) entity;
-        copyCategory(content.getParent(), category);
+        if (entity instanceof CoreMediaConnectorItem) {
+          Content parent = content.getParent();
+          CoreMediaConnectorItem item = (CoreMediaConnectorItem) entity;
+          copyItem(parent, item, content);
+
+          //re-set the connectorId since we have overwritten the localSettings
+          setConnectorId(content, item.getConnectorId());
+        }
+        else if (entity instanceof CoreMediaConnectorCategory) {
+          CoreMediaConnectorCategory category = (CoreMediaConnectorCategory) entity;
+          copyCategory(content.getParent(), category);
+        }
       }
     }
   }
@@ -94,7 +98,7 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
   private Content copyItem(Content folder, CoreMediaConnectorItem item, Content content) {
     Content original = item.getContent();
     ContentType ct = contentRepository.getContentType(original.getType().getName());
-    if(content == null) {
+    if (content == null) {
       content = ct.createByTemplate(folder, original.getName(), "{3} ({1})", new HashMap<>());
     }
 
@@ -107,36 +111,36 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
 
         CapPropertyDescriptor descriptor = original.getType().getDescriptor(key);
         String type = descriptor.getType().name();
-        if(type.equals(CapPropertyDescriptorType.STRING.name())) {
+        if (type.equals(CapPropertyDescriptorType.STRING.name())) {
           content.set(key, value);
         }
-        else if(type.equals(CapPropertyDescriptorType.MARKUP.name())) {
+        else if (type.equals(CapPropertyDescriptorType.MARKUP.name())) {
           Markup originalMarkup = original.getMarkup(key);
-          if(originalMarkup != null) {
+          if (originalMarkup != null) {
             String xml = originalMarkup.asXml();
             Markup newMarkup = MarkupFactory.fromString(xml);
             content.set(key, newMarkup);
           }
         }
-        else if(type.equals(CapPropertyDescriptorType.BLOB.name())) {
+        else if (type.equals(CapPropertyDescriptorType.BLOB.name())) {
           Blob blob = original.getBlob(key);
-          if(blob != null && blob.getSize() > 0) {
+          if (blob != null && blob.getSize() > 0) {
             Blob newBlob = super.createBlob(blob.getInputStream(), null, blob.getContentType().toString());
             content.set(key, newBlob);
           }
         }
-        else if(type.equals(CapPropertyDescriptorType.LINK.name())) {
+        else if (type.equals(CapPropertyDescriptorType.LINK.name())) {
           List<Content> newLinks = new ArrayList<>();
           List<Content> links = original.getLinks(key);
           for (Content link : links) {
             Content existingLink = contentRepository.getChild(link.getPath());
-            if(existingLink != null) {
+            if (existingLink != null) {
               newLinks.add(existingLink);
             }
           }
           content.set(key, newLinks);
         }
-        else if(type.equals(CapPropertyDescriptorType.STRUCT.name())) {
+        else if (type.equals(CapPropertyDescriptorType.STRUCT.name())) {
           Struct struct = original.getStruct(key);
           Markup originalMarkup = struct.toMarkup();
           String xml = originalMarkup.asXml();
@@ -147,8 +151,7 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
       }
     } catch (Exception e) {
       LOG.error("Failed to copy " + original.getPath() + ": " + e.getMessage(), e);
-    }
-    finally {
+    } finally {
       content.checkIn();
     }
 

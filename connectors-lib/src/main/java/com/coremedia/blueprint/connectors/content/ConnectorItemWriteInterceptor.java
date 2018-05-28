@@ -2,11 +2,17 @@ package com.coremedia.blueprint.connectors.content;
 
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
+import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.cap.common.Blob;
+import com.coremedia.cap.common.CapPropertyDescriptor;
+import com.coremedia.cap.common.CapPropertyDescriptorType;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.content.ContentType;
+import com.coremedia.cap.struct.Struct;
+import com.coremedia.cap.struct.StructBuilder;
+import com.coremedia.cap.struct.StructService;
 import com.coremedia.mimetype.MimeTypeService;
 import com.coremedia.rest.cap.intercept.ContentWriteInterceptorBase;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
@@ -28,6 +34,8 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CONNECTOR_ID;
+
 /**
  * The default ConnectorItemWriteInterceptor used for the content creation of connector items.
  * Since the content creation is based on ContentWriteInterceptors, additional interceptors may
@@ -39,6 +47,8 @@ import java.util.Map;
  */
 public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorItemWriteInterceptor.class);
+  private static final String LOCAL_SETTINGS = ConnectorContentServiceImpl.LOCAL_SETTINGS;
+
   public final static String CONNECTOR_ENTITY = "connectorEntity";
   public final static String CONTENT_ITEM = "content";
   public final static String CONNECTOR_CONTEXT = "connectorContext";
@@ -59,11 +69,11 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
       ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
 
       if (entity instanceof ConnectorItem) {
-        properties.put("title", entity.getDisplayName());
         ConnectorItem item = (ConnectorItem) entity;
+        properties.put("title", entity.getDisplayName());
         properties.put("url", item.getOpenInTabUrl());
         properties.put("teaserText", createMarkup(item.getDescription()));
-        properties.put("data", createBlob(item.stream(), item.getName(), null));
+        properties.put("data", createBlob(item.stream(), item.getName(), item.getMimeType()));
       }
     }
   }
@@ -76,6 +86,27 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
     properties.remove("url");
     properties.remove("teaserText");
     properties.remove("data");
+  }
+
+  protected void setConnectorId(@Nonnull Content content, @Nonnull ConnectorId id) {
+    CapPropertyDescriptor descriptor = content.getType().getDescriptor(LOCAL_SETTINGS);
+    if (descriptor != null && descriptor.getType().equals(CapPropertyDescriptorType.STRUCT)) {
+      Struct struct = content.getStruct(LOCAL_SETTINGS);
+      if (struct == null) {
+        StructService structService = content.getRepository().getConnection().getStructService();
+        struct = structService.emptyStruct();
+      }
+
+      StructBuilder builder = struct.builder();
+      builder.set(CONNECTOR_ID, id.toString());
+      Struct updatedStruct = builder.build();
+      if (!content.isCheckedOut()) {
+        content.checkOut();
+      }
+      content.set(LOCAL_SETTINGS, updatedStruct);
+      content.checkIn();
+      content.getRepository().getConnection().flush();
+    }
   }
 
   protected Markup createMarkup(@Nullable String description) {

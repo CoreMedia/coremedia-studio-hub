@@ -29,6 +29,7 @@
     <module>connectors-studio-lib</module>
     <module>connectors-studio</module>
     <module>connectors-lib</module>
+    <module>connectors-lib-cloudinary</module>
     <module>connectors-lib-coremedia</module>
     <module>connectors-lib-dropbox</module>
     <module>connectors-lib-filesystem</module>

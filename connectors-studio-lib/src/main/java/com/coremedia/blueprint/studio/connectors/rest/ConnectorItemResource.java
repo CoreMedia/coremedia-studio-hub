@@ -171,18 +171,21 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   @Override
   protected ConnectorItemRepresentation getRepresentation() throws URISyntaxException {
     ConnectorItem entity = getEntity();
-    ConnectorItemRepresentation representation = new ConnectorItemRepresentation();
-    representation.setDownloadable(entity.isDownloadable());
-    representation.setOpenInTabUrl(entity.getOpenInTabUrl());
-    representation.setDownloadUrl(entity.getDownloadUrl());
-    representation.setStreamUrl(entity.getStreamUrl());
-    representation.setColumnValues(entity.getColumnValues());
-    representation.setTargetContentType(entity.getTargetContentType());
-    representation.setDeleteUri(new URI("connector/item/" + entity.getConnectorId().toUri() + "/delete"));
-    representation.setPreviewUri(new URI("connector/item/" + entity.getConnectorId().toUri() + "/preview"));
-    fillRepresentation(representation);
-    fillItemRepresentation(entity, representation);
-    return representation;
+    if (entity != null) {
+      ConnectorItemRepresentation representation = new ConnectorItemRepresentation();
+      representation.setDownloadable(entity.isDownloadable());
+      representation.setOpenInTabUrl(entity.getOpenInTabUrl());
+      representation.setDownloadUrl(entity.getDownloadUrl());
+      representation.setStreamUrl(entity.getStreamUrl());
+      representation.setColumnValues(entity.getColumnValues());
+      representation.setTargetContentType(entity.getTargetContentType());
+      representation.setPreviewUri(new URI("connector/item/" + entity.getConnectorId().toUri() + "/preview"));
+      representation.setSize(entity.getSize());
+      representation.setItemType(entity.getItemType());
+      fillRepresentation(entity, representation);
+      return representation;
+    }
+    return null;
   }
 
   @Override
@@ -202,12 +205,6 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     }
     return is;
   }
-
-  private void fillItemRepresentation(ConnectorItem entity, ConnectorItemRepresentation representation) {
-    representation.setSize(entity.getSize());
-    representation.setItemType(entity.getItemType());
-  }
-
 
   /**
    * Additional preview processing such as preview formatting and additional metadata retrieval
@@ -281,7 +278,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     if (!name.contains(".")) {
       String mimeType = item.getMimeType();
       String suffix = item.getItemType();
-      if(mimeType != null) {
+      if (mimeType != null) {
         suffix = mimeType.split("/")[1];
       }
       name = name + "." + suffix;

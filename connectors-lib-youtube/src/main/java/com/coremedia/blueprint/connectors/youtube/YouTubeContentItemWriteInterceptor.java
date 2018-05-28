@@ -29,8 +29,20 @@ public class YouTubeContentItemWriteInterceptor extends ConnectorItemWriteInterc
         List<Content> pictures = new ArrayList<>();
         Content owner = (Content) properties.get(ConnectorItemWriteInterceptor.CONTENT_ITEM);
         ThumbnailDetails thumbnails = video.getVideo().getSnippet().getThumbnails();
-        if (thumbnails != null && thumbnails.getMaxres() != null) {
-          String url = thumbnails.getMaxres().getUrl();
+        if (thumbnails != null) {
+          String url = null;
+          if(thumbnails.getMaxres() != null) {
+            url = thumbnails.getMaxres().getUrl();
+          }
+
+          if(url == null && thumbnails.getHigh() != null) {
+            url = thumbnails.getHigh().getUrl();
+          }
+
+          if(url == null && thumbnails.getDefault() != null) {
+            url = thumbnails.getDefault().getUrl();
+          }
+
           if (url != null) {
             String imageName = owner.getName() + " - Thumbnail";
             Content pictureFromUrl = super.createPictureFromUrl(owner, imageName, url);

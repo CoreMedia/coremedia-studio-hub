@@ -21,6 +21,7 @@
   <component class="com.coremedia.blueprint.studio.connectors.notifications.ShowConnectorForNotificationAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchListContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchList"/>
+  <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchThumbnails"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.toolbar.ConnectorSearchToolbarContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.toolbar.ConnectorSearchToolbar"/>
 </componentPackage>

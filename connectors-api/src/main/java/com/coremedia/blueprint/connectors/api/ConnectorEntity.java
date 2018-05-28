@@ -42,6 +42,15 @@ public interface ConnectorEntity {
   String getManagementUrl();
 
   /**
+   * Returns the thumbnail URL used to show
+   * an image preview in the Studio's thumbnail view
+   */
+  @Nullable
+  default String getThumbnailUrl() {
+    return null;
+  }
+
+  /**
    * Returns true if it is possible to delete the given item or category.
    */
   Boolean isDeleteable();

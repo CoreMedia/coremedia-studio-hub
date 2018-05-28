@@ -8,6 +8,8 @@
         itemId="{VIEW_CONTAINER_ITEM_ID}"
         activeItemValueExpression="{getActiveViewExpression()}">
   <fx:Script><![CDATA[
+    import com.coremedia.cms.editor.sdk.collectionview.CollectionViewConstants;
+
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorRepositoryListContainer";
 
     private var config:ConnectorRepositoryListConainer;
@@ -17,11 +19,23 @@
     ]]></fx:Script>
 
   <library2:items>
-    <Container>
+    <Container itemId="{CollectionViewConstants.LIST_VIEW}">
       <items>
         <library2:ConnectorRepositoryList region="center"
                                           flex="1"
                                           itemId="connectorRepositoryList"/>
+        <preview:ConnectorPreviewPanel region="south"
+                                       flex="1"
+                                       selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+      </items>
+      <layout>
+        <editor:ExtendedBorderLayout/>
+      </layout>
+    </Container>
+    <Container itemId="{CollectionViewConstants.THUMBNAILS_VIEW}">
+      <items>
+        <library2:ConnectorRepositoryThumbnails region="center"
+                                                flex="1"/>
         <preview:ConnectorPreviewPanel region="south"
                                        flex="1"
                                        selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>

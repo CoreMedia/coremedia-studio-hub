@@ -31,6 +31,7 @@ public class ConnectorConnectionModel {
     context.put(ConnectorContextImpl.PREVIEW_THRESHOLD, privateContext.getPreviewThresholdMB());
     context.put(ConnectorContextImpl.TYPE, privateContext.getType());
     context.put(ConnectorContextImpl.DATE_FORMAT, privateContext.getDateFormat());
+    context.put(ConnectorContextImpl.DEFAULT_COLUMNS, privateContext.getDefaultColumns());
   }
 
   public String getConnectorType() {

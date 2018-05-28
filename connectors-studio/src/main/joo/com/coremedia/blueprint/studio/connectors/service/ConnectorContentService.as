@@ -3,6 +3,7 @@ import com.coremedia.blueprint.studio.connectors.model.*;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorContext;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cms.editor.sdk.editorContext;
+import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.impl.BeanFactoryImpl;
@@ -19,7 +20,7 @@ import mx.resources.ResourceManager;
  */
 public class ConnectorContentService {
 
-  public static function createContentsForDrop(connectorEntities:Array, callback:Function, folder:String):void {
+  public static function createContentsForDrop(connectorEntities:Array, site:Site, callback:Function, folder:String):void {
     ValueExpressionFactory.createFromFunction(function():ConnectorContext {
       var ctx:ConnectorContext = connectorEntities[0].getContext();
       if(ctx === undefined) {
@@ -36,10 +37,10 @@ public class ConnectorContentService {
       var results:Array = [];
       var count:Number = 0;
       for each(var entity:ConnectorEntity in connectorEntities) {
-        findContent(entity, folder, function (existingContent:Content):void {
+        findContent(entity, folder, site, function (existingContent:Content):void {
           if(existingContent) {
             count++;
-            var creationResult:ConnectorContentCreationResult = new ConnectorContentCreationResult(existingContent, entity);
+            var creationResult:ConnectorContentCreationResult = new ConnectorContentCreationResult(existingContent, entity, false);
             results.push(creationResult);
 
             if (count == connectorEntities.length) {
@@ -77,8 +78,13 @@ public class ConnectorContentService {
     }
   }
 
-  public static function findContent(entity:ConnectorEntity, folder:String, callback:Function):void {
-    var url:String = 'connector/contentservice/content/' + editorContext.getSitesService().getPreferredSiteId();
+  public static function findContent(entity:ConnectorEntity, folder:String, site:Site, callback:Function):void {
+    var siteId:String = '';
+    if(site) {
+      siteId = site.getId();
+    }
+
+    var url:String = 'connector/contentservice/content/' + siteId;
     var remoteServiceMethod:RemoteServiceMethod = new RemoteServiceMethod(url, 'POST');
     var params:* = {
       id: entity.getConnectorId(),
@@ -109,7 +115,7 @@ public class ConnectorContentService {
       if (id) {
         var content:Content = BeanFactoryImpl.resolveBeans(JSON.decode(id)) as Content;
         content.load(function ():void {
-          var result:ConnectorContentCreationResult = new ConnectorContentCreationResult(content, entity);
+          var result:ConnectorContentCreationResult = new ConnectorContentCreationResult(content, entity, true);
           callback.call(null, result);
         });
       }
@@ -168,14 +174,23 @@ public class ConnectorContentService {
    * @param callback
    */
   private static function waitForFeeding(content:Content, entity:ConnectorEntity, timeout:Number, callback:Function):void {
-    findContent(entity, null, function (feededContent:Content):void {
+    var site:Site = editorContext.getSitesService().getSiteFor(content);
+    findContent(entity, null, site, function (feededContent:Content):void {
       if (feededContent) {
         callback(content);
       }
       else {
         window.setTimeout(function ():void {
-          timeout = timeout > 10000 ? timeout : timeout * 2;
-          waitForFeeding(content, entity, timeout, callback);
+          if(timeout > 10000) {
+            content.doDelete();
+            var title:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'create_title');
+            var message:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'create_error_message_feeding_error');
+            MessageBoxUtil.showError(title, message);
+          }
+          else {
+            timeout = timeout * 2;
+            waitForFeeding(content, entity, timeout, callback);
+          }
         }, timeout);
       }
     });

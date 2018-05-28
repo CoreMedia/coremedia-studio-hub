@@ -45,6 +45,16 @@ public interface ConnectorItem extends ConnectorEntity {
     return "/api/connector/item/" + id.toUri() + "/data?mode=download";
   }
 
+  @Nullable
+  @Override
+  default String getThumbnailUrl() {
+    String type = getItemType();
+    if(type.startsWith("picture")) {
+      return getStreamUrl();
+    }
+    return null;
+  }
+
   /**
    * The description of the item.
    * The returned String may contain HTML that can be used to render the preview.

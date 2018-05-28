@@ -22,6 +22,7 @@ import com.coremedia.cap.struct.StructService;
 import com.coremedia.rest.cap.content.search.SearchServiceResult;
 import com.coremedia.rest.cap.content.search.solr.SolrSearchService;
 import com.coremedia.rest.cap.intercept.ContentWriteInterceptor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -52,7 +53,7 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  */
 public class ConnectorContentServiceImpl implements ConnectorContentService, InitializingBean {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentServiceImpl.class);
-  private static final String LOCAL_SETTINGS = "localSettings";
+  public static final String LOCAL_SETTINGS = "localSettings";
 
   private ExecutorService service = Executors.newCachedThreadPool();
 
@@ -77,6 +78,11 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
         String targetContentTypeName = item.getTargetContentType();
         ContentType contentType = contentRepository.getContentType(targetContentTypeName);
         String name = item.getDisplayName();
+        //remove unwanted characters
+        if (StringUtils.isNotBlank(name)) {
+          name = name.replaceAll("[^\\x00-\\x7F]", "").trim();
+        }
+
         Content newContent = contentType.createByTemplate(targetFolder, name, "{3} ({1})", new HashMap<>());
         setConnectorId(newContent, item.getConnectorId());
         return newContent;

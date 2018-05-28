@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ConnectorEntityRepresentation {
   private URI previewUri;
-  private URI deleteUri;
 
   private ConnectorModel connector;
   private String connectorType;
@@ -22,6 +21,7 @@ public class ConnectorEntityRepresentation {
   private Date lastModified;
   private ConnectorCategory parent;
   private String managementUrl;
+  private String thumbnailUrl;
   private boolean deleteable;
   private List<ConnectorColumnValue> columnValues;
 
@@ -90,14 +90,6 @@ public class ConnectorEntityRepresentation {
     this.managementUrl = managementUrl;
   }
 
-  public URI getDeleteUri() {
-    return deleteUri;
-  }
-
-  public void setDeleteUri(URI deleteUri) {
-    this.deleteUri = deleteUri;
-  }
-
   public boolean isDeleteable() {
     return deleteable;
   }
@@ -120,5 +112,13 @@ public class ConnectorEntityRepresentation {
 
   public void setPreviewUri(URI previewUri) {
     this.previewUri = previewUri;
+  }
+
+  public String getThumbnailUrl() {
+    return thumbnailUrl;
+  }
+
+  public void setThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
   }
 }

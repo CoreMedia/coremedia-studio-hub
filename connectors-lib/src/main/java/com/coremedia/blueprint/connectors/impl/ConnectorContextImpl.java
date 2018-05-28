@@ -21,8 +21,10 @@ public class ConnectorContextImpl implements ConnectorContext {
   public static final String PREVIEW_THRESHOLD = "previewThresholdMB";
   public static final String CONTENT_SCOPE= "contentScope";
   public static final String TYPE = "type";
+  public static final String NAME = "name";
   public static final String CONNECTION_ID = "connectionId";
   public static final String DATE_FORMAT = "dateFormat";
+  public static final String DEFAULT_COLUMNS = "defaultColumns";
 
   private static final String ENABLED = "enabled";
 
@@ -39,6 +41,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   static final String CONTENT_MAPPING = "contentMapping";
 
   private Map<String, Object> properties;
+  private List<String> defaultColumns = Collections.emptyList();
 
   private ConnectorItemTypes itemTypes;
   private ConnectorContentMappings contentMapping;
@@ -109,9 +112,24 @@ public class ConnectorContextImpl implements ConnectorContext {
     return (String) properties.get(TYPE);
   }
 
+  @Nonnull
+  @Override
+  public String getTypeName() {
+    return (String) properties.getOrDefault(NAME, "-empty type name-");
+  }
+
   @Override
   public String getProperty(String key) {
     return (String) properties.get(key);
+  }
+
+  @Override
+  public Boolean getBooleanProperty(String key, boolean defaultValue) {
+    if(properties.containsKey(key) && properties.get(key) instanceof Boolean) {
+      return (Boolean) properties.get(key);
+
+    }
+    return defaultValue;
   }
 
   @Override
@@ -211,5 +229,15 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public void setLocale(Locale locale) {
     this.locale = locale;
+  }
+
+  @Nonnull
+  @Override
+  public List<String> getDefaultColumns() {
+    return defaultColumns;
+  }
+
+  public void setDefaultColumns(List<String> columns) {
+    this.defaultColumns = columns;
   }
 }

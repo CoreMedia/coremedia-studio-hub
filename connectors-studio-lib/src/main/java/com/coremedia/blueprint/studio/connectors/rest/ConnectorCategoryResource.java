@@ -110,18 +110,19 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
 
   @Override
   protected ConnectorCategoryRepresentation getRepresentation() throws URISyntaxException {
+    ConnectorCategory entity = getEntity();
+    if(entity == null) {
+      return null;
+    }
+
     ConnectorCategoryRepresentation representation = new ConnectorCategoryRepresentation();
-    fillRepresentation(representation);
-    fillCategoryRepresentation(representation);
+    fillRepresentation(entity, representation);
+    fillCategoryRepresentation(entity, representation);
     return representation;
   }
 
-  private void fillCategoryRepresentation(ConnectorCategoryRepresentation representation) throws URISyntaxException {
-    ConnectorCategory entity = getEntity();
-
+  private void fillCategoryRepresentation(ConnectorCategory entity, ConnectorCategoryRepresentation representation) throws URISyntaxException {
     representation.setRefreshUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/refresh"));
-    representation.setDeleteUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/delete"));
-    representation.setDeleteUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/delete"));
     representation.setUploadUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/upload"));
     representation.setPreviewUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/preview"));
     representation.setWriteable(entity.isWriteable());

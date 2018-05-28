@@ -40,6 +40,9 @@
     <property name="contentRepository" ref="contentRepository" />
   </bean>
 
+  <bean id="connectorsResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorsResource" scope="prototype">
+    <property name="connector" ref="connector" />
+  </bean>
 
   <!-- Model Entities-->
   <bean id="connectorResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorResource" scope="prototype">

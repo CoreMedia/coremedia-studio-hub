@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +49,22 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     return connections.get(connectionId);
   }
 
+  @Nonnull
+  public List<String> getConnectorTypes() {
+    List<String> result = new ArrayList<>();
+    List<ConnectorContext> contexts = connectorContextProvider.getContexts();
+    contexts.sort(Comparator.comparing(ConnectorContext::getTypeName));
+
+    for (ConnectorContext context : contexts) {
+      String connectorType = context.getType();
+      if(!result.contains(connectorType)) {
+        result.add(connectorType);
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
   public List<ConnectorConnection> getConnectionsByType(String siteId, Locale locale, String type) {
     if(siteId == null) {
       return Collections.emptyList();

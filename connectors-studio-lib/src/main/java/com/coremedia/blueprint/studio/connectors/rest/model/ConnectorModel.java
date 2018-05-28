@@ -29,7 +29,7 @@ public class ConnectorModel {
 
     for (ConnectorConnection con : cons) {
       try {
-        name = con.getContext().getProperty("name");
+        name = con.getContext().getTypeName();
         itemTypes = con.getContext().getItemTypes();
         connections.add(new ConnectorConnectionModel(con));
       } catch (Exception e) {

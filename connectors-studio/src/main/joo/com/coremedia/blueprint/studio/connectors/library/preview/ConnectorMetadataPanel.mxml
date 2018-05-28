@@ -49,6 +49,8 @@
         <ui:BindPropertyPlugin componentProperty="value"
                                transformer="{formatDate}"
                                bindTo="{config.selectedItemValueExpression.extendBy(ConnectorPropertyNames.LAST_MODIFIED)}" />
+        <ui:BindVisibilityPlugin bindTo="{config.selectedItemValueExpression.extendBy(ConnectorPropertyNames.LAST_MODIFIED)}"
+                                 transformer="{function(value:Date):Boolean {return value;}}"/>
       </plugins>
     </DisplayField>
   </preview:items>

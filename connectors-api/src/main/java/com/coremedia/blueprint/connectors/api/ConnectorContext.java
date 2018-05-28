@@ -25,9 +25,16 @@ public interface ConnectorContext {
   String getType();
 
   /**
-   * Utility method to access additional configuration parameters.
+   * Returns the name that has been set for the connector type name in 'Connector Types'.
+   */
+  @Nonnull
+  String getTypeName();
+
+  /**
+   * Utility methods to access additional configuration parameters.
    */
   String getProperty(String key);
+  Boolean getBooleanProperty(String key, boolean defaultValue);
 
   /**
    * Returns the threshold im MB that is used for the item preview.
@@ -122,4 +129,12 @@ public interface ConnectorContext {
    * Possible values are 'long' and 'short'.
    */
   String getDateFormat();
+
+  /**
+   * Returns the default columns to show in the library list view.
+   * Custom columns are not affected by this.
+   * @return the list of default columns to display.
+   */
+  @Nonnull
+  List<String> getDefaultColumns();
 }

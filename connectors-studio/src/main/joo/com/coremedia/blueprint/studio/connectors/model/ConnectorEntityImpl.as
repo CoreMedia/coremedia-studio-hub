@@ -11,6 +11,10 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
     return get(ConnectorPropertyNames.MANAGEMENT_URL);
   }
 
+  public function getThumbnailUrl():String {
+    return get(ConnectorPropertyNames.THUMBNAIL_URL);
+  }
+
   public function getParent():ConnectorCategory {
     return get(ConnectorPropertyNames.PARENT);
   }
@@ -44,10 +48,6 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
     return null;
   }
 
-  private function getDeleteUri():String {
-    return get(ConnectorPropertyNames.DELETE_URI);
-  }
-
   public function getContext():ConnectorContext {
     if(!this.getConnector().isLoaded()) {
       this.getConnector().load();
@@ -70,7 +70,8 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
 
   public function deleteEntity(callback:Function = null, errorHandler:Function = null):void {
     var parent:ConnectorCategory = getParent() as ConnectorCategory;
-    var method:RemoteServiceMethod = new RemoteServiceMethod(getDeleteUri(), 'GET');
+    var method:RemoteServiceMethod = new RemoteServiceMethod(getUriPath(), 'DELETE');
+    var entity:ConnectorEntity = this;
     method.request({},
             function (response:RemoteServiceMethodResponse):void {
               var result:String = response.response.responseText;
@@ -80,6 +81,9 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
               if(parent) {
                 parent.refresh(callback);
               }
+              else {
+                trace('[WARN]', 'No parent category found for ' + entity + '. Ensure that the parent is set to ensure that a refresh is applied after deletion.');
+              }
 
             },
             function (response:RemoteServiceMethodResponse):void {
@@ -88,6 +92,11 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
               }
             }
     );
+  }
+
+
+  override public function toString():String {
+    return "Connector Entity (" + getUriPath() + ")";
   }
 }
 }

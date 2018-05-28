@@ -5,6 +5,8 @@ public interface ConnectorEntity extends ConnectorObject {
 
   function getManagementUrl():String;
 
+  function getThumbnailUrl():String;
+
   function getConnectionId():String;
 
   function isDeleteable():Boolean;
