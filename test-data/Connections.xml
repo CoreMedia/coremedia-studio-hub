@@ -39,6 +39,17 @@
           <BooleanProperty Name="enabled">true</BooleanProperty>
         </Struct>
         <Struct>
+          <StringProperty Name="displayName">Cloudinary</StringProperty>
+          <StringProperty Name="connectionId">cloudinary1</StringProperty>
+          <StringProperty Name="type">cloudinary</StringProperty>
+          <StringProperty Name="cloudName">coremedia</StringProperty>
+          <StringProperty Name="apiKey"></StringProperty>
+          <StringProperty Name="apiSecret"></StringProperty>
+          <BooleanProperty Name="searchApiEnabled">false</BooleanProperty>
+          <StringProperty Name="contentScope">site</StringProperty>
+          <BooleanProperty Name="enabled">true</BooleanProperty>
+        </Struct>
+        <Struct>
           <StringProperty Name="displayName">CoreMedia</StringProperty>
           <StringProperty Name="connectionId">coremedia1</StringProperty>
           <StringProperty Name="type">coremedia</StringProperty>
