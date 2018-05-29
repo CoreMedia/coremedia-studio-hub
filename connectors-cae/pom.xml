@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1804.1-2</version>
+    <version>1804.1-3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -18,36 +18,36 @@
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-s3</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-filesystem</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-youtube</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-rss</artifactId>
-      <version>1804.1-2</version>
+      <version>1804.1-3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -80,4 +80,18 @@
     <!--</dependency>-->
   </dependencies>
 
+<distributionManagement>
+    <repository>
+      <id>contributions-releases</id>
+      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>localfs</id>
+      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target</url>
+    </snapshotRepository>
+    <site>
+      <id>localsite</id>
+      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target\site-deploy\modules\extensions\connectors</url>
+    </site>
+  </distributionManagement>
 </project>

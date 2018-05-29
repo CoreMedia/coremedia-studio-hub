@@ -223,6 +223,7 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
       ConnectorId newItemId = ConnectorId.createItemId(context.getConnectionId(), uniqueObjectName);
       client.files().uploadBuilder(newItemId.getExternalId()).uploadAndFinish(inputStream);
       inputStream.close();
+      this.refresh(context, category);
       return getItem(context, newItemId);
     } catch (Exception e) {
       LOGGER.error("Failed to upload " + itemName + ": " + e.getMessage(), e);

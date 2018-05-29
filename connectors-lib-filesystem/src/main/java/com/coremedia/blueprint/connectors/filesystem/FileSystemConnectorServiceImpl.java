@@ -6,8 +6,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     super.init(context);
     String rootPath = context.getProperty(FOLDER);
     File file = new File(rootPath);
-    if(!file.exists()) {
+    if (!file.exists()) {
       LOGGER.warn("File Connector folder '" + file.getAbsolutePath() + " does not exist, connector will be ignored.");
     }
     return file.exists();
@@ -49,7 +49,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
 
   @Override
   public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    if(category.getConnectorId().isRootId()) {
+    if (category.getConnectorId().isRootId()) {
       rootCategory = null;
       rootCategory = (FileSystemConnectorCategory) getRootCategory(context);
     }
@@ -70,13 +70,13 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
         displayName = rootPath;
       }
 
-      if(rootPath == null) {
+      if (rootPath == null) {
         throw new ConnectorException("No root folder set for file connector, " +
                 "ensure that the 'folder' property is set in the connection settings.");
       }
 
       File rootFolder = new File(rootPath);
-      if(!rootFolder.exists()) {
+      if (!rootFolder.exists()) {
         throw new ConnectorException("Folder '" + rootPath + "' for file connector does exists.");
       }
 
@@ -173,6 +173,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
       IOUtils.copy(inputStream, out);
       inputStream.close();
       out.close();
+      this.refresh(context, category);
       return getItem(context, newItemId);
     } catch (IOException e) {
       LOGGER.error("Failed to created system file " + file.getAbsolutePath() + ": " + e.getMessage(), e);
@@ -184,7 +185,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
 
   public List<File> list(ConnectorId categoryId) {
     String path = categoryId.getExternalId();
-    if(categoryId.isRootId()) {
+    if (categoryId.isRootId()) {
       path = context.getProperty(FOLDER);
     }
 
@@ -192,7 +193,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
       File f = new File(dir, name);
       return isValid(f);
     });
-    if(files == null) {
+    if (files == null) {
       return Collections.emptyList();
     }
     return Arrays.asList(files);

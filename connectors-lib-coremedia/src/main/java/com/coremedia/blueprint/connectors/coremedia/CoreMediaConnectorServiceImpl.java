@@ -188,7 +188,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
   }
 
   public boolean isWriteable(Content content) {
-    return repository.getAccessControl().mayWrite(content);
+    return false;
   }
 
   public String getLifecycle(Content content) {

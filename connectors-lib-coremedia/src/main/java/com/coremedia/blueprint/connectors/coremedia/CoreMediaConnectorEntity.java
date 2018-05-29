@@ -47,6 +47,8 @@ abstract public class CoreMediaConnectorEntity implements ConnectorEntity {
     return service.isDeleteable(content);
   }
 
+
+
   @Override
   public Boolean delete() {
     BulkOperationResult delete = content.delete();

@@ -217,7 +217,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     String bucketName = item.getBucketName();
     String key = item.getKey();
     s3Client.deleteObject(new DeleteObjectRequest(bucketName, key));
-    refresh(null, rootCategory);
+    refresh(this.context, rootCategory);
     return true;
   }
 
