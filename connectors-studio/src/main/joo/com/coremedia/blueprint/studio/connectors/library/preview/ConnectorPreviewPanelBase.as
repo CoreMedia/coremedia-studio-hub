@@ -1,9 +1,8 @@
 package com.coremedia.blueprint.studio.connectors.library.preview {
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.context.ComponentContextManager;
+import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.skins.LoadMaskSkin;
@@ -17,6 +16,9 @@ public class ConnectorPreviewPanelBase extends Panel {
   private var loadMask:LoadMask;
   private const videoDelayMillis:Number = 500;
   private const videoPreviewTimeout:Number = 10000;
+
+  //additional ignored doctypes for previewing that are not part of the editorContext
+  private const IGNORED_DOCTYPES:Array = ["CMExternalLink"];
 
   [Bindable]
   public var selectedItemsValueExpression:ValueExpression;
@@ -62,7 +64,7 @@ public class ConnectorPreviewPanelBase extends Panel {
 
   private function selectionChanged(ve:ValueExpression):void {
     var selection:Object = ve.getValue();
-    if((!selection || selection.length === 0) && getSelectedNodeExpression().getValue()) {
+    if ((!selection || selection.length === 0) && getSelectedNodeExpression().getValue()) {
       selection = getSelectedNodeExpression().getValue();
     }
 
@@ -74,8 +76,13 @@ public class ConnectorPreviewPanelBase extends Panel {
     getDisplayField().setValue('<i>' + resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'preview_loading') + '...</i>');
 
     if (selection is ConnectorEntity) {
-      getActivePreviewExpression().setValue(ConnectorPreviewPanel.PREVIEW);
       var entity:ConnectorEntity = selection as ConnectorEntity;
+      if(!isPreviewable(entity)){
+        getDisplayField().setValue(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_preview'));
+        return;
+      }
+
+      getActivePreviewExpression().setValue(ConnectorPreviewPanel.PREVIEW);
       loadMask.setVisible(true);
 
       var dom:* = queryById('connectorPreviewSwitchingContainer').el.dom;
@@ -106,6 +113,27 @@ public class ConnectorPreviewPanelBase extends Panel {
     else {
       getActivePreviewExpression().setValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
     }
+  }
+
+  /**
+   * Special check for connector items that are based on content.
+   * We check if the content type should be ignored for previewing
+   * since this is already configured in the editorContext.
+   */
+  private function isPreviewable(entity:ConnectorEntity):Boolean {
+    var columnValues:Array = entity.getColumnValues();
+    for each(var cValue:Object in columnValues) {
+      if(cValue.dataIndex === "docType") {
+        var docType:String = cValue.value;
+        if(editorContext.getDocumentTypesWithoutPreview().indexOf(docType) !== -1) {
+          return false;
+        }
+        if(IGNORED_DOCTYPES.indexOf(docType) !== -1) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   private function refreshLayout():void {
@@ -150,10 +178,6 @@ public class ConnectorPreviewPanelBase extends Panel {
   private function refreshPreviewLayout():void {
     queryById('connectorPreviewSwitchingContainer').updateLayout();
     queryById('connectorMetaDataPanel').updateLayout();
-  }
-
-  protected function isVisibleTransformer(entity:ConnectorEntity):Boolean {
-    return entity is ConnectorItem;
   }
 
   protected function getActivePreviewExpression():ValueExpression {

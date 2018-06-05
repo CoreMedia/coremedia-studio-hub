@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class ConnectorRepresentation {
   private String name;
+  private String siteId;
   private String connectorType;
   private List<ConnectorConnectionModel> connections;
   private List<String> itemTypes;
@@ -80,5 +81,13 @@ public class ConnectorRepresentation {
         this.contentMappings.put(entry.getKey(), String.valueOf(value));
       }
     }
+  }
+
+  public String getSiteId() {
+    return siteId;
+  }
+
+  public void setSiteId(String siteId) {
+    this.siteId = siteId;
   }
 }

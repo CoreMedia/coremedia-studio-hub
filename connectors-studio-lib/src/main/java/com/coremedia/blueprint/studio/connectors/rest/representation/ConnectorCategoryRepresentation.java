@@ -13,6 +13,7 @@ public class ConnectorCategoryRepresentation extends ConnectorEntityRepresentati
 
   private URI refreshUri;
   private URI uploadUri;
+  private URI contentDropUri;
 
   private List<ConnectorCategory> subCategories;
   private List<ConnectorItem> items;
@@ -20,6 +21,7 @@ public class ConnectorCategoryRepresentation extends ConnectorEntityRepresentati
   private List<ConnectorColumn> columns;
   private Map<String, ConnectorChildRepresentation> childrenByName;
   private boolean writeable;
+  private boolean contentUploadEnabled;
   private String type;
 
   public List<ConnectorCategory> getSubCategories() {
@@ -92,5 +94,21 @@ public class ConnectorCategoryRepresentation extends ConnectorEntityRepresentati
 
   public void setColumns(List<ConnectorColumn> columns) {
     this.columns = columns;
+  }
+
+  public URI getContentDropUri() {
+    return contentDropUri;
+  }
+
+  public void setContentDropUri(URI contentDropUri) {
+    this.contentDropUri = contentDropUri;
+  }
+
+  public boolean isContentUploadEnabled() {
+    return contentUploadEnabled;
+  }
+
+  public void setContentUploadEnabled(boolean contentUploadEnabled) {
+    this.contentUploadEnabled = contentUploadEnabled;
   }
 }

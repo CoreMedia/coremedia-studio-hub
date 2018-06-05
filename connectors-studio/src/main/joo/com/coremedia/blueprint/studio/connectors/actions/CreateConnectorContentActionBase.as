@@ -2,6 +2,7 @@ package com.coremedia.blueprint.studio.connectors.actions {
 import com.coremedia.blueprint.base.components.quickcreate.QuickCreateDialog;
 import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cms.editor.sdk.editorContext;
@@ -32,6 +33,25 @@ public class CreateConnectorContentActionBase extends Action {
   public function CreateConnectorContentActionBase(config:CreateConnectorContentAction = null) {
     super(Action(Ext.apply({handler: runDuplicateCheck}, config)));
     setDisabled(true);
+    config.selectedItemsValueExpression.addChangeListener(selectionChanged);
+  }
+
+  private function selectionChanged(ve:ValueExpression):void {
+    setDisabled(true);
+    var selection:Array = ve.getValue();
+    if (!selection) {
+      return;
+    }
+
+    for each(var selected:ConnectorObject in selection) {
+      if (selected is ConnectorItem) {
+        var entity:ConnectorItem = selected as ConnectorItem;
+        if (entity.getTargetContentType()) {
+          setDisabled(false);
+          return;
+        }
+      }
+    }
   }
 
   private function runDuplicateCheck():void {

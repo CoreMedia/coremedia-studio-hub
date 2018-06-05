@@ -23,14 +23,22 @@ public class ConnectorsStudioPluginBase extends StudioPlugin {
     editorContext.registerThumbnailResolver(new ConnectorThumbnailResolver(ConnectorPropertyNames.TYPE_CONNECTOR_ITEM));
 
     ConnectorHelper.getConnectorTypesExpression().loadValue(function(connectorTypes:Array):void {
-      for each(var cType:String in connectorTypes) {
-        var treeModel:ConnectorTreeModel = new ConnectorTreeModel(cType);
+      for each(var cType:Object in connectorTypes) {
+        var typeName:String = cType.name;
+        var rootNodeVisible:Boolean = cType.rootNodeVisible;
+        var treeModel:ConnectorTreeModel = new ConnectorTreeModel(typeName, rootNodeVisible);
 
         var collectionViewManagerInternal:CollectionViewManagerInternal =
                 ((editorContext.getCollectionViewManager()) as CollectionViewManagerInternal);
         editorContext.getCollectionViewExtender().addExtension(new ConnectorCollectionViewExtension(), 600);
         collectionViewManagerInternal.addTreeModel(treeModel, new ConnectorTreeDragDropModel(treeModel));
       }
+
+      ConnectorHelper.onSiteSelectionChange();
+    });
+
+    editorContext.getSitesService().getPreferredSiteIdExpression().addChangeListener(function():void {
+      ConnectorHelper.onSiteSelectionChange();
     });
   }
 }

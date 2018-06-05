@@ -26,6 +26,7 @@ public class ConnectorPropertyNames {
   public static const DELETEABLE:String = 'deleteable';
   public static const WRITEABLE:String = 'writeable';
   public static const DOWNLOADABLE:String = 'downloadable';
+  public static const CONTENT_UPLOAD_ENABLED:String = 'contentUploadEnabled';
   public static const META_DATA:String = 'metaData';
   public static const ITEM_TYPE:String = 'itemType';
   public static const ITEM_TYPES:String = 'itemTypes';
@@ -42,6 +43,7 @@ public class ConnectorPropertyNames {
   public static const REFRESH_URI:String = "refreshUri";
   public static const PREVIEW_URI:String = "previewUri";
   public static const UPLOAD_URI:String = "uploadUri";
+  public static const CONTENT_DROP_URI:String = 'contentDropUri';
 
   //Content Mapping Properties
   public static const TARGET_CONTENT_TYPE:String = 'targetContentType';

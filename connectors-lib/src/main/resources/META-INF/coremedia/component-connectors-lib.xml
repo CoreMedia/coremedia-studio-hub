@@ -75,7 +75,7 @@
   </bean>
 
   <!-- PageGrid -->
-  <bean id="connectorPageGridCreator" class="com.coremedia.blueprint.connectors.content.PageGridCreator">
+  <bean id="connectorPageGridService" class="com.coremedia.blueprint.connectors.content.ConnectorPageGridService">
     <property name="sitesService" ref="sitesService" />
     <property name="placementPaths" value="Options/Settings/Pagegrid/Placements" />
   </bean>
@@ -83,6 +83,11 @@
   <!-- Temp Service-->
   <bean id="tempFileCacheService" class="com.coremedia.blueprint.connectors.caching.TempFileCacheService" scope="singleton">
     <property name="cacheSize" value="${connectors.preview.cacheSize:100}" />
+  </bean>
+
+  <!-- Content Upload -->
+  <bean id="connectorContentUploadService" class="com.coremedia.blueprint.connectors.upload.ConnectorContentUploadService" scope="singleton">
+    <property name="connectors" ref="connector" />
   </bean>
 
 </beans>

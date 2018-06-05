@@ -8,6 +8,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,9 +17,11 @@ public class FileSystemConnectorCategory extends FileSystemConnectorEntity imple
 
   private List<ConnectorCategory> subCategories = new ArrayList<>();
   private List<ConnectorItem> items = new ArrayList<>();
+  private FileSystemConnectorServiceImpl service;
 
-  FileSystemConnectorCategory(ConnectorCategory parent, ConnectorContext context, ConnectorId id, File file) {
+  FileSystemConnectorCategory(FileSystemConnectorServiceImpl service, ConnectorCategory parent, ConnectorContext context, ConnectorId id, File file) {
     super(parent, context, id, file);
+    this.service = service;
   }
 
   @Override
@@ -63,5 +66,15 @@ public class FileSystemConnectorCategory extends FileSystemConnectorEntity imple
 
   void setItems(List<ConnectorItem> items) {
     this.items = items;
+  }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return service.refresh(context, this);
+  }
+
+  @Override
+  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+    return service.upload(context, this, itemName, inputStream);
   }
 }

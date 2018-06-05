@@ -6,11 +6,14 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.caching.TempFileCacheService;
+import com.coremedia.blueprint.connectors.upload.ConnectorContentUploadService;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorCategoryRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorChildRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorPreviewRepresentation;
+import com.coremedia.cap.common.IdHelper;
+import com.coremedia.cap.content.Content;
+import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.rest.linking.LocationHeaderResourceFilter;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
@@ -21,6 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -31,9 +36,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A resource to receive categories.
@@ -43,6 +51,8 @@ import java.util.Map;
 public class ConnectorCategoryResource extends ConnectorEntityResource<ConnectorCategory> {
 
   private TempFileCacheService tempFileCacheService;
+  private ContentRepository contentRepository;
+  private ConnectorContentUploadService connectorUploadService;
 
   @Override
   protected ConnectorCategory doGetEntity() {
@@ -70,6 +80,7 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
 
     //add metadata
     representation.addMetaData(category.getMetaData());
+    representation.setHtml(category.getPreviewHtml());
     return representation;
   }
 
@@ -79,11 +90,21 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   @Produces(MediaType.APPLICATION_JSON)
   public Boolean refresh() {
     ConnectorCategory category = getEntity();
-    ConnectorConnection connection = getConnection(category.getConnectorId());
-    ConnectorService service = connection.getConnectorService();
     ConnectorContext context = getContext(category.getConnectorId());
     tempFileCacheService.clear(context);
-    return service.refresh(context, category);
+    return category.refresh(context);
+  }
+
+  @POST
+  @Path("contents")
+  public ConnectorCategory dropContents(@FormParam("contentIds") @DefaultValue("") String contentIds,
+                                        @FormParam("defaultAction") Boolean defaultAction) {
+    String[] ids = contentIds.split(",");
+    List<Content> contents = Arrays.asList(ids).stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
+    ConnectorCategory category = getEntity();
+    ConnectorContext context = getContext(category.getConnectorId());
+    connectorUploadService.upload(context, category, contents, defaultAction);
+    return category;
   }
 
   @POST
@@ -102,16 +123,14 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
       contentName = contentName + "." + extension;
     }
     ConnectorContext context = getContext(category.getConnectorId());
-    ConnectorConnection connection = getConnection(category.getConnectorId());
-    ConnectorService service = connection.getConnectorService();
-    return service.upload(context, category, contentName, inputStream);
+    return category.upload(context, contentName, inputStream);
   }
 
 
   @Override
   protected ConnectorCategoryRepresentation getRepresentation() throws URISyntaxException {
     ConnectorCategory entity = getEntity();
-    if(entity == null) {
+    if (entity == null) {
       return null;
     }
 
@@ -125,7 +144,9 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
     representation.setRefreshUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/refresh"));
     representation.setUploadUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/upload"));
     representation.setPreviewUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/preview"));
+    representation.setContentDropUri(new URI("connector/category/" + entity.getConnectorId().toUri() + "/contents"));
     representation.setWriteable(entity.isWriteable());
+    representation.setContentUploadEnabled(entity.isContentUploadEnabled());
     representation.setType(entity.getType());
     representation.setColumns(entity.getColumns());
     representation.setColumnValues(entity.getColumnValues());
@@ -167,5 +188,15 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   @Required
   public void setTempFileCacheService(TempFileCacheService tempFileCacheService) {
     this.tempFileCacheService = tempFileCacheService;
+  }
+
+  @Required
+  public void setContentRepository(ContentRepository contentRepository) {
+    this.contentRepository = contentRepository;
+  }
+
+  @Required
+  public void setConnectorContentUploadService(ConnectorContentUploadService connectorUploadService) {
+    this.connectorUploadService = connectorUploadService;
   }
 }

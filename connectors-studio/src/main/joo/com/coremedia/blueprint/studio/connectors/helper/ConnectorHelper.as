@@ -61,6 +61,23 @@ public class ConnectorHelper {
     return [];
   }
 
+  public static function onSiteSelectionChange():void {
+    var beans:Object = connectorExpressions.toObject();
+    for each(var item:Object in beans) {
+      var fve:ValueExpression = item as ValueExpression;
+      var connector:Connector = fve.getValue();
+      connector.invalidate(function (loadedConnector:Connector):void {
+        var connectorType:String = loadedConnector.getConnectorType();
+        if (connectorType === "navigation") {
+          var roots:Array = loadedConnector.getRootCategories();
+          for each(var root:ConnectorCategory in roots) {
+            root.invalidate();
+          }
+        }
+      });
+    }
+  }
+
   public static function getConnectorExpression(connectorType:String):ValueExpression {
     if (!connectorExpressions.get(connectorType)) {
       var ve:ValueExpression = ValueExpressionFactory.createFromFunction(function ():Connector {
@@ -68,7 +85,8 @@ public class ConnectorHelper {
         var preferredSite:Site = siteService.getPreferredSite();
         var locale:String = localeSupport.getLocale();
         if (preferredSite) {
-          return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/" + preferredSite.getId()) as Connector;
+          var connector:Connector = beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/" + preferredSite.getId()) as Connector;
+          return connector;
         }
 
         return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/all") as Connector;
@@ -236,7 +254,7 @@ public class ConnectorHelper {
     var connector:ConnectorImpl = connectorObject.getConnector() as ConnectorImpl;
     var category:ConnectorCategory = connectorObject as ConnectorCategory;
     var context:ConnectorContext = new ConnectorContext({});
-    if(category) {
+    if (category) {
       var connection:Connection = connector.getConnection(category.getConnectionId());
       context = connection.getContext();
     }
@@ -426,6 +444,5 @@ public class ConnectorHelper {
       });
     });
   }
-
 }
 }

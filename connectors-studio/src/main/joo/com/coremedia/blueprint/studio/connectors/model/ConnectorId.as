@@ -2,6 +2,7 @@ package com.coremedia.blueprint.studio.connectors.model {
 import com.coremedia.ui.data.beanFactory;
 
 public class ConnectorId {
+  private const PARENT_ID_SEPARATOR:String = "|";
   private var connectionId:String;
   private var externalId:String;
   private var id:String;
@@ -23,7 +24,18 @@ public class ConnectorId {
   }
 
   public function getExternalId():String {
-    return externalId;
+    if(externalId.indexOf(PARENT_ID_SEPARATOR) ===-1) {
+      return externalId;
+    }
+    return externalId.split(PARENT_ID_SEPARATOR)[0];
+  }
+
+  public function getParentId():ConnectorId {
+    if(externalId.indexOf(PARENT_ID_SEPARATOR) ===-1) {
+      var parentId:String = externalId.split(PARENT_ID_SEPARATOR)[1];
+      return new ConnectorId(parentId);
+    }
+    return null;
   }
 
   public function toString():String {

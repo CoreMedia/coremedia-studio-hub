@@ -49,7 +49,7 @@
     <MenuSeparator/>
     <MenuItem>
       <baseAction>
-        <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+        <connectorAction:OpenItemtInBrowserTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </baseAction>
     </MenuItem>
     <MenuSeparator/>

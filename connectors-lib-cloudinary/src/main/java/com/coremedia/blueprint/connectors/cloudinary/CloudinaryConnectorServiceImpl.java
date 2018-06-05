@@ -105,7 +105,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
       String name = context.getProperty("displayName");
       ConnectorId id = ConnectorId.createRootId(context.getConnectionId());
       List<ConnectorCategory> children = new ArrayList<>();
-      rootCategory = new CloudinaryConnectorCategory(context, id, name, children);
+      rootCategory = new CloudinaryConnectorCategory(this, context, id, name, children);
 
       List<CloudinaryFolder> rootNodes = cloudinaryService.getRootFolders(context);
       for (CloudinaryFolder node : rootNodes) {
@@ -164,7 +164,6 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return new ConnectorSearchResult<>(result);
   }
 
-  @Override
   public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     CacheManager cacheManager = CacheManager.getCacheManager(CLOUDINARY_CACHE);
     cacheManager.getCache("cloudinaryFolderCache").removeAll();
@@ -173,8 +172,6 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return true;
   }
 
-  @Nullable
-  @Override
   public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     CloudinaryConnectorCategory cloudinaryCategory = (CloudinaryConnectorCategory) category;
     String folder = "";
@@ -221,18 +218,18 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     ConnectorCategory parentCategory = rootCategory;
     if (parentFolder != null) {
       ConnectorId connectorId = ConnectorId.createCategoryId(context.getConnectionId(), parentFolder);
-      parentCategory = new CloudinaryConnectorCategory(context, connectorId, cloudinaryFolder, null, Collections.emptyList());
+      parentCategory = new CloudinaryConnectorCategory(this, context, connectorId, cloudinaryFolder, null, Collections.emptyList());
     }
 
     //add assets
-    CloudinaryConnectorCategory category = new CloudinaryConnectorCategory(context, categoryId, cloudinaryFolder, parentCategory, subCategories);
+    CloudinaryConnectorCategory category = new CloudinaryConnectorCategory(this, context, categoryId, cloudinaryFolder, parentCategory, subCategories);
     category.setChildItems(getAssets(context, category));
 
     //add sub categories
     List<CloudinaryFolder> folders = cloudinaryService.getSubfolders(context, cloudinaryFolder.getFolder());
     for (CloudinaryFolder subFolder: folders) {
       ConnectorId childCategoryId = ConnectorId.createCategoryId(context.getConnectionId(), subFolder.getFolder());
-      CloudinaryConnectorCategory childCat = new CloudinaryConnectorCategory(context, childCategoryId, subFolder, category, Collections.emptyList());
+      CloudinaryConnectorCategory childCat = new CloudinaryConnectorCategory(this, context, childCategoryId, subFolder, category, Collections.emptyList());
       subCategories.add(childCat);
     }
 

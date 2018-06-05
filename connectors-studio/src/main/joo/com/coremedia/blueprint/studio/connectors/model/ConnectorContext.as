@@ -1,4 +1,9 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import com.coremedia.cap.common.CapType;
+import com.coremedia.cap.common.SESSION;
+import com.coremedia.cap.content.Content;
+import com.coremedia.cms.editor.sdk.editorContext;
+
 public class ConnectorContext {
 
   private var values:Object;
@@ -30,6 +35,19 @@ public class ConnectorContext {
     }
 
     return columns.indexOf(columnName) === -1;
+  }
+
+  public function isValidDrop(content:Content):Boolean {
+    var cType:CapType = content.getType();
+
+    var onWhitelist:Boolean = false;
+    for each(var whitelistType:String in values.contentUploadTypes) {
+      if(cType.isSubtypeOf(whitelistType)) {
+        onWhitelist = true;
+      }
+    }
+
+    return onWhitelist;
   }
 }
 }

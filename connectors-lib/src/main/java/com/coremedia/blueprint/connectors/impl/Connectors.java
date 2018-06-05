@@ -1,7 +1,9 @@
 package com.coremedia.blueprint.connectors.impl;
 
+import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
+import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
   private ConnectorContextProvider connectorContextProvider;
   private SitesService sitesService;
   private List<ConnectorConnectionListener> connectionListeners = new ArrayList<>();
+  private List<ConnectorCategoryChangeListener> connectorCategoryChangeListeners = new ArrayList<>();
+
 
   @Nullable
   public ConnectorConnection getConnection(ConnectorContext context) {
@@ -50,15 +54,17 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
   }
 
   @Nonnull
-  public List<String> getConnectorTypes() {
-    List<String> result = new ArrayList<>();
+  public List<ConnectorType> getConnectorTypes() {
+    List<ConnectorType> result = new ArrayList<>();
     List<ConnectorContext> contexts = connectorContextProvider.getContexts();
     contexts.sort(Comparator.comparing(ConnectorContext::getTypeName));
 
     for (ConnectorContext context : contexts) {
-      String connectorType = context.getType();
-      if(!result.contains(connectorType)) {
-        result.add(connectorType);
+      String typeName = context.getType();
+      ConnectorType cType = new ConnectorType(typeName);
+      if(!result.contains(cType)) {
+        cType.setRootNodeVisible(context.isRootNodeVisible());
+        result.add(cType);
       }
     }
     return result;
@@ -71,7 +77,8 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     }
 
     List<ConnectorContext> filtered = new ArrayList<>();
-    List<ConnectorContext> contexts = connectorContextProvider.findContexts(sitesService.getSite(siteId));
+    Site site = sitesService.getSite(siteId);
+    List<ConnectorContext> contexts = connectorContextProvider.findContexts(site);
     for (ConnectorContext context : contexts) {
       if(context.getType().equals(type)) {
         filtered.add(context);
@@ -82,6 +89,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     List<ConnectorConnection> connections = getConnections(filtered);
     for (ConnectorConnection connection : connections) {
       ((ConnectorContextImpl)connection.getContext()).setLocale(locale);
+      ((ConnectorContextImpl)connection.getContext()).setPreferredSite(sitesService.getSite(siteId));
     }
     return connections;
   }
@@ -92,6 +100,16 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
 
   public void addConnectionListener(ConnectorConnectionListener listener) {
     this.connectionListeners.add(listener);
+  }
+
+  public void addConnectorCategoryChangeListener(ConnectorCategoryChangeListener listener) {
+    this.connectorCategoryChangeListeners.add(listener);
+  }
+
+  public void notifyCategoryChange(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    for (ConnectorCategoryChangeListener connectorCategoryChangeListener : connectorCategoryChangeListeners) {
+      connectorCategoryChangeListener.categoryChanged(context, category);
+    }
   }
 
   //------------- Helper -----------------------------------------------------------------------------------------------

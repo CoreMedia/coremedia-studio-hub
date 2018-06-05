@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1804.1-3</version>
+    <version>1804.2-1</version>
   </parent>
 
   <artifactId>connectors-studio-lib</artifactId>
@@ -23,53 +23,65 @@
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-s3</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.blueprint.connectors</groupId>
+      <artifactId>connectors-lib-canto</artifactId>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-coremedia</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.blueprint.connectors</groupId>
+      <artifactId>connectors-lib-coremedia-navigation</artifactId>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-cloudinary</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-youtube</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-dropbox</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-filesystem</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-rss</artifactId>
-      <version>1804.1-3</version>
+      <version>1804.2-1</version>
       <scope>runtime</scope>
     </dependency>
 

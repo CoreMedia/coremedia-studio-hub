@@ -65,15 +65,6 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    if (category.getConnectorId().isRootId()) {
-      rootCategory = null;
-      rootCategory = (DropboxConnectorCategory) getRootCategory(context);
-    }
-    return super.refresh(context, category);
-  }
-
-  @Override
   public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
     InvalidationResult invalidationResult = new InvalidationResult(context);
 
@@ -216,7 +207,14 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
     return new ConnectorSearchResult<>(results);
   }
 
-  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    if (category.getConnectorId().isRootId()) {
+      rootCategory = null;
+      rootCategory = (DropboxConnectorCategory) getRootCategory(context);
+    }
+    return super.refresh(context, category);
+  }
+
   public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
       String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);

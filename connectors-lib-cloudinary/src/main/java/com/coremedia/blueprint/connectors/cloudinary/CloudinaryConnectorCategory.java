@@ -9,6 +9,7 @@ import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryFolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,15 +26,18 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
   private ConnectorCategory parent;
   private List<ConnectorCategory> childCategories;
   private List<ConnectorItem> childItems = new ArrayList<>();
+  private CloudinaryConnectorServiceImpl service;
 
-  CloudinaryConnectorCategory(ConnectorContext context, ConnectorId id, String name, List<ConnectorCategory> childCategories) {
+  CloudinaryConnectorCategory(CloudinaryConnectorServiceImpl service, ConnectorContext context, ConnectorId id, String name, List<ConnectorCategory> childCategories) {
     super(context, id);
     this.name = name;
     this.childCategories = childCategories;
+    this.service = service;
   }
 
-  CloudinaryConnectorCategory(ConnectorContext context, ConnectorId id, CloudinaryFolder folder, ConnectorCategory parent, List<ConnectorCategory> childCategories) {
+  CloudinaryConnectorCategory(CloudinaryConnectorServiceImpl service, ConnectorContext context, ConnectorId id, CloudinaryFolder folder, ConnectorCategory parent, List<ConnectorCategory> childCategories) {
     super(context, id);
+    this.service = service;
     this.folder = folder;
     this.parent = parent;
     this.childCategories = childCategories;
@@ -126,5 +130,15 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
 
   public void setChildItems(List<ConnectorItem> childItems) {
     this.childItems = childItems;
+  }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return service.refresh(context, this);
+  }
+
+  @Override
+  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+    return service.upload(context, this, itemName, inputStream);
   }
 }

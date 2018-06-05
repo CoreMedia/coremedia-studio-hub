@@ -117,6 +117,10 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
         context.setContentMapping(new ConnectorContentMappingsImpl(struct.getLink(ConnectorContextImpl.CONTENT_MAPPING)));
       }
 
+      if (struct.get(ConnectorContextImpl.CONTENT_UPLOAD_TYPES) != null) {
+        context.setContentUploadTypes(new ConnectorContentUploadTypesImpl(struct.getLink(ConnectorContextImpl.CONTENT_UPLOAD_TYPES)));
+      }
+
       if (struct.get(ConnectorContextImpl.DEFAULT_COLUMNS) != null) {
         String defaultColumnsString = struct.getString(ConnectorContextImpl.DEFAULT_COLUMNS);
         List<String> defaultColumns = Arrays.asList(defaultColumnsString.split(","));

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>com.coremedia.blueprint.connectors</groupId>
+    <artifactId>connectors</artifactId>
+    <version>1804.2-1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>connectors-lib-coremedia-navigation</artifactId>
+
+
+  <dependencies>
+    <!-- Workspace Dependencies -->
+    <dependency>
+      <groupId>com.coremedia.blueprint.connectors</groupId>
+      <artifactId>connectors-api</artifactId>
+      <version>1804.2-1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.blueprint.connectors</groupId>
+      <artifactId>connectors-lib</artifactId>
+      <version>1804.2-1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- CoreMedia Dependencies -->
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-unified-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-multisite</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-rest-plugins</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Thirdparty Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+  </dependencies>
+
+<distributionManagement>
+    <repository>
+      <id>contributions-releases</id>
+      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>localfs</id>
+      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target</url>
+    </snapshotRepository>
+    <site>
+      <id>localsite</id>
+      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target\site-deploy\modules\extensions\connectors</url>
+    </site>
+  </distributionManagement>
+</project>

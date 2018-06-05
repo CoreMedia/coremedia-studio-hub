@@ -4,7 +4,9 @@ import com.coremedia.blueprint.connectors.api.ConnectorContentMappings;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
+import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.cap.content.Content;
+import com.coremedia.cap.multisite.Site;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,6 +23,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   public static final String PREVIEW_THRESHOLD = "previewThresholdMB";
   public static final String CONTENT_SCOPE= "contentScope";
   public static final String TYPE = "type";
+  public static final String ROOT_NODE_VISIBLE = "rootNodeVisible";
   public static final String NAME = "name";
   public static final String CONNECTION_ID = "connectionId";
   public static final String DATE_FORMAT = "dateFormat";
@@ -39,16 +42,19 @@ public class ConnectorContextImpl implements ConnectorContext {
   static final String ITEM_TYPES = "itemTypes";
   static final String PREVIEW_TEMPLATES = "previewTemplates";
   static final String CONTENT_MAPPING = "contentMapping";
+  public static final String CONTENT_UPLOAD_TYPES = "contentUploadTypes";
 
   private Map<String, Object> properties;
   private List<String> defaultColumns = Collections.emptyList();
 
   private ConnectorItemTypes itemTypes;
   private ConnectorContentMappings contentMapping;
+  private ConnectorContentUploadTypes contentUploadTypes;
   private ConnectorPreviewTemplates previewTemplates;
 
   private boolean dirty;
   private String siteId;
+  private Site site;
   private Locale locale;
 
   public ConnectorContextImpl(Map<String, Object> properties) {
@@ -62,6 +68,9 @@ public class ConnectorContextImpl implements ConnectorContext {
     }
     if (properties.get(CONTENT_MAPPING) != null) {
       this.contentMapping = new ConnectorContentMappingsImpl((Content) properties.get(CONTENT_MAPPING));
+    }
+    if (properties.get(CONTENT_UPLOAD_TYPES) != null) {
+      this.contentUploadTypes = new ConnectorContentUploadTypesImpl((Content) properties.get(CONTENT_UPLOAD_TYPES));
     }
 
     setDirty(true);
@@ -110,6 +119,12 @@ public class ConnectorContextImpl implements ConnectorContext {
   @Override
   public String getType() {
     return (String) properties.get(TYPE);
+  }
+
+  @Nonnull
+  @Override
+  public boolean isRootNodeVisible() {
+    return getBooleanProperty(ROOT_NODE_VISIBLE, true);
   }
 
   @Nonnull
@@ -202,6 +217,10 @@ public class ConnectorContextImpl implements ConnectorContext {
     this.contentMapping = contentMapping;
   }
 
+  void setContentUploadTypes(ConnectorContentUploadTypes contentUploadTypes) {
+    this.contentUploadTypes = contentUploadTypes;
+  }
+
   boolean isDirty() {
     return dirty;
   }
@@ -231,13 +250,37 @@ public class ConnectorContextImpl implements ConnectorContext {
     this.locale = locale;
   }
 
+  @Nullable
+  @Override
+  public Site getPreferredSite() {
+    return site;
+  }
+
+  public void setPreferredSite(Site site) {
+    this.site = site;
+  }
+
   @Nonnull
   @Override
   public List<String> getDefaultColumns() {
     return defaultColumns;
   }
 
+  @Nullable
+  @Override
+  public ConnectorContentUploadTypes getContentUploadTypes() {
+    return this.contentUploadTypes;
+  }
+
   public void setDefaultColumns(List<String> columns) {
     this.defaultColumns = columns;
+  }
+
+  private List<String> getListValue(String property) {
+    if(properties.containsKey(property)) {
+      String valueString = (String) properties.get(property);
+      return Arrays.asList(valueString.split(","));
+    }
+    return Collections.emptyList();
   }
 }

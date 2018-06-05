@@ -9,6 +9,7 @@ import com.dropbox.core.v2.files.Metadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,5 +89,15 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
 
   void setItems(List<ConnectorItem> items) {
     this.items = items;
+  }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return service.refresh(context, this);
+  }
+
+  @Override
+  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+   return service.upload(context, this, itemName, inputStream);
   }
 }

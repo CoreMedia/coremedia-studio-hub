@@ -47,15 +47,6 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return file.exists();
   }
 
-  @Override
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    if (category.getConnectorId().isRootId()) {
-      rootCategory = null;
-      rootCategory = (FileSystemConnectorCategory) getRootCategory(context);
-    }
-    return super.refresh(context, category);
-  }
-
   @Nonnull
   @Override
   public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
@@ -81,7 +72,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
       }
 
       ConnectorId id = ConnectorId.createRootId(context.getConnectionId());
-      rootCategory = new FileSystemConnectorCategory(null, context, id, rootFolder);
+      rootCategory = new FileSystemConnectorCategory(this, null, context, id, rootFolder);
       rootCategory.setName(displayName);
 
       List<ConnectorCategory> subCategories = getSubCategories(context, rootCategory);
@@ -110,7 +101,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     }
 
     File file = getCachedFileOrFolderEntity(context, categoryId);
-    FileSystemConnectorCategory subCategory = new FileSystemConnectorCategory(parentCategory, context, categoryId, file);
+    FileSystemConnectorCategory subCategory = new FileSystemConnectorCategory(this, parentCategory, context, categoryId, file);
     subCategory.setItems(getItems(context, subCategory));
     subCategory.setSubCategories(getSubCategories(context, subCategory));
     return subCategory;
@@ -162,7 +153,14 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return new ConnectorSearchResult<>(results);
   }
 
-  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    if (category.getConnectorId().isRootId()) {
+      rootCategory = null;
+      rootCategory = (FileSystemConnectorCategory) getRootCategory(context);
+    }
+    return super.refresh(context, category);
+  }
+
   public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
     ConnectorId newItemId = ConnectorId.createItemId(context.getConnectionId(), uniqueObjectName);
@@ -224,7 +222,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     List<File> subfolders = getSubfolderEntities(context, category.getConnectorId());
     for (File entry : subfolders) {
       ConnectorId connectorId = ConnectorId.createCategoryId(context.getConnectionId(), getPath(entry));
-      FileSystemConnectorCategory subCategory = new FileSystemConnectorCategory(category, context, connectorId, entry);
+      FileSystemConnectorCategory subCategory = new FileSystemConnectorCategory(this, category, context, connectorId, entry);
       subCategory.setItems(getItems(context, subCategory));
       subCategories.add(subCategory);
     }

@@ -58,8 +58,6 @@
                   <plugins>
                     <ui:BindPropertyPlugin componentProperty="title"
                                            bindTo="{getSelectedItemExpression().extendBy(ConnectorPropertyNames.NAME)}"/>
-                    <ui:BindVisibilityPlugin bindTo="{getSelectedItemExpression()}"
-                                             transformer="{isVisibleTransformer}"/>
                   </plugins>
                   <items>
                     <DisplayField itemId="connectorPreviewHtmlField"

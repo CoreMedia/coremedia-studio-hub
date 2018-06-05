@@ -9,6 +9,7 @@ import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorEntityRepresentation;
+import com.coremedia.cap.multisite.Site;
 import com.coremedia.rest.linking.EntityResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
 
   private static final String ID = "id";
   static final String SESSION_ATTRIBUTE_LOCALE = "studio-locale";
+  static final String SESSION_ATTRIBUTE_PREFERRED_SITE = "studio-preferred-site";
 
   private String decodedId;
   private ConnectorContextProvider connectorContextProvider;
@@ -101,7 +103,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     representation.setDeleteable(entity.isDeleteable());
 
     //fill dam data
-    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), getLocale(), Collections.emptyList());
+    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), getPreferredSite(), getLocale(), Collections.emptyList());
     representation.setConnector(model);
     representation.setConnectorType(model.getConnectorType());
 
@@ -121,11 +123,18 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     return (Locale) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_LOCALE);
   }
 
+  protected Site getPreferredSite() {
+    ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    HttpServletRequest req = sra.getRequest();
+    return (Site) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_PREFERRED_SITE);
+  }
+
   protected abstract ConnectorEntityRepresentation getRepresentation() throws URISyntaxException;
 
   protected ConnectorContext getContext(ConnectorId id) {
     ConnectorContext context = connectorContextProvider.createContext(id.getConnectionId());
     ((ConnectorContextImpl)context).setLocale(getLocale());
+    ((ConnectorContextImpl)context).setPreferredSite(getPreferredSite());
     return context;
   }
 

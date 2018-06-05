@@ -21,7 +21,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,17 +42,6 @@ public class RssConnectorServiceImpl implements ConnectorService {
   public boolean init(@Nonnull ConnectorContext context) {
     this.context = context;
     return getFeed() != null;
-  }
-
-  @Override
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    rootCategory = getRootCategory(true);
-    return true;
-  }
-
-  @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
-    return null;
   }
 
   @Nullable
@@ -138,10 +126,15 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return result;
   }
 
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    rootCategory = getRootCategory(true);
+    return true;
+  }
+
   //-------------------- Helper ----------------------------------------------------------------------------------------
 
   private ConnectorItem createRssAsset(SyndEntry entry) {
-    ConnectorId id = ConnectorId.createItemId(context.getConnectionId(), entry.getUri());
+    ConnectorId id = ConnectorId.createItemId(rootCategory.getConnectorId(), entry.getUri());
     return new RssConnectorItem(rootCategory, context, rootCategory.getFeed(), entry, id);
   }
 
@@ -168,7 +161,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
       SyndFeed feed = getFeed();
 
       ConnectorId id = ConnectorId.createRootId(context.getConnectionId());
-      rootCategory = new RssConnectorCategory(context, feed, id);
+      rootCategory = new RssConnectorCategory(this, context, feed, id);
       rootCategory.setSubCategories(Collections.emptyList());
       rootCategory.setItems(getItems(rootCategory));
       rootCategory.setName(displayName);

@@ -18,9 +18,11 @@ import java.util.List;
 public class RssConnectorCategory extends RssConnectorEntity implements ConnectorCategory {
   private List<ConnectorCategory> subCategories = new ArrayList<>();
   private List<ConnectorItem> items = new ArrayList<>();
+  private RssConnectorServiceImpl service;
 
-  RssConnectorCategory(ConnectorContext context, SyndFeed feed, ConnectorId connectorId) {
+  RssConnectorCategory(RssConnectorServiceImpl service, ConnectorContext context, SyndFeed feed, ConnectorId connectorId) {
     super(null, context, feed, connectorId);
+    this.service = service;
   }
 
   @Override
@@ -69,4 +71,10 @@ public class RssConnectorCategory extends RssConnectorEntity implements Connecto
   void setItems(List<ConnectorItem> items) {
     this.items = items;
   }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return service.refresh(context, this);
+  }
+
 }

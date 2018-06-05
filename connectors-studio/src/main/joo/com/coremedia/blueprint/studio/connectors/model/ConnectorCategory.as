@@ -11,6 +11,10 @@ public interface ConnectorCategory extends ConnectorEntity {
 
   function isWriteable():Boolean;
 
+  function isContentUploadEnabled():Boolean;
+
+  function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined);
+
   function getColumns():Array;
 
   /**

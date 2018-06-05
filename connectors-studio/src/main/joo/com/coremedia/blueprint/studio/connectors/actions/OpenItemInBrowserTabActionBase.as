@@ -9,7 +9,7 @@ import ext.Ext;
 /**
  * Opens the selection in a new tab
  */
-public class OpenItemInTabActionBase extends Action {
+public class OpenItemInBrowserTabActionBase extends Action {
 
   [Bindable]
   public var selectedItemsValueExpression:ValueExpression;
@@ -17,7 +17,7 @@ public class OpenItemInTabActionBase extends Action {
   /**
    * @param config
    */
-  public function OpenItemInTabActionBase(config:OpenItemtInTabAction = null) {
+  public function OpenItemInBrowserTabActionBase(config:OpenItemtInBrowserTabAction = null) {
     super(Action(Ext.apply({handler: doOpen}, config)));
 
     config.selectedItemsValueExpression.addChangeListener(selectionChanged);

@@ -79,15 +79,6 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    if(category.getConnectorId().isRootId()) {
-      rootCategory = null;
-      rootCategory = (S3ConnectorCategory) getRootCategory(context);
-    }
-    return super.refresh(context, category);
-  }
-
-  @Override
   public void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {
     super.shutdown(context);
     if(s3Client != null) {
@@ -137,7 +128,14 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return subCategory;
   }
 
-  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+    if(category.getConnectorId().isRootId()) {
+      rootCategory = null;
+      rootCategory = (S3ConnectorCategory) getRootCategory(context);
+    }
+    return super.refresh(context, category);
+  }
+
   public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
       String bucketName = context.getProperty(BUCKET_NAME);

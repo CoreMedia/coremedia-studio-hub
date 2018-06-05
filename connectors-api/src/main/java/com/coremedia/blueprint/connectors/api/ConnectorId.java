@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -15,6 +16,8 @@ public class ConnectorId {
   private final static String ITEM = "item";
   private final static String ROOT = "root";
 
+  private final static String PARENT_ID_SEPARATOR = "|";
+
   private String id;
   private String externalId;
   private String connectionId;
@@ -26,15 +29,33 @@ public class ConnectorId {
   }
 
   @Nonnull
-  public static ConnectorId createCategoryId(@Nonnull String connectionId, @Nonnull String externalId) {
+  public static ConnectorId createCategoryId(@Nonnull String connectionId, @Nonnull Object externalId) {
     String connectorId = PREFIX + connectionId + "/" + CATEGORY + "/" + externalId;
-    return new ConnectorId(connectorId, connectionId, externalId);
+    return new ConnectorId(connectorId, connectionId, String.valueOf(externalId));
   }
 
   @Nonnull
-  public static ConnectorId createItemId(@Nonnull String connectionId, @Nonnull String externalId) {
+  public static ConnectorId createItemId(@Nonnull String connectionId, @Nonnull Object externalId) {
     String connectorId = PREFIX + connectionId + "/" + ITEM + "/" + externalId;
-    return new ConnectorId(connectorId, connectionId, externalId);
+    return new ConnectorId(connectorId, connectionId, String.valueOf(externalId));
+  }
+
+  @Nonnull
+  public static ConnectorId createItemId(@Nonnull ConnectorId parentId, @Nonnull Object externalId) {
+    String parentExternalId = parentId.getExternalId();
+    String fullExternalId = externalId + PARENT_ID_SEPARATOR + parentExternalId;
+    String connectorId = PREFIX + parentId.getConnectionId() + "/" + ITEM + "/" + fullExternalId;
+    return new ConnectorId(connectorId, parentId.getConnectionId(), fullExternalId);
+  }
+
+  @Nullable
+  public ConnectorId getParentId() {
+    if(externalId.contains(PARENT_ID_SEPARATOR)) {
+      String parentId = externalId.split("\\" + PARENT_ID_SEPARATOR)[1];
+      String idString = PREFIX + connectionId + "/"  + CATEGORY + "/" + parentId;
+      return new ConnectorId(idString, connectionId, parentId);
+    }
+    return null;
   }
 
   @Nonnull
@@ -52,6 +73,9 @@ public class ConnectorId {
   }
 
   public String getExternalId() {
+    if(externalId.contains("|")) {
+      return externalId.split("\\" + PARENT_ID_SEPARATOR)[0];
+    }
     return externalId;
   }
 

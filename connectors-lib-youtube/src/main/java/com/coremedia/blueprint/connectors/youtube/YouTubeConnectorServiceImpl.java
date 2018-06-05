@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,19 +76,16 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   @Nullable
   @Override
   public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
-    String playlistId = YouTubeIdHelper.getPlaylistId(id);
-    String videoId = YouTubeIdHelper.getExternalId(id);
-    Playlist playlist = getPlaylist(context, playlistId);
-    Video video = youTubeService.getVideo(context.getConnectionId(), videoId);
+    Playlist playlist = getPlaylist(context, id.getParentId().getExternalId());
+    Video video = youTubeService.getVideo(context.getConnectionId(), id.getExternalId());
     ConnectorId categoryId = ConnectorId.createRootId(context.getConnectionId());
     ConnectorCategory parent = rootCategory;
 
     //again, we have to check here if the video belongs to a playlist or not
     if (playlist != null) {
-      categoryId = ConnectorId.createCategoryId(context.getConnectionId(), YouTubeIdHelper.createPlaylistId(playlist.getId()));
-      parent = new YouTubeConnectorCategory(getRootCategory(context), context, categoryId, playlist, playlist.getSnippet().getTitle());
+      parent = new YouTubeConnectorCategory(this, getRootCategory(context), context, id.getParentId(), playlist, playlist.getSnippet().getTitle());
     }
-    YouTubeConnectorCategory category = new YouTubeConnectorCategory(parent, context, categoryId, playlist, null);
+    YouTubeConnectorCategory category = new YouTubeConnectorCategory(this, parent, context, categoryId, playlist, null);
     return new YouTubeConnectorVideo(this, category, context, id, video);
   }
 
@@ -100,10 +96,9 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
       return rootCategory;
     }
 
-    String playlistId = YouTubeIdHelper.getPlaylistId(id);
-    Playlist playlist = getPlaylist(context, playlistId);
+    Playlist playlist = getPlaylist(context, id.getExternalId());
     String name = playlist.getSnippet().getTitle();
-    YouTubeConnectorCategory category = new YouTubeConnectorCategory(getRootCategory(context), context, id, playlist, name);
+    YouTubeConnectorCategory category = new YouTubeConnectorCategory(this, getRootCategory(context), context, id, playlist, name);
     category.setItems(getItems(context, category));
     return category;
   }
@@ -114,7 +109,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
 //    if (rootCategory == null) {
     String displayName = context.getProperty(DISPLAY_NAME);
     ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
-    rootCategory = new YouTubeConnectorCategory(null, context, rootId, null, displayName);
+    rootCategory = new YouTubeConnectorCategory(this, null, context, rootId, null, displayName);
     rootCategory.setSubCategories(getSubCategories(context));
     rootCategory.setItems(getItems(context, rootCategory));
 //    }
@@ -129,25 +124,25 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
 
     try {
       if (category != null && !category.getConnectorId().isRootId()) {
-        String playlistId = YouTubeIdHelper.getPlaylistId(category.getConnectorId());
+        String playlistId = category.getConnectorId().getExternalId();
         List<PlaylistItem> playlistItems = youTubeService.getPlaylistItems(context.getConnectionId(), playlistId);
         for (PlaylistItem video : playlistItems) {
           String name = video.getSnippet().getTitle();
           if (name.toLowerCase().contains(query.toLowerCase()) || query.trim().length() == 0) {
             String videoId = video.getSnippet().getResourceId().getVideoId();
-            ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), YouTubeIdHelper.createVideoId(playlistId, videoId));
+            ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), videoId);
             result.add(getItem(context, itemId));
           }
         }
       }
       else {
         String channelId = context.getProperty(CHANNEL_ID);
-        SearchListResponse response = search(context.getConnectionId(), channelId, query);
+        SearchListResponse response = search(channelId, query);
         List<com.google.api.services.youtube.model.SearchResult> searchResults = response.getItems();
         if (searchResults != null) {
           for (com.google.api.services.youtube.model.SearchResult searchResult : searchResults) {
             String videoId = searchResult.getId().getVideoId();
-            ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), YouTubeIdHelper.createVideoId("", videoId));
+            ConnectorId itemId = ConnectorId.createItemId(rootCategory.getConnectorId(), videoId);
             result.add(getItem(context, itemId));
           }
         }
@@ -158,7 +153,6 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     return new ConnectorSearchResult<>(result);
   }
 
-  @Override
   public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     CacheManager cacheManager = CacheManager.getCacheManager(CACHE_MANAGER);
     cacheManager.getCache("youTubePlayListByUserCache").removeAll();
@@ -171,13 +165,8 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     return true;
   }
 
-  @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
-    return null;
-  }
-
   // -------------------- Helper ---------------------------------------------------------------------------------------
-  private SearchListResponse search(String connectionId, String channelId, String query) {
+  private SearchListResponse search(String channelId, String query) {
     try {
       return youTubeConnector.getSearchListResponse(channelId, query);
     } catch (IOException e) {
@@ -187,7 +176,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   }
 
   private Playlist getPlaylist(ConnectorContext context, String playlistId) {
-    if (StringUtils.isEmpty(playlistId)) {
+    if (StringUtils.isEmpty(playlistId) || playlistId.equals("root")) {
       return null;
     }
     List<Playlist> playlists = getPlaylists(context);
@@ -222,9 +211,9 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     List<Playlist> playlists = getPlaylists(context);
 
     for (Playlist list : playlists) {
-      ConnectorId categoryId = ConnectorId.createCategoryId(context.getConnectionId(), YouTubeIdHelper.createPlaylistId(list.getId()));
+      ConnectorId categoryId = ConnectorId.createCategoryId(context.getConnectionId(), list.getId());
       String name = list.getSnippet().getTitle();
-      YouTubeConnectorCategory channel = new YouTubeConnectorCategory(rootCategory, context, categoryId, list, name);
+      YouTubeConnectorCategory channel = new YouTubeConnectorCategory(this, rootCategory, context, categoryId, list, name);
 //      channel.setItems(getItems(context, channel));
       result.add(channel);
     }
@@ -237,15 +226,14 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   private List<ConnectorItem> getItems(@Nonnull ConnectorContext context, ConnectorCategory category) {
     List<ConnectorItem> result = new ArrayList<>();
 
-    String playlistId = YouTubeIdHelper.getPlaylistId(category.getConnectorId());
+    String playlistId = category.getConnectorId().getExternalId();
 
     if (category.getConnectorId().isRootId()) {
       String channelId = context.getProperty(CHANNEL_ID);
       if (!StringUtils.isEmpty(channelId)) {
         List<Video> videos = youTubeService.getVideos(context.getConnectionId(), channelId);
         for (Video video : videos) {
-          String vId = YouTubeIdHelper.createVideoId(playlistId, video.getId());
-          ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), vId);
+          ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), video.getId());
           result.add(getItem(context, itemId));
         }
       }
@@ -253,8 +241,8 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     else {
       List<PlaylistItem> playlistItems = youTubeService.getPlaylistItems(context.getConnectionId(), playlistId);
       for (PlaylistItem playlistItem : playlistItems) {
-        String vId = YouTubeIdHelper.createVideoId(playlistId, playlistItem.getSnippet().getResourceId().getVideoId());
-        ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), vId);
+        String vId = playlistItem.getSnippet().getResourceId().getVideoId();
+        ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), vId);
         result.add(getItem(context, itemId));
       }
     }

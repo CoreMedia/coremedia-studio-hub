@@ -11,7 +11,7 @@ public class ConnectorObjectImpl extends RemoteBeanImpl implements ConnectorObje
       return super.get(property);
     } catch (e:Error) {
       // catalog objects such as marketing spots do not use stable IDs and may vanish any time :(
-      trace("[INFO] ignoring error while accesing property", property, e);
+      trace("[INFO] ignoring error while accessing property", property, e);
       return null;
     }
   }

@@ -6,7 +6,7 @@
         text="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_OpenItemInSystem_text')}"
         tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_OpenItemInSystem_tooltip')}">
   <fx:Script><![CDATA[
-    private var config:OpenItemtInTabAction;
+    private var config:OpenItemtInBrowserTabAction;
 
     public native function OpenItemInSystemAction(config:OpenItemInSystemAction = null);
     ]]></fx:Script>

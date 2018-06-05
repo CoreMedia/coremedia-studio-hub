@@ -2,9 +2,12 @@ package com.coremedia.blueprint.studio.connectors.rest.model;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
+import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextImpl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +35,13 @@ public class ConnectorConnectionModel {
     context.put(ConnectorContextImpl.TYPE, privateContext.getType());
     context.put(ConnectorContextImpl.DATE_FORMAT, privateContext.getDateFormat());
     context.put(ConnectorContextImpl.DEFAULT_COLUMNS, privateContext.getDefaultColumns());
+
+    ConnectorContentUploadTypes contentUploadTypes = privateContext.getContentUploadTypes();
+    Collection<String> uploadContentTypeNames = new ArrayList<>();
+    if(contentUploadTypes != null) {
+      uploadContentTypeNames = contentUploadTypes.getProperties().keySet();
+    }
+    context.put(ConnectorContextImpl.CONTENT_UPLOAD_TYPES, uploadContentTypeNames);
   }
 
   public String getConnectorType() {

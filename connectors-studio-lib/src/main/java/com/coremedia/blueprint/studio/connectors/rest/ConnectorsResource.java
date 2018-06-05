@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.studio.connectors.rest;
 
+import com.coremedia.blueprint.connectors.impl.ConnectorType;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -21,7 +22,7 @@ public class ConnectorsResource {
 
   @GET
   @Path("types")
-  public List<String> getRepresentation(@Context HttpServletRequest request) {
+  public List<ConnectorType> getRepresentation(@Context HttpServletRequest request) {
     return connector.getConnectorTypes();
   }
 

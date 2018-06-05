@@ -79,16 +79,6 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     return false;
   }
 
-  @Override
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
-    return true;
-  }
-
-  @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
-    return null;
-  }
-
   @Nullable
   @Override
   public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {

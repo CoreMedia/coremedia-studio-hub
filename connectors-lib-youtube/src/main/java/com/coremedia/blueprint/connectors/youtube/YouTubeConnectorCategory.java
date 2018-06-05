@@ -16,10 +16,12 @@ import java.util.List;
 public class YouTubeConnectorCategory extends YouTubeConnectorEntity implements ConnectorCategory {
   private List<ConnectorCategory> subCategories = new ArrayList<>();
   private List<ConnectorItem> items = new ArrayList<>();
+  private final YouTubeConnectorServiceImpl service;
   private Playlist playlist;
 
-  YouTubeConnectorCategory(ConnectorCategory parent, ConnectorContext context, ConnectorId connectorId, Playlist youtubePlaylist, String name) {
+  YouTubeConnectorCategory(YouTubeConnectorServiceImpl service, ConnectorCategory parent, ConnectorContext context, ConnectorId connectorId, Playlist youtubePlaylist, String name) {
     super(parent, context, connectorId);
+    this.service = service;
     this.playlist = youtubePlaylist;
     setName(name);
   }
@@ -74,5 +76,10 @@ public class YouTubeConnectorCategory extends YouTubeConnectorEntity implements 
 
   public Playlist getPlaylist() {
     return playlist;
+  }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return service.refresh(context, this);
   }
 }

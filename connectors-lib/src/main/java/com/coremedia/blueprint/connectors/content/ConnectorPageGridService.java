@@ -7,17 +7,22 @@ import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.cap.struct.Struct;
 import com.coremedia.cap.struct.StructBuilder;
 import com.coremedia.cap.struct.StructService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Utility class to fill placements with content.
  */
-public class PageGridCreator {
+public class ConnectorPageGridService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorPageGridService.class);
   private static final String PLACEMENTS_2 = "placements_2";
   private static final String PLACEMENTS = "placements";
   private static final String PROPERTY_PAGEGRID = "placement";
@@ -30,16 +35,21 @@ public class PageGridCreator {
 
   /**
    * Adds the given content to the placement with the given name
+   *
    * @param sectionName the name of the placement
-   * @param page the content to add
+   * @param page        the content to add
    */
   public void addToPlacement(String sectionName, Content page, Content item) {
+    addToPlacement(sectionName, page, Arrays.asList(item));
+  }
+
+  public void addToPlacement(String sectionName, Content page, List<Content> items) {
     Content section = getSection(page, sectionName);
-    if(section == null) {
+    if (section == null) {
       throw new UnsupportedOperationException("No section found '" + sectionName + "', used paths " + placementPaths);
     }
 
-    if(page.getStruct(PROPERTY_PAGEGRID) == null) {
+    if (page.getStruct(PROPERTY_PAGEGRID) == null) {
       StructService structService = page.getRepository().getConnection().getStructService();
       Struct struct = structService.emptyStruct();
       Struct placements2Struct = structService.emptyStruct();
@@ -56,10 +66,18 @@ public class PageGridCreator {
       page.set(PROPERTY_PAGEGRID, builder.build());
     }
 
+    Struct pg = page.getStruct(PROPERTY_PAGEGRID);
+    Map<String, Object> placements= pg.getStruct(PLACEMENTS).toNestedMaps();
+    Struct llStruct = null;
+    if(placements.containsKey(ITEMS) && !((List)placements.get(ITEMS)).isEmpty()) {
+      llStruct = pg.getStruct(PLACEMENTS);
+    }
+    else {
+      llStruct = pg.getStruct(PLACEMENTS_2).getStruct(PLACEMENTS).getStruct(String.valueOf(IdHelper.parseContentId(section.getId())));
+    }
 
-    Struct llStruct = page.getStruct(PROPERTY_PAGEGRID).getStruct(PLACEMENTS_2).getStruct(PLACEMENTS).getStruct(String.valueOf(IdHelper.parseContentId(section.getId())));
     List<Content> mainItems = new ArrayList<>(llStruct.getLinks(ITEMS));
-    mainItems.add(item);
+    mainItems.addAll(items);
 
     Struct placementStruct = page.getStruct(PROPERTY_PAGEGRID);
     Struct struct = placementStruct.builder().enter(PLACEMENTS_2).enter(PLACEMENTS).enter(String.valueOf(IdHelper.parseContentId(section.getId()))).set("items", mainItems).build();
@@ -68,33 +86,84 @@ public class PageGridCreator {
     page.getRepository().getConnection().flush();
   }
 
+  public List<Content> getContents(Content page) {
+    Collection<Content> sections = getSections(page);
+    List<Content> result = new ArrayList<>();
+    for (Content section : sections) {
+      result.addAll(getPlacementContents(page, section.getName()));
+    }
+
+    return result;
+  }
+
+  public List<Content> getPlacementContents(Content page, String sectionName) {
+    Content section = getSection(page, sectionName);
+    List<Content> result = new ArrayList<>();
+
+    Struct targetStruct = page.getStruct(PROPERTY_PAGEGRID);
+    if (targetStruct != null) {
+      if (targetStruct.toNestedMaps().containsKey(PLACEMENTS)) {
+        List<Content> placementItems = getPlacementItems(targetStruct, page, section);
+        result.addAll(placementItems);
+      }
+
+      if (targetStruct.toNestedMaps().containsKey(PLACEMENTS_2)) {
+        Struct placementStruct = targetStruct.getStruct(PLACEMENTS_2);
+        if (placementStruct != null) {
+          Map<String, Object> placementsMap= placementStruct.toNestedMaps();
+          if(placementsMap.containsKey(PLACEMENTS)) {
+            List<Content> placementItems = getPlacementItems(placementStruct, page, section);
+            result.addAll(placementItems);
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  public Content getSection(Content channel, String name) {
+    Collection<Content> sections = getSections(channel);
+    for (Content section : sections) {
+      if (section.getName().equalsIgnoreCase(name)) {
+        return section;
+      }
+    }
+    return null;
+  }
 
   //------------------------ Helper ------------------------------------------------------------------------------------
 
-  private Content getSection(Content channel, String name) {
+  private List<Content> getPlacementItems(Struct parent, Content page, Content section) {
+    List<Struct> structs = parent.getStructs(PLACEMENTS);
+    for (Struct struct : structs) {
+      Content placementSection = (Content) struct.toNestedMaps().get("section");
+      if (placementSection != null && placementSection.getId().equals(section.getId())) {
+        return (List<Content>) struct.toNestedMaps().get("items");
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  private Collection<Content> getSections(Content channel) {
     Site site = sitesService.getContentSiteAspect(channel).getSite();
     String[] paths = placementPaths.split(",");
     for (String path : paths) {
       Content placements = null;
-      if(path.startsWith("/")) {
+      if (path.startsWith("/")) {
         placements = channel.getRepository().getRoot().getChild(path);
       }
       else {
         placements = site.getSiteRootFolder().getChild(path);
       }
 
-      if(placements != null) {
-        Set<Content> sections = placements.getChildDocuments();
-        for (Content section : sections) {
-          if(section.getName().equalsIgnoreCase(name)) {
-            return section;
-          }
-        }
+      if (placements != null) {
+        return placements.getChildDocuments();
       }
     }
-    return null;
+
+    return Collections.emptyList();
   }
-  
+
   //------------------------- Spring -----------------------------------------------------------------------------------
 
   @Required

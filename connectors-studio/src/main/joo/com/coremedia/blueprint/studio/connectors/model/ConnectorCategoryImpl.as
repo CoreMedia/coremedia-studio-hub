@@ -1,4 +1,5 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import com.coremedia.cap.undoc.content.Content;
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 
@@ -44,6 +45,36 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     return get(ConnectorPropertyNames.TYPE);
   }
 
+  public function isContentUploadEnabled():Boolean {
+    return get(ConnectorPropertyNames.CONTENT_UPLOAD_ENABLED);
+  }
+
+  public function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined) {
+    var method:RemoteServiceMethod = new RemoteServiceMethod(getContentDropUri(), 'POST');
+    var contentIds:Array = [];
+    for each(var c:Content in contents) {
+      contentIds.push(c.getNumericId());
+    }
+    var data:Object = {
+      'contentIds': contentIds.join(","),
+      'defaultAction': defaultAction
+    };
+
+    method.request(data,
+            function (response:RemoteServiceMethodResponse):void {
+              if(callback) {
+                callback();
+              }
+
+            },
+            function (response:RemoteServiceMethodResponse):void {
+              if(callback) {
+                callback(response.getError());
+              }
+            }
+    );
+  }
+
   override public function preview(callback:Function):void {
     var method:RemoteServiceMethod = new RemoteServiceMethod(getPreviewUri(), 'GET');
     method.request(
@@ -72,6 +103,11 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
               invalidate(callback);
             }
     );
+  }
+
+
+  public function getContentDropUri():String {
+    return get(ConnectorPropertyNames.CONTENT_DROP_URI);
   }
 
   public function getUploadUri():String {

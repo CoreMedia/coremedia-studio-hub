@@ -50,7 +50,7 @@ public class CoreMediaConnectorItem extends CoreMediaConnectorEntity implements 
     return content.getPath();
   }
 
-  @Nonnull
+  @Nullable
   @Override
   public String getTargetContentType() {
     return content.getType().getName();

@@ -3,12 +3,12 @@ package com.coremedia.blueprint.connectors.s3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,5 +57,15 @@ public class S3ConnectorCategory extends S3ConnectorEntity implements ConnectorC
   }
   void setItems(List<ConnectorItem> items) {
     this.items = items;
+  }
+
+  @Override
+  public Boolean refresh(@Nonnull ConnectorContext context) {
+    return s3Service.refresh(context, this);
+  }
+
+  @Override
+  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+    return s3Service.upload(context, this, itemName, inputStream);
   }
 }

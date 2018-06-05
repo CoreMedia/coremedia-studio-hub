@@ -35,6 +35,13 @@
     <property name="connectorNotificationService" ref="connectorNotificationService" />
   </bean>
 
+  <bean id="connectorCategoryInvalidator" class="com.coremedia.blueprint.studio.connectors.rest.invalidation.ConnectorCategoryInvalidator">
+    <property name="connectors" ref="connector" />
+    <property name="linker" ref="linker" />
+    <property name="id" value="connectorCategoryInvalidator" />
+    <property name="capacity" value="${studio.rest.eventsCache.capacity:10000}"/>
+  </bean>
+
   <!-- Notifications-->
   <bean id="connectorNotificationService" class="com.coremedia.blueprint.studio.connectors.rest.notifications.ConnectorNotificationService">
     <property name="contentRepository" ref="contentRepository" />
@@ -47,6 +54,7 @@
   <!-- Model Entities-->
   <bean id="connectorResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorResource" scope="prototype">
     <property name="connector" ref="connector" />
+    <property name="sitesService" ref="sitesService" />
   </bean>
 
 
@@ -62,6 +70,8 @@
   <bean id="connectorCategoryResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorCategoryResource" scope="prototype"
         parent="connectorEntityResource">
     <property name="tempFileCacheService" ref="tempFileCacheService" />
+    <property name="contentRepository" ref="contentRepository" />
+    <property name="connectorContentUploadService" ref="connectorContentUploadService" />
   </bean>
 
 </beans>

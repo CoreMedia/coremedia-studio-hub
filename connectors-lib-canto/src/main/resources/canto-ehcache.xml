@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect" dynamicConfig="true" name="cacheManagerCanto">
+
+  <cache name="cantoCatalogCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         diskSpoolBufferSizeMB="20"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LFU"
+         transactionalMode="off"/>
+
+  <cache name="cantoCategoryCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         diskSpoolBufferSizeMB="20"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LFU"
+         transactionalMode="off"/>
+
+  <cache name="cantoCategoryAssignmentsCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         diskSpoolBufferSizeMB="20"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LFU"
+         transactionalMode="off"/>
+
+  <cache name="cantoAssetCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         diskSpoolBufferSizeMB="20"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LFU"
+         transactionalMode="off"/>
+
+  <cache name="cantoSearchResultCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         diskSpoolBufferSizeMB="20"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LFU"
+         transactionalMode="off"/>
+
+</ehcache>

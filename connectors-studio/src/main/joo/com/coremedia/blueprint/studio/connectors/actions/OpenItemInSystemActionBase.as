@@ -28,9 +28,15 @@ public class OpenItemInSystemActionBase extends Action {
     var selection:ConnectorItem = initialConfig.selectedItemsValueExpression.getValue()[0];
     var url:String = selection.getManagementUrl();
     if(url) {
-      window.open(url, "_blank");
+      if(url.indexOf("javascript:") !== -1) {
+        var start:int = "javascript:".length;
+        var script:String = url.substr(start, url.length);
+        window['eval'](script);
+      }
+      else {
+        window.open(url, "_blank");
+      }
     }
-
   }
 
   private function selectionChanged(ve:ValueExpression):void {

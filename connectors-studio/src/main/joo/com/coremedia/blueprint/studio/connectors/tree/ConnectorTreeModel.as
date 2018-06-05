@@ -18,8 +18,10 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   public static const ID_PREFIX:String = "connector/";
   public static const CONNECTOR_TREE_ID:String = "connectorTreeId";
   private var connectorExpression:ValueExpression;
+  private var rootNodeVisible:Boolean;
 
-  public function ConnectorTreeModel(connectorType:String) {
+  public function ConnectorTreeModel(connectorType:String, rootNodeVisible:Boolean) {
+    this.rootNodeVisible = rootNodeVisible;
     this.connectorExpression = ConnectorHelper.getConnectorExpression(connectorType);
   }
 
@@ -43,7 +45,7 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   }
 
   public function isRootVisible():Boolean {
-    return true;
+    return rootNodeVisible;
   }
 
   public function getRootId():String {

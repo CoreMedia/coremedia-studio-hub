@@ -81,7 +81,6 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
     fileSystemService.invalidate();
   }
 
-  @Override
   public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
     fileSystemService.invalidate();
     return true;

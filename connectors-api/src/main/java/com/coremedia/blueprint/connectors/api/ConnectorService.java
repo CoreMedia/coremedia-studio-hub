@@ -5,7 +5,6 @@ import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -60,21 +59,4 @@ public interface ConnectorService {
 
   @Nonnull
   ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params);
-
-  /**
-   * Called to refresh the service
-   * @return true if the operation was successful
-   */
-  Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category);
-
-  /**
-   * Uses the given InputStream and name to create a new connector item in
-   * the selected category or folder
-   * @param category the category to upload the file to
-   * @param itemName the name of the new connector item
-   * @param inputStream the upload input stream
-   * @return the newly created item created from the stream or null if not upload is provided
-   */
-  @Nullable
-  ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream);
 }

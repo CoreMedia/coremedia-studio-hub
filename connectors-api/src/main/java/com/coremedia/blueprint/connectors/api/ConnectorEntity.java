@@ -42,6 +42,17 @@ public interface ConnectorEntity {
   String getManagementUrl();
 
   /**
+   * Default implementation for preview HTML.
+   * There are no default templates provided here as we assume that
+   * most categories won't need a preview
+   * @return the HTML to render or null if the entity does not support a preview.
+   */
+  @Nullable
+  default String getPreviewHtml() {
+    return null;
+  }
+
+  /**
    * Returns the thumbnail URL used to show
    * an image preview in the Studio's thumbnail view
    */

@@ -57,7 +57,7 @@
     <TbSeparator/>
     <ui:IconButton>
       <ui:baseAction>
-        <connectorAction:OpenItemtInTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+        <connectorAction:OpenItemtInBrowserTabAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </ui:baseAction>
     </ui:IconButton>
     <ui:IconButton>

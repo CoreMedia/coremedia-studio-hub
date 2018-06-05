@@ -95,7 +95,7 @@ public interface ConnectorItem extends ConnectorEntity {
     return DEFAULT_TYPE;
   }
 
-  @Nonnull
+  @Nullable
   default String getTargetContentType() {
     ConnectorContext context = getContext();
     ConnectorContentMappings contentMappings = context.getContentMappings();

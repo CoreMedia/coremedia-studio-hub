@@ -1,5 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
+import com.coremedia.cap.multisite.Site;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,6 +25,12 @@ public interface ConnectorContext {
    */
   @Nonnull
   String getType();
+
+  /**
+   * If true, the tree for this connector
+   * will be displayed on root level without a parent aggregator node.
+   */
+  boolean isRootNodeVisible();
 
   /**
    * Returns the name that has been set for the connector type name in 'Connector Types'.
@@ -125,6 +133,12 @@ public interface ConnectorContext {
   Locale getLocale();
 
   /**
+   * Returns the preferred site of the current user
+   */
+  @Nullable
+  Site getPreferredSite();
+
+  /**
    * Returns the type of date format that should be used when displayed in the Studio.
    * Possible values are 'long' and 'short'.
    */
@@ -137,4 +151,11 @@ public interface ConnectorContext {
    */
   @Nonnull
   List<String> getDefaultColumns();
+
+  /**
+   * If content drop is enabled this list represents the content types
+   * that may be dropped on the target connector node.
+   */
+  @Nullable
+  ConnectorContentUploadTypes getContentUploadTypes();
 }
