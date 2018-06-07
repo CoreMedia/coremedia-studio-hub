@@ -4,7 +4,7 @@ In this tutorial, we will implement a connector for the Studio Hub.
 The example connector will be implemented as a separate extension and does not connect to a specific system.
 Instead, we simulate the Studio Hub categories and items programmatically.
 
-The full example of this tutorial can be downloaded [here](downloads/studio-hub-example.zip "Studio Hub Example").
+The full example of this tutorial can be downloaded [here](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/downloads/studio-hub-example.zip "Studio Hub Example").
 
 ## Prerequisites
 
@@ -487,7 +487,7 @@ Save the new settings struct and reload the Studio.
 
 - The new tree should be visible in the Studio library now.
 
-[[images/tree1.png|Example Connector]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/tree1.png|Example Connector]]
 
 ## Step 5 - Connector Item Types
 
@@ -506,7 +506,7 @@ exampleItem1 = new ExampleConnectorItem(item1d, context, "test.png", subCategory
 
 Once you rebuild and reload the Studio, the item will be recognized as an image.
 
-[[images/item1.png|Image Connector Item]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/item1.png|Image Connector Item]]
 
 You see that the type is changed. Because the file ending '.png' is mapped as type _image_
 in the _Connector Item Types_, the preview template will try to render an image.
@@ -530,7 +530,7 @@ In a concrete implementation, the stream would access the corresponding external
   }
 ```
 
-[[images/item2.png|Image Connector Item with Preview]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/item2.png|Image Connector Item with Preview]]
 
 The preview panel shows the image now. The preview of other item types is generated in a similar way.
 For example you can change the name of the item to "test.txt" and the preview
@@ -554,7 +554,7 @@ putting some values into the map that is returned by the _getMetadata_ method.
 
 The item selection should look like this:
 
-[[images/item3.png|Image Connector Item with Preview and Metadata]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/item3.png|Image Connector Item with Preview and Metadata]]
 
 
 ## Step 6: Custom Connector Item Types
@@ -609,7 +609,7 @@ For more details about the item name and icon mapping, read the chapter "Studio 
 
 The custom preview is rendered. The metadata information is hardcoded for every item selection.
 
-[[images/item4.png|Custom Connector Item with Preview and Metadata]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/item4.png|Custom Connector Item with Preview and Metadata]]
 
 
 
@@ -628,7 +628,7 @@ that is streamed by the _stream_ method of the connector item.
 
 The _CMPicture_ document is generated from the connector item "test.png":
 
-[[images/content1.png|Default Content Creation]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/content1.png|Default Content Creation]]
 
 
 ## Step 8 - Custom Content Creation
@@ -688,5 +688,5 @@ In that case, the priority attribute allows you to customize the order of execut
 
 You custom content interceptor should have created the URL segment:
 
-[[images/content2.png|Custom Content Creation]]
+[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/content2.png|Custom Content Creation]]
 
