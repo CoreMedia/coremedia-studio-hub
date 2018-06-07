@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor:StudioPlugin
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns:connector="exml:com.coremedia.blueprint.studio.config.connectors"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config">
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.cms.editor.ContentTypes')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    private var config:StudioHubExampleStudioPlugin;
+
+    public native function StudioHubExampleStudioPlugin(config:StudioHubExampleStudioPlugin = null);
+    ]]></fx:Script>
+
+
+  <editor:rules>
+  </editor:rules>
+
+  <editor:configuration>
+  </editor:configuration>
+
+
+</editor:StudioPlugin>
