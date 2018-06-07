@@ -688,5 +688,5 @@ In that case, the priority attribute allows you to customize the order of execut
 
 You custom content interceptor should have created the URL segment:
 
-[[https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/content2.png|Custom Content Creation]]
+![Custom Content Creation](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/content2.png)
 
