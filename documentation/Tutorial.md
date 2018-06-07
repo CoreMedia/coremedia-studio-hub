@@ -44,7 +44,8 @@ At this point, the following things should have happened:
  * The rebuild Studio webapp is started with the additional plugin _Studio Hub Example_ (there won't be anything to see in the Studio library yet!).
  * IDEA has the modules detected properly and you see the following structure:
 
- <img src="coremedia-studio-hub/src/main/documentation/images/maven-modules.png?sanitize=true"> 
+ 
+ ![Maven Modules](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/maven-modules.png)
 
 # Step 2 - Implementing the Studio Module (Backend)
 
