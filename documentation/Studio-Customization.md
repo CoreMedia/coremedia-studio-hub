@@ -101,3 +101,9 @@ The default implementation allows to configure an icon for the column too:
 
 If this constructor is used, the column value ("publish") will be looked up in the Studio resource bundle _CoreIcons.properties_
 and the icon will be shown with it's tooltip and the given optional icon text.
+
+
+### Custom Forms
+
+The Studio Hub comes with a custom link list that can be added to any document form of a content type, that owns a struct property.
+
