@@ -3,6 +3,11 @@
 # Index
 
 * [Studio Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
+* [Content Creation](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Creation.md)
+* [Metadata Resolvers](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Metadata-Resolvers.md)
+* [Search](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Search.md)
+* [Studio Customization](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Studio-Customization.md)
+* [Tutorial](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Tutorial.md)
 
 ## Abstract
 
