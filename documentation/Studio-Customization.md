@@ -130,6 +130,6 @@ To add a connector link list to a form, you have to use a regular _AddItemsPlugi
 every form definition that includes the _MediaDocumentForm_ will also contain the link list _External Media Items_.
 The label of this link list is localized like any other property editor, but by default, the Studio Hub supports the label for the _Struct_ property _localSettings.connectorIds_, where the actual items are stored.
 
-Note that you can not only drop _ConnectorItem_s on the link list, but also _ConntectorCategory_ items. This allows you to render all children of a category without touching any CoreMedia content.
+Note that you can not only drop _ConnectorItem_ entities on the link list, but also _ConntectorCategory_ entities. This allows you to render all children of a category without touching any CoreMedia content.
 
 The _CAE_ modules of the Studio Hub comes with a Freemarker fascade that allows to access the linked items from _ContentBeans_.
