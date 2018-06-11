@@ -1,3 +1,5 @@
+# Content Creation
+
 This section describes how content is created by the Studio Hub and how to customize it.
 
 ### Asynchronous Content Creation
