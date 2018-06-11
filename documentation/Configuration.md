@@ -1,3 +1,5 @@
+# Studio Hub Configuration
+
 The configuration of the connector extension consists of different settings documents that can be
 put in a global, site-specific or user's home folder.
 The CoreMedia Blueprint comes with the following predefined settings documents:
