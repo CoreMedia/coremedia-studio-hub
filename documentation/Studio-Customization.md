@@ -73,6 +73,8 @@ For example, the RSS connector declares an additional column _Author_:
   }
 ```
 
+![Custom Columns](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/custom_columns.png)
+
 The method used the default implementation _DefaultConnectorColumn_. The first parameter is the resource bundle
 key that should be used from the Studio resource bundle _ConnectorsStudioPlugin.properties_.
 The second parameter is the name of the data index that should be used when the data is displayed.
