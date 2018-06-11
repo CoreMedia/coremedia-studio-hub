@@ -1,3 +1,5 @@
+# Studio Customization
+
 Developing new connectors requires client-side Studio customization too. These customization are easily done by overriding
 the connector property files of the Connector Studio plugin. Examples for overriding property files
 can be found in documentation or the file 'BlueprintFormsStudioPlugin.mxml' inside the CoreMedia Blueprint.
