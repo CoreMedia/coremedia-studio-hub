@@ -1,6 +1,6 @@
 # CoreMedia Studio Hub
 
-# Index
+## Index
 
 * [Studio Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
 * [Content Creation](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Creation.md)
