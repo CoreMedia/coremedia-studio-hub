@@ -48,6 +48,7 @@ version __1804.1-X__ where 'X' indicates the release version of the Studio Hub.
  * Automatic invalidation after server side changes
  * Change notifications
  * Custom columns
+ * Custom Link Lists
 
 
 ## Supported Systems
