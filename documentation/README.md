@@ -1,5 +1,9 @@
 # CoreMedia Studio Hub
 
+# Index
+
+* [Studio Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
+
 ## Abstract
 
 The CoreMedia Studio Hub allows to integrate various external
