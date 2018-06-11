@@ -107,3 +107,23 @@ and the icon will be shown with it's tooltip and the given optional icon text.
 
 The Studio Hub comes with a custom link list that can be added to any document form of a content type, that owns a struct property.
 
+![Custom Link Lists](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/custom_ll.png)
+
+To add a connector link list to a form, you have to use a regular _AddItemsPlugin_ inside your _StudioPlugin_. For example, when you add the following snippet to you _BlueprintFormsStudioPlugin.mxml_
+
+```xml
+<bpforms:MediaDocumentForm>
+  <bpforms:plugins exml:mode="append">
+    <ui:AddItemsPlugin>
+      <ui:items>
+        <connectors:ConnectorLinkListPropertyField itemId="connectorLinkList"
+                                                   showThumbnails="true"
+                                                   propertyName="localSettings.connectorIds"/>
+      </ui:items>
+    </ui:AddItemsPlugin>
+  </bpforms:plugins>
+</bpforms:MediaDocumentForm>
+```
+
+every form definition that includes the _MediaDocumentForm_ will also contain the link list _External Media Items_.
+The label of this link list is localized like any other property editor, but by default, the Studio Hub supports the label for the _Struct_ property _localSettings.connectorIds_, where the actual items are stored.
