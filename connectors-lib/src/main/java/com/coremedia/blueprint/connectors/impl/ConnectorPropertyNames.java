@@ -24,4 +24,5 @@ public interface ConnectorPropertyNames {
 
   //id content property
   String CONNECTOR_ID = "connectorId";
+  String CONNECTOR_IDS = "connectorIds";
 }

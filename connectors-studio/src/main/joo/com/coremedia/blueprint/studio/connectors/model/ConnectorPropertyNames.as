@@ -4,6 +4,7 @@ public class ConnectorPropertyNames {
   public static const TYPE_CONNECTOR:String = 'Connector';
   public static const TYPE_CONNECTOR_CATEGORY:String = 'ConnectorCategory';
   public static const TYPE_CONNECTOR_ITEM:String = 'ConnectorItem';
+  public static const TYPE_CONNECTOR_ENTITY:String = 'ConnectorEntity';
 
   public static const NAME:String = 'name';
   public static const SIZE:String = 'size';

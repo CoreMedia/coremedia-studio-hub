@@ -37,10 +37,10 @@ public class ConnectorContentService {
       var results:Array = [];
       var count:Number = 0;
       for each(var entity:ConnectorEntity in connectorEntities) {
-        findContent(entity, folder, site, function (existingContent:Content):void {
+        findContent(entity, folder, site, function (searchEntity:ConnectorEntity, existingContent:Content):void {
           if(existingContent) {
             count++;
-            var creationResult:ConnectorContentCreationResult = new ConnectorContentCreationResult(existingContent, entity, false);
+            var creationResult:ConnectorContentCreationResult = new ConnectorContentCreationResult(existingContent, searchEntity, false);
             results.push(creationResult);
 
             if (count == connectorEntities.length) {
@@ -48,7 +48,7 @@ public class ConnectorContentService {
             }
           }
           else {
-            createContentForItem(entity, folder, function (cr:ConnectorContentCreationResult):void {
+            createContentForItem(searchEntity, folder, function (cr:ConnectorContentCreationResult):void {
               count++;
               results.push(cr);
               if (count == connectorEntities.length) {
@@ -94,10 +94,10 @@ public class ConnectorContentService {
       var contentId:String = response.response.responseText;
       if (contentId) {
         var content:Content = BeanFactoryImpl.resolveBeans(JSON.decode(contentId)) as Content;
-        callback.call(null, content);
+        callback.call(null, entity, content);
       }
       else {
-        callback.call(null, null);
+        callback.call(null, entity, null);
       }
     });
   }
@@ -114,8 +114,8 @@ public class ConnectorContentService {
       var id:String = response.response.responseText;
       if (id) {
         var content:Content = BeanFactoryImpl.resolveBeans(JSON.decode(id)) as Content;
-        content.load(function ():void {
-          var result:ConnectorContentCreationResult = new ConnectorContentCreationResult(content, entity, true);
+        content.load(function (loadedContent:Content):void {
+          var result:ConnectorContentCreationResult = new ConnectorContentCreationResult(loadedContent, entity, true);
           callback.call(null, result);
         });
       }
@@ -175,7 +175,7 @@ public class ConnectorContentService {
    */
   private static function waitForFeeding(content:Content, entity:ConnectorEntity, timeout:Number, callback:Function):void {
     var site:Site = editorContext.getSitesService().getSiteFor(content);
-    findContent(entity, null, site, function (feededContent:Content):void {
+    findContent(entity, null, site, function (searchedEntity:ConnectorEntity, feededContent:Content):void {
       if (feededContent) {
         callback(content);
       }

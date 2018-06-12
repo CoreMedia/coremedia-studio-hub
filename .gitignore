@@ -5,12 +5,21 @@
 .idea/
 
 connectors-api/target/
+connectors-cae/target/
+connectors-lib/target/
+connectors-lib-canto/target/
+connectors-lib-cloudinary/target/
 connectors-lib-dropbox/target/
 connectors-lib-coremedia/target/
+connectors-lib-coremedia-navigation/target/
+connectors-lib-dropbox/target/
 connectors-lib-filesystem/target/
 connectors-lib-rss/target/
 connectors-lib-s3/target/
 connectors-lib-youtube/target/
-connectors-lib/target/
-connectors-studio-lib/target/
 connectors-studio/target/
+connectors-studio-lib/target/
+
+
+*.class
+

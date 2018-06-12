@@ -2,6 +2,7 @@
 <componentPackage>
   <component class="com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.CreateConnectorContentAction"/>
+  <component class="com.coremedia.blueprint.studio.connectors.actions.ShowInLibraryAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.DeleteItemAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.OpenItemtInBrowserTabAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.actions.ReloadCategoryAction"/>
@@ -16,6 +17,10 @@
   <component class="com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryListConainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbarContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbar"/>
+  <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkContextMenu"/>
+  <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkListGridPanel"/>
+  <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkToolbar"/>
+  <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkListPropertyField"/>
   <component class="com.coremedia.blueprint.studio.connectors.notifications.ConnectorInvalidationDetails"/>
   <component class="com.coremedia.blueprint.studio.connectors.notifications.ShowConnectorForNotificationAction"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchListContainer"/>

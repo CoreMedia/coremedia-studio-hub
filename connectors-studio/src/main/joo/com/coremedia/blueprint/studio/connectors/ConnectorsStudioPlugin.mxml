@@ -51,6 +51,9 @@
     <editor:CopyResourceBundleProperties
             destination="{ResourceManager.getInstance().getResourceBundle(null,'com.coremedia.cms.editor.notification.Notifications')}"
             source="{ResourceManager.getInstance().getResourceBundle(null,'com.coremedia.blueprint.studio.connectors.ConnectorNotifications')}"/>
+    <editor:CopyResourceBundleProperties
+            destination="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.cms.editor.ContentTypes')}"
+            source="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.blueprint.studio.connectors.ConnectorDocumentTypes')}"/>
 
     <notifications:RegisterNotificationDetailsPlugin notificationType="invalidation">
       <notifications:notificationDetailsComponentConfig>

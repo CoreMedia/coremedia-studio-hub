@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.studio.connectors.actions {
 import com.coremedia.blueprint.base.components.quickcreate.QuickCreateDialog;
 import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
@@ -60,7 +61,7 @@ public class CreateConnectorContentActionBase extends Action {
       var item:ConnectorItem = selection[0] as ConnectorItem;
       if (item) {
         var site:Site = editorContext.getSitesService().getPreferredSite();
-        ConnectorContentService.findContent(item, null, site, function (c:Content):void {
+        ConnectorContentService.findContent(item, null, site, function (searchedEntity:ConnectorEntity, c:Content):void {
           if (c) {
             var msg:String = StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'create_duplicate_exists_message'), c.getName());
             MessageBoxUtilInternal.show(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'duplicate_title'), msg, null, {

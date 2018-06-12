@@ -8,6 +8,7 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorEntityImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorObjectImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorPropertyNames;
 import com.coremedia.cms.editor.sdk.columns.grid.TypeIconColumn;
 import com.coremedia.cms.editor.sdk.editorContext;
@@ -35,6 +36,21 @@ import mx.resources.ResourceManager;
 public class ConnectorHelper {
   public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
+
+  public static function getConnectorObject(connectorId:String):ConnectorObject {
+    //double encoding!
+    var formattedId:String = encodeURIComponent(connectorId);
+    formattedId = encodeURIComponent(formattedId);
+
+    var uriPath:String = 'connector/item/' + formattedId;
+    if(connectorId.indexOf('/category/') !== -1) {
+      uriPath = 'connector/category/' + formattedId;
+    }
+
+    var bean:ConnectorObjectImpl = beanFactory.getRemoteBean(uriPath) as ConnectorObjectImpl;
+    bean.load();
+    return bean;
+  }
 
   public static function getType(entity:ConnectorObject):String {
     if (entity is Connector) {

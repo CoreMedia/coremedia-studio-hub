@@ -15,6 +15,8 @@ public interface ConnectorEntity extends ConnectorObject {
 
   function getColumnValues():Array;
 
+  function getRootCategory():ConnectorCategory;
+
   /**
    * Deletes this entity
    * @param callback optional callback called with the refreshed parent entity.

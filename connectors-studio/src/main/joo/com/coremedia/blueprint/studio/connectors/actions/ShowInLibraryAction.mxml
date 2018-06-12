@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:ShowInLibraryActionBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:local="com.coremedia.blueprint.studio.connectors.actions.*"
+        iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'show_in_library')}"
+        tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_ShowInLibrary_tooltip')}"
+        text="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Action_ShowInLibrary_text')}">
+  <fx:Script><![CDATA[
+    private var config:ShowInLibraryAction;
+
+    public native function ShowInLibraryAction(config:ShowInLibraryAction= null);
+    ]]></fx:Script>
+
+</local:ShowInLibraryActionBase>

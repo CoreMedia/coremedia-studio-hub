@@ -1,8 +1,8 @@
 package com.coremedia.blueprint.studio.connectors.dnd {
+import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentCreationResult;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
-import com.coremedia.blueprint.studio.connectors.service.ConnectorService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
 import com.coremedia.cms.editor.sdk.dragdrop.DragInfo;
@@ -40,7 +40,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
     this.linkListWrapper = linkListWrapper;
     this.boundView = boundView;
 
-    linkListWrapper.bindTo.loadValue(function(value:Content):void {
+    linkListWrapper.bindTo.loadValue(function (value:Content):void {
       llOwner = value;
     });
 
@@ -144,11 +144,11 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
       var count:Number = createdAndExistingContents.length;
 
       //..and trigger the server side post processing if the content was newly created
-      if(count > 0) {
+      if (count > 0) {
         for each(var result:ConnectorContentCreationResult in createdAndExistingContents) {
           triggerPostProcessingForNewContent(result, function ():void {
             count--;
-            if(count === 0) {
+            if (count === 0) {
               findAndLinkContents(folder, site, itemsToCreate);
             }
           });
@@ -161,7 +161,7 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
   }
 
   private function triggerPostProcessingForNewContent(result:ConnectorContentCreationResult, callback:Function):void {
-    if(result.isNew) {
+    if (result.isNew) {
       ConnectorContentService.processContent(result.content, result.connectorEntity, callback, true);
     }
     else {
@@ -172,19 +172,19 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
   private function findAndLinkContents(folder:String, site:Site, itemsToCreate:Array):void {
     var contents:Array = [];
     for each(var item:ConnectorItem in itemsToCreate) {
-      ConnectorContentService.findContent(item, folder, site, function(content:Content):void {
-        if(content) {
-          content.load(function():void {
+      ConnectorContentService.findContent(item, folder, site, function (searchedEntity:ConnectorEntity, content:Content):void {
+        if (content) {
+          content.load(function ():void {
             contents.push(content);
-            if(contents.length === itemsToCreate.length) {
-              link(contents, function(results:Array):void {
+            if (contents.length === itemsToCreate.length) {
+              link(contents, function (results:Array):void {
                 setBusy(false);
               });
             }
           });
         }
         else {
-          trace('[ERROR]', "Failed to find content for item "+ item.getConnectorId());
+          trace('[ERROR]', "Failed to find content for item " + item.getConnectorId());
           setBusy(false);
         }
       });

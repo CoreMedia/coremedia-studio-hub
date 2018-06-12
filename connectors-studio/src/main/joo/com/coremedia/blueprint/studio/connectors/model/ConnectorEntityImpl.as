@@ -1,8 +1,9 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import com.coremedia.ui.data.beanFactory;
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 
-public class ConnectorEntityImpl extends ConnectorObjectImpl implements ConnectorEntity{
+public class ConnectorEntityImpl extends ConnectorObjectImpl implements ConnectorEntity {
   public function ConnectorEntityImpl(uri:String) {
     super(uri);
   }
@@ -31,17 +32,30 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
     return get(ConnectorPropertyNames.PREVIEW_URI);
   }
 
+  public function getRootCategory():ConnectorCategory {
+    var myConnectorId:ConnectorId = new ConnectorId(getConnectorId());
+    var connectionId:String = myConnectorId.getConnectionId();
+    var rootCategoryId:ConnectorId = ConnectorId.createRootId(connectionId);
+
+    var encodedId:String = encodeURIComponent(rootCategoryId.toString());
+    encodedId = encodeURIComponent(encodedId);
+    var uriPath:String = 'connector/category/' + encodedId;
+    var bean:ConnectorCategory = beanFactory.getRemoteBean(uriPath) as ConnectorCategory;
+    bean.load();
+    return bean;
+  }
+
   public function getColumnValue(dataIndex:String):Object {
-    if(!isLoaded()) {
+    if (!isLoaded()) {
       return undefined;
     }
 
-    if(!getColumnValues()) {
+    if (!getColumnValues()) {
       return null;
     }
 
     for each(var value:Object in getColumnValues()) {
-      if(value.dataIndex === dataIndex) {
+      if (value.dataIndex === dataIndex) {
         return value;
       }
     }
@@ -49,12 +63,12 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
   }
 
   public function getContext():ConnectorContext {
-    if(!this.getConnector().isLoaded()) {
+    if (!this.getConnector().isLoaded()) {
       this.getConnector().load();
       return undefined;
     }
     var connection:Connection = getConnector().getConnection(getConnectionId());
-    if(connection) {
+    if (connection) {
       return connection.getContext();
     }
     return null;
@@ -75,10 +89,10 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
     method.request({},
             function (response:RemoteServiceMethodResponse):void {
               var result:String = response.response.responseText;
-              if(result && result === "false") {
+              if (result && result === "false") {
                 errorHandler(response.response.responseText);
               }
-              if(parent) {
+              if (parent) {
                 parent.refresh(callback);
               }
               else {
@@ -87,7 +101,7 @@ public class ConnectorEntityImpl extends ConnectorObjectImpl implements Connecto
 
             },
             function (response:RemoteServiceMethodResponse):void {
-              if(parent) {
+              if (parent) {
                 parent.refresh(callback);
               }
             }

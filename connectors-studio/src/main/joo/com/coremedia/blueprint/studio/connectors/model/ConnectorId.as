@@ -2,6 +2,12 @@ package com.coremedia.blueprint.studio.connectors.model {
 import com.coremedia.ui.data.beanFactory;
 
 public class ConnectorId {
+
+  private static const PREFIX:String = "connector:///";
+  private static const CATEGORY:String = "category";
+  private static const ITEM:String = "item";
+  private static const ROOT:String = "root";
+
   private const PARENT_ID_SEPARATOR:String = "|";
   private var connectionId:String;
   private var externalId:String;
@@ -17,6 +23,17 @@ public class ConnectorId {
     this.id = id;
     this.connectionId = connectionId;
     this.externalId = segment;
+  }
+
+  public function connectorIdForSegments(id:String, connectionId:String, externalId:String) {
+    this.id = id;
+    this.connectionId = connectionId;
+    this.externalId = externalId;
+  }
+
+
+  public static function createRootId(connectionId:String):ConnectorId {
+    return new ConnectorId(PREFIX + connectionId + "/" + CATEGORY + "/" + ROOT);
   }
 
   public function getConnectionId():String {
