@@ -13,7 +13,6 @@ Apart from the ready-to-go implementations mentioned before, this extension prov
 
 The configuration is done through settings which can be conveniently created in CoreMedia Studio. To use our OOTB adapters no code needs to be changed, as all setup for connections and options is kept cleanly separated from the extension code.
 
-Here is an overview of the steps to take to install and configure the extension. The details for these steps together with example settings can be found in the [wiki](https://github.com/CoreMedia/coremedia-studio-hub/wiki).
 
 **1. Get the extension**
 
