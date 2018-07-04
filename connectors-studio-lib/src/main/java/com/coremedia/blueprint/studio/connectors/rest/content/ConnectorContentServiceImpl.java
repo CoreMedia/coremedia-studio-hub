@@ -1,4 +1,4 @@
-package com.coremedia.blueprint.connectors.content;
+package com.coremedia.blueprint.studio.connectors.rest.content;
 
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;

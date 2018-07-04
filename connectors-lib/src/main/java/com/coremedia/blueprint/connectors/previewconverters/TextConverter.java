@@ -21,11 +21,8 @@ public class TextConverter implements ConnectorPreviewConverter {
 
   @Override
   public boolean include(ConnectorItem item) {
-    if(item.getItemType() != null) {
-      String type = item.getItemType();
-      return type.startsWith("text/");
-    }
-    return false;
+    String type = item.getItemType();
+    return type.startsWith("text/");
   }
 
   @Nullable

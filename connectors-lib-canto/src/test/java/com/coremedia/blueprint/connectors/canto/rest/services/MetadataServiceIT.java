@@ -1,18 +1,14 @@
 package com.coremedia.blueprint.connectors.canto.rest.services;
 
 import com.coremedia.blueprint.connectors.canto.rest.CantoConnector;
-import com.coremedia.blueprint.connectors.canto.rest.entities.AbstractCantoEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCatalogEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCategoryEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.SearchResultEntity;
-import com.coremedia.translate.xliff.core.jaxb.Ex;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -26,7 +22,7 @@ public class MetadataServiceIT {
 
   @Before
   public void setUp() {
-    connector = new CantoConnector("sandbox.canto.com","coremedia-poc", "m4YnSNpHOt2Q");
+    connector = new CantoConnector("sandbox.canto.com","coremedia-poc", "");
 
     testling = new MetadataService();
     testling.setConnector(connector);

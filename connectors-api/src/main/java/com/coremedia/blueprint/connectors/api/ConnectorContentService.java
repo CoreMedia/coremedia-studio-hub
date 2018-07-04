@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Interface for the content service which manages the lookup of duplicats, content creation and
+ * Interface for the content service which manages the lookup of duplicates, content creation and
  * post-processing.
  */
 public interface ConnectorContentService {

@@ -24,7 +24,7 @@ public class CommonMarkConverter implements ConnectorPreviewConverter {
 
   @Override
   public boolean include(ConnectorItem connectorItem) {
-    return connectorItem.getName() != null && connectorItem.getName().endsWith(".md");
+    return connectorItem.getName().endsWith(".md");
   }
 
   @Nullable

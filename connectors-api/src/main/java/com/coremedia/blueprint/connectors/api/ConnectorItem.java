@@ -95,6 +95,12 @@ public interface ConnectorItem extends ConnectorEntity {
     return DEFAULT_TYPE;
   }
 
+  /**
+   * Returns the CoreMedia content type for this item.
+   * The item type is mapped to a CoreMedia content type in the Content Mappings settings document.
+   * This default method accesses this setting and may be overridden if the type should
+   * be calculated dynamically.
+   */
   @Nullable
   default String getTargetContentType() {
     ConnectorContext context = getContext();

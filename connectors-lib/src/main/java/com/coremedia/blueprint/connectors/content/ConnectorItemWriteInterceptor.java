@@ -47,7 +47,7 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  */
 public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorItemWriteInterceptor.class);
-  private static final String LOCAL_SETTINGS = ConnectorContentServiceImpl.LOCAL_SETTINGS;
+  private static final String LOCAL_SETTINGS = "localSettings";
 
   public final static String CONNECTOR_ENTITY = "connectorEntity";
   public final static String CONTENT_ITEM = "content";

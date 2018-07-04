@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class ConnectorContentMappingsImpl implements ConnectorContentMappings {
   private static final String SETTINGS = "settings";
-  public static final String DEFAULT_MAPPING = "default";
+  private static final String DEFAULT_MAPPING = "default";
   private Map<String, Object> properties;
 
   ConnectorContentMappingsImpl(Content content) {

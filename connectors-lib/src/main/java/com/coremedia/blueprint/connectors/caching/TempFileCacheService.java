@@ -43,7 +43,6 @@ public class TempFileCacheService {
       FileUtils.copyToFile(in, assetTempFile);
       in.close();
 
-
       TempFile entry = new TempFile(prefix, assetTempFile);
       cache.add(entry);
 

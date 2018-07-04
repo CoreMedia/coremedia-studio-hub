@@ -35,15 +35,12 @@ public class OfficeConverter implements ConnectorPreviewConverter {
 
   @Override
   public boolean include(ConnectorItem item) {
-    if (item.getName() != null) {
-      return item.getName().endsWith(".pptx")
+    return item.getName().endsWith(".pptx")
               || item.getName().endsWith(".docx")
               || item.getName().endsWith(".xlsx")
               || item.getName().endsWith(".odt")
               || item.getName().endsWith(".ods")
               || item.getName().endsWith(".odp");
-    }
-    return false;
   }
 
   @Nullable

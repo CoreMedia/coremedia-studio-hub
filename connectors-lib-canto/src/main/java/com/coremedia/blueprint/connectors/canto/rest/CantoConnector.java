@@ -31,8 +31,6 @@ import java.io.InputStream;
 import java.util.Base64;
 import java.util.Map;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 /**
  * REST-Connector for Canto Cumulus REST API.
  * This is the "should-be" connector with clientId and clientSecret.
@@ -286,7 +284,7 @@ public class CantoConnector {
 
   private HttpHeaders buildHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.ACCEPT, APPLICATION_JSON);
+    headers.set(HttpHeaders.ACCEPT, "application/json");
     headers.set(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
     return headers;
   }

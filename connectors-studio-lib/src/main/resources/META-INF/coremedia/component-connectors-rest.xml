@@ -5,7 +5,7 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
+  <import resource="classpath:com/coremedia/rest/cap/cap-rest-service.xml"/>
 
   <bean id="connectorEntityResource" abstract="true" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource"/>
 
@@ -40,6 +40,14 @@
     <property name="linker" ref="linker" />
     <property name="id" value="connectorCategoryInvalidator" />
     <property name="capacity" value="${studio.rest.eventsCache.capacity:10000}"/>
+  </bean>
+
+  <!-- Content -->
+  <bean id="connectorContentService" class="com.coremedia.blueprint.studio.connectors.rest.content.ConnectorContentServiceImpl" scope="prototype">
+    <property name="solrSearchService" ref="solrSearchService" />
+    <property name="connectorContextProvider" ref="connectorContextProvider" />
+    <property name="contentRepository" ref="contentRepository" />
+    <property name="connectors" ref="connector" />
   </bean>
 
   <!-- Notifications-->

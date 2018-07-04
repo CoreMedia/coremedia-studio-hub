@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1804.2-2</version>
+    <version>1804.3-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -15,17 +15,14 @@
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>1804.2-2</version>
+      <version>1804.3-1</version>
     </dependency>
 
     <!-- CoreMedia Dependencies -->
     <dependency>
       <groupId>com.coremedia.cms</groupId>
-      <artifactId>coremedia-rest-plugins</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
@@ -50,11 +47,6 @@
     <dependency>
       <groupId>com.coremedia.blueprint.base</groupId>
       <artifactId>bpbase-settings-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.coremedia.ui</groupId>
-      <artifactId>cap-rest-service</artifactId>
     </dependency>
 
     <!-- Thirdparty Dependencies -->

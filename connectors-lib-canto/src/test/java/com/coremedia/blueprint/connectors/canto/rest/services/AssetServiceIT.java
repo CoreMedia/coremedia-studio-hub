@@ -1,22 +1,11 @@
 package com.coremedia.blueprint.connectors.canto.rest.services;
 
 import com.coremedia.blueprint.connectors.canto.rest.CantoConnector;
-import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
-import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCatalogEntity;
-import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCategoryEntity;
-import com.coremedia.blueprint.connectors.canto.rest.entities.SearchResultEntity;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class AssetServiceIT {
@@ -27,7 +16,7 @@ public class AssetServiceIT {
 
   @Before
   public void setUp() {
-    connector = new CantoConnector("sandbox.canto.com","coremedia-poc", "m4YnSNpHOt2Q");
+    connector = new CantoConnector("sandbox.canto.com","coremedia-poc", "");
 
     testling = new AssetService();
     testling.setConnector(connector);

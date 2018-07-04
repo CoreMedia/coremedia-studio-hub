@@ -23,20 +23,19 @@ public class ConnectorContextImpl implements ConnectorContext {
   public static final String PREVIEW_THRESHOLD = "previewThresholdMB";
   public static final String CONTENT_SCOPE= "contentScope";
   public static final String TYPE = "type";
-  public static final String ROOT_NODE_VISIBLE = "rootNodeVisible";
-  public static final String NAME = "name";
   public static final String CONNECTION_ID = "connectionId";
   public static final String DATE_FORMAT = "dateFormat";
   public static final String DEFAULT_COLUMNS = "defaultColumns";
 
+  private static final String ROOT_NODE_VISIBLE = "rootNodeVisible";
+  private static final String NAME = "name";
   private static final String ENABLED = "enabled";
 
-  public static final String INVALIDATION_INTERVAL = "invalidationInterval";
-  public static final String NOTIFICATION_GROUPS = "notificationGroups";
-  public static final String NOTIFICATION_USERS = "notificationUsers";
+  private static final String INVALIDATION_INTERVAL = "invalidationInterval";
+  private static final String NOTIFICATION_GROUPS = "notificationGroups";
+  private static final String NOTIFICATION_USERS = "notificationUsers";
 
   public static final String CONTENT_SCOPE_SITE = "site";
-  public static final String CONTENT_SCOPE_GLOBAL = "global";
   public static final String CONTENT_SCOPE_DOMAIN = "domain";
 
   static final String ITEM_TYPES = "itemTypes";
@@ -57,7 +56,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   private Site site;
   private Locale locale;
 
-  public ConnectorContextImpl(Map<String, Object> properties) {
+  ConnectorContextImpl(Map<String, Object> properties) {
     this.properties = new HashMap<>(properties);
 
     if (properties.get(ITEM_TYPES) != null) {
@@ -121,7 +120,6 @@ public class ConnectorContextImpl implements ConnectorContext {
     return (String) properties.get(TYPE);
   }
 
-  @Nonnull
   @Override
   public boolean isRootNodeVisible() {
     return getBooleanProperty(ROOT_NODE_VISIBLE, true);
@@ -274,13 +272,5 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public void setDefaultColumns(List<String> columns) {
     this.defaultColumns = columns;
-  }
-
-  private List<String> getListValue(String property) {
-    if(properties.containsKey(property)) {
-      String valueString = (String) properties.get(property);
-      return Arrays.asList(valueString.split(","));
-    }
-    return Collections.emptyList();
   }
 }

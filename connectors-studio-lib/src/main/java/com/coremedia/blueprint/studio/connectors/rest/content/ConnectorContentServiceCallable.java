@@ -1,7 +1,8 @@
-package com.coremedia.blueprint.connectors.content;
+package com.coremedia.blueprint.studio.connectors.rest.content;
 
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
+import com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;

@@ -1,4 +1,4 @@
-package com.coremedia.blueprint.connectors.content;
+package com.coremedia.blueprint.connectors.navigation.util;
 
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;

@@ -10,13 +10,9 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Stores the content mappings and creates ContentCreators out of it
- */
 public class ConnectorContentUploadTypesImpl implements ConnectorContentUploadTypes {
   private static final String SETTINGS = "settings";
-  public static final String DEFAULT_MAPPING = "default";
-  public static final String TYPES = "types";
+  private static final String TYPES = "types";
   private Map<String, Object> properties;
 
   ConnectorContentUploadTypesImpl(Content content) {

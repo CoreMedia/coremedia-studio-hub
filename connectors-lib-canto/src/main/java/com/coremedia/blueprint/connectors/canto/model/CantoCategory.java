@@ -87,6 +87,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     return true;
   }
 
+  @Nonnull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;

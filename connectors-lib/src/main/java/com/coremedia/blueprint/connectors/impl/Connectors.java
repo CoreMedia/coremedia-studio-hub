@@ -151,7 +151,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
       return result;
     } catch (Exception e) {
       LOG.error("Could not retrieve connector bean for connections {}.", e);
-      return null;
+      return Collections.emptyList();
     }
   }
 
@@ -183,7 +183,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     this.beanName = beanName;
   }
 
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     if (this.beanFactory == null) {
       throw new IllegalStateException("BeanFactory must be set.");
     } else if (this.beanName == null) {

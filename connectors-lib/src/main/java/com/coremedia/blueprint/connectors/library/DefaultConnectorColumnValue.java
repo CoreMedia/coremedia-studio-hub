@@ -3,9 +3,9 @@ package com.coremedia.blueprint.connectors.library;
 import com.coremedia.blueprint.connectors.api.ConnectorColumnValue;
 
 /**
- *
+ * Default implementation of a connector column value
  */
-public class DefaultConnectorColumnValue implements ConnectorColumnValue{
+public class DefaultConnectorColumnValue implements ConnectorColumnValue {
   private String value;
   private String dataIndex;
   private String iconText;

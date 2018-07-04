@@ -14,7 +14,6 @@
 
   <import resource="classpath:/com/coremedia/cap/common/uapi-services.xml"/>
   <import resource="classpath:/com/coremedia/cap/multisite/multisite-services.xml"/>
-  <import resource="classpath:com/coremedia/rest/cap/cap-rest-service.xml"/>
   <import resource="classpath:/com/coremedia/blueprint/base/settings/impl/bpbase-settings-services.xml"/>
 
   <bean id="connector" class="com.coremedia.blueprint.connectors.impl.Connectors" scope="singleton">
@@ -31,12 +30,6 @@
     <property name="cache" ref="cache" />
   </bean>
 
-  <bean id="connectorContentService" class="com.coremedia.blueprint.connectors.content.ConnectorContentServiceImpl" scope="prototype">
-    <property name="solrSearchService" ref="solrSearchService" />
-    <property name="connectorContextProvider" ref="connectorContextProvider" />
-    <property name="contentRepository" ref="contentRepository" />
-    <property name="connectors" ref="connector" />
-  </bean>
 
   <!-- Preview Converters-->
   <bean id="connectorMdPreviewConverter" class="com.coremedia.blueprint.connectors.previewconverters.CommonMarkConverter" />
@@ -70,14 +63,8 @@
 
   <!-- Tagging-->
   <bean id="connectorContentTagger" class="com.coremedia.blueprint.connectors.content.ContentTagger">
-    <property name="taxonomyPath" value="/Settings/Taxonomies/" />
+    <property name="taxonomyPath" value="${connectors.taxonomies.path:/Settings/Taxonomies}" />
     <property name="contentRepository" ref="contentRepository" />
-  </bean>
-
-  <!-- PageGrid -->
-  <bean id="connectorPageGridService" class="com.coremedia.blueprint.connectors.content.ConnectorPageGridService">
-    <property name="sitesService" ref="sitesService" />
-    <property name="placementPaths" value="Options/Settings/Pagegrid/Placements" />
   </bean>
 
   <!-- Temp Service-->

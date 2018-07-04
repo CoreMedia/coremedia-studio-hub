@@ -5,15 +5,23 @@
 
   <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
 
+  <!-- PageGrid -->
+  <bean id="navigationConnectorPageGridService" class="com.coremedia.blueprint.connectors.navigation.util.ConnectorPageGridService">
+    <property name="sitesService" ref="sitesService" />
+    <property name="placementPaths" value="Options/Settings/Pagegrid/Placements" />
+  </bean>
+
+
   <bean id="connectorNavigationService" class="com.coremedia.blueprint.connectors.navigation.NavigationConnectorServiceImpl"
         scope="prototype">
     <property name="contentRepository" ref="contentRepository" />
-    <property name="pageGridService" ref="connectorPageGridService" />
+    <property name="pageGridService" ref="navigationConnectorPageGridService" />
   </bean>
 
   <bean id="connector:navigation" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
     <property name="connectorService" ref="connectorNavigationService"/>
     <property name="connectorContentService" ref="connectorContentService"/>
   </bean>
+
 
 </beans>
