@@ -1,10 +1,11 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.sun.syndication.feed.module.mediarss.MediaEntryModule;
-import com.sun.syndication.feed.module.mediarss.types.MediaContent;
-import com.sun.syndication.feed.module.mediarss.types.MediaGroup;
-import com.sun.syndication.feed.module.mediarss.types.Thumbnail;
-import com.sun.syndication.feed.synd.SyndEntry;
+
+import com.rometools.modules.mediarss.MediaEntryModule;
+import com.rometools.modules.mediarss.types.MediaContent;
+import com.rometools.modules.mediarss.types.MediaGroup;
+import com.rometools.modules.mediarss.types.Thumbnail;
+import com.rometools.rome.feed.synd.SyndEntry;
 
 import java.util.ArrayList;
 import java.util.List;

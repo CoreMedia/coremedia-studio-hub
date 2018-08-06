@@ -10,8 +10,8 @@ import com.coremedia.blueprint.connectors.library.DefaultConnectorColumn;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -54,20 +54,20 @@ public class NavigationConnectorCategory extends NavigationConnectorEntity imple
     return () -> data;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorColumn> getColumns() {
     return Arrays.asList(new DefaultConnectorColumn("status", "status", 50, 2),
             new DefaultConnectorColumn("docType", "docType", 100, 3));
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return items;
@@ -85,12 +85,12 @@ public class NavigationConnectorCategory extends NavigationConnectorEntity imple
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return false;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return false;
   }
 

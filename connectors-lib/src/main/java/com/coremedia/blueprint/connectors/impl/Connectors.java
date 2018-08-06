@@ -14,8 +14,8 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,7 +53,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     return connections.get(connectionId);
   }
 
-  @Nonnull
+  @NonNull
   public List<ConnectorType> getConnectorTypes() {
     List<ConnectorType> result = new ArrayList<>();
     List<ConnectorContext> contexts = connectorContextProvider.getContexts();
@@ -70,7 +70,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     return result;
   }
 
-  @Nonnull
+  @NonNull
   public List<ConnectorConnection> getConnectionsByType(String siteId, Locale locale, String type) {
     if(siteId == null) {
       return Collections.emptyList();
@@ -106,7 +106,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     this.connectorCategoryChangeListeners.add(listener);
   }
 
-  public void notifyCategoryChange(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public void notifyCategoryChange(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     for (ConnectorCategoryChangeListener connectorCategoryChangeListener : connectorCategoryChangeListeners) {
       connectorCategoryChangeListener.categoryChanged(context, category);
     }
@@ -175,11 +175,11 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
 
   //-------------------------------- Spring ----------------------------------------------------------------------------
 
-  public void setBeanFactory(@Nonnull BeanFactory beanFactory) throws BeansException {
+  public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
     this.beanFactory = beanFactory;
   }
 
-  public void setBeanName(@Nonnull String beanName) {
+  public void setBeanName(@NonNull String beanName) {
     this.beanName = beanName;
   }
 

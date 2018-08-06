@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1804.3-1</version>
+    <version>1807.1-1</version>
   </parent>
 
   <artifactId>connectors-studio</artifactId>

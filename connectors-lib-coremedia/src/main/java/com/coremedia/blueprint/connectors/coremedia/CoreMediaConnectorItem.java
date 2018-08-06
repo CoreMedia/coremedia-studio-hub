@@ -16,8 +16,8 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
@@ -99,7 +99,7 @@ public class CoreMediaConnectorItem extends CoreMediaConnectorEntity implements 
     return html;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getItemType() {
     ConnectorContext context = getContext();

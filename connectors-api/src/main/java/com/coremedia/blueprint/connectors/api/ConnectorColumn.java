@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.api;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * The Column interface to be implemented for a custom column inside the library view.
@@ -10,13 +10,13 @@ public interface ConnectorColumn {
    * The title of the library, can return the actual label
    * or a resource bundle key of value that has been overridden in the ConnectorsStudioPlugin.properties.
    */
-  @Nonnull
+  @NonNull
   String getTitle();
 
   /**
    * The dataIndex identifies the value of the item that is rendered by this column
    */
-  @Nonnull
+  @NonNull
   String getDataIndex();
 
   /**

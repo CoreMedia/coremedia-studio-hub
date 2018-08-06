@@ -1,5 +1,7 @@
 package com.coremedia.blueprint.connectors.s3;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -17,15 +19,16 @@ import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.filesystems.FileSystemItem;
-import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
+import com.coremedia.blueprint.connectors.filesystems.FileSystemItem;
+import com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,7 +54,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   private S3ConnectorCategory rootCategory;
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     this.context = context;
     this.ensureSeparatorSuffix = true;
 
@@ -60,12 +63,27 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     String awsSecret = context.getProperty(SECRET);
     String awsAccessKey = context.getProperty(ACCESS_KEY);
 
+    String proxyHost = context.getProperty(ConnectorPropertyNames.PROXY_HOST);
+    String proxyPort = context.getProperty(ConnectorPropertyNames.PROXY_PORT);
+    String proxyType = context.getProperty(ConnectorPropertyNames.PROXY_TYPE);
+
     try {
       BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecret);
-      s3Client = AmazonS3ClientBuilder.standard()
+
+      AmazonS3ClientBuilder clientBuilder = AmazonS3ClientBuilder.standard()
               .withRegion(awsRegion)
-              .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-              .build();
+              .withCredentials(new AWSStaticCredentialsProvider(awsCreds));
+
+      if(proxyType != null && proxyHost != null && proxyPort != null) {
+        ClientConfiguration config = new ClientConfiguration();
+        config.setProtocol(Protocol.valueOf(proxyType));
+        config.setProxyHost(proxyHost);
+        config.setProxyPort(Integer.parseInt(proxyPort));
+
+        clientBuilder.withClientConfiguration(config);
+      }
+
+      s3Client = clientBuilder.build();
 
       //execute a list call to see if the connection is working
       String bucketName = context.getProperty(BUCKET_NAME);
@@ -79,16 +97,16 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   }
 
   @Override
-  public void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {
+  public void shutdown(@NonNull ConnectorContext context) throws ConnectorException {
     super.shutdown(context);
     if(s3Client != null) {
       s3Client.shutdown();
     }
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       String displayName = context.getProperty(DISPLAY_NAME);
 
@@ -107,7 +125,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId itemId) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId itemId) throws ConnectorException {
     ConnectorId parentFolderId = getFolderId(itemId);
     S3ObjectSummary file = getCachedFileOrFolderEntity(context, itemId);
     return new S3ConnectorItem(this, getCategory(context, parentFolderId), context, file, itemId);
@@ -115,7 +133,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId categoryId) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId categoryId) throws ConnectorException {
     ConnectorCategory parentCategory = getParentCategory(context, categoryId);
     if (parentCategory == null) {
       return getRootCategory(context);
@@ -128,7 +146,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return subCategory;
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     if(category.getConnectorId().isRootId()) {
       rootCategory = null;
       rootCategory = (S3ConnectorCategory) getRootCategory(context);
@@ -136,7 +154,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return super.refresh(context, category);
   }
 
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
       String bucketName = context.getProperty(BUCKET_NAME);
       String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
@@ -175,9 +193,9 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     }
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
     if(query.equals("*")) {
       query = "";
@@ -291,7 +309,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
 
   //----------------------------- Helper -------------------------------------------------------------------------------
 
-  private List<ConnectorCategory> getSubCategories(ConnectorContext context, @Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorCategory> getSubCategories(ConnectorContext context, @NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorCategory> subCategories = new ArrayList<>();
 
     List<S3ObjectSummary> subfolders = getSubfolderEntities(context, category.getConnectorId());
@@ -305,7 +323,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return subCategories;
   }
 
-  private List<ConnectorItem> getItems(ConnectorContext context, @Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorItem> getItems(ConnectorContext context, @NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorItem> items = new ArrayList<>();
 
     List<S3ObjectSummary> fileEntities = getFileEntities(context, category.getConnectorId());

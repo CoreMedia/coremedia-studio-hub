@@ -2,8 +2,8 @@ package com.coremedia.blueprint.connectors.api;
 
 import com.coremedia.cap.content.ContentType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -17,7 +17,7 @@ public interface ConnectorContentUploadTypes {
   /**
    * Returns all content mapping properties as map
    */
-  @Nonnull
+  @NonNull
   Map<String,Object> getProperties();
 
   /**

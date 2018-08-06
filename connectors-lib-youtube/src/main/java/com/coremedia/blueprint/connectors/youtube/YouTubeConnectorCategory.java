@@ -7,8 +7,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.google.api.services.youtube.model.Playlist;
 import com.google.api.services.youtube.model.PlaylistSnippet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,13 +49,13 @@ public class YouTubeConnectorCategory extends YouTubeConnectorEntity implements 
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return items;
@@ -79,7 +79,7 @@ public class YouTubeConnectorCategory extends YouTubeConnectorEntity implements 
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return service.refresh(context, this);
   }
 }

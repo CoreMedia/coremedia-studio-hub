@@ -2,8 +2,8 @@ package com.coremedia.blueprint.connectors.api;
 
 import com.coremedia.cap.multisite.Site;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,13 +17,13 @@ public interface ConnectorContext {
    * Returns the connectionId of the connection this context belongs too.
    * This id must be unique over all sites.
    */
-  @Nonnull
+  @NonNull
   String getConnectionId();
 
   /**
    * Returns the connector type for this context, as defined in the Connections.xml
    */
-  @Nonnull
+  @NonNull
   String getType();
 
   /**
@@ -35,14 +35,14 @@ public interface ConnectorContext {
   /**
    * Returns the name that has been set for the connector type name in 'Connector Types'.
    */
-  @Nonnull
+  @NonNull
   String getTypeName();
 
   /**
    * Utility methods to access additional configuration parameters.
    */
   String getProperty(String key);
-  Boolean getBooleanProperty(String key, boolean defaultValue);
+  boolean getBooleanProperty(String key, boolean defaultValue);
 
   /**
    * Returns the threshold im MB that is used for the item preview.
@@ -82,14 +82,14 @@ public interface ConnectorContext {
    * Returns the list of user groups that are notified for this connection context.
    * @return a list with cap group names
    */
-  @Nonnull
+  @NonNull
   List<String> getNotificationsUserGroups();
 
   /**
    * Returns a list of user names that are notified for this connection context.
    * @return a list with cap user names
    */
-  @Nonnull
+  @NonNull
   List<String> getNotificationsUsers();
 
   /**
@@ -129,7 +129,7 @@ public interface ConnectorContext {
    * Returns the locale that should be used for this connector.
    * The locale matches the one that is set for the current Studio user.
    */
-  @Nonnull
+  @NonNull
   Locale getLocale();
 
   /**
@@ -149,7 +149,7 @@ public interface ConnectorContext {
    * Custom columns are not affected by this.
    * @return the list of default columns to display.
    */
-  @Nonnull
+  @NonNull
   List<String> getDefaultColumns();
 
   /**

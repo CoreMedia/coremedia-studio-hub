@@ -6,10 +6,10 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.library.DefaultConnectorColumn;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndFeed;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,7 +35,7 @@ public class RssConnectorCategory extends RssConnectorEntity implements Connecto
     return getFeed().getPublishedDate();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorColumn> getColumns() {
     return Arrays.asList(new DefaultConnectorColumn("author_header", "author", 120, 2));
@@ -47,13 +47,13 @@ public class RssConnectorCategory extends RssConnectorEntity implements Connecto
     return getFeed().getLink();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return items;
@@ -73,7 +73,7 @@ public class RssConnectorCategory extends RssConnectorEntity implements Connecto
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return service.refresh(context, this);
   }
 

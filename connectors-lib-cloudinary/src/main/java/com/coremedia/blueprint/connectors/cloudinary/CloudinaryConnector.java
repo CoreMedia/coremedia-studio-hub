@@ -158,7 +158,7 @@ public class CloudinaryConnector {
     return null;
   }
 
-  public Boolean delete(CloudinaryAsset asset) {
+  public boolean delete(CloudinaryAsset asset) {
     try {
       Map<String, Object> options = getDefaultOptions();
       options.put("invalidate", true);

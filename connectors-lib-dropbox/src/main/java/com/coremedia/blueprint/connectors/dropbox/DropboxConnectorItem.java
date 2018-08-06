@@ -9,7 +9,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,12 +53,12 @@ public class DropboxConnectorItem extends DropboxConnectorEntity implements Conn
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return true;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return service.delete(this);
   }
 

@@ -4,8 +4,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.common.util.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 
 /**
@@ -24,5 +24,5 @@ public interface ConnectorPreviewConverter extends Predicate<ConnectorItem> {
    * @return HTML used for the preview
    */
   @Nullable
-  PreviewConversionResult convert(@Nonnull ConnectorContext context, @Nonnull ConnectorItem connectorItem, @Nonnull File itemTempFile);
+  PreviewConversionResult convert(@NonNull ConnectorContext context, @NonNull ConnectorItem connectorItem, @NonNull File itemTempFile);
 }

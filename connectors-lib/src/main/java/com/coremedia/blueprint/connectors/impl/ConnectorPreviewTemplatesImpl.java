@@ -4,7 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.struct.Struct;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Map;
 
 /**

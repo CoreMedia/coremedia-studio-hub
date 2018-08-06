@@ -10,8 +10,8 @@ import com.coremedia.blueprint.connectors.library.DefaultConnectorColumnValue;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,16 +60,16 @@ abstract public class NavigationConnectorEntity implements ConnectorEntity {
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return false;
   }
 
   @Override
-  public Boolean delete() {
-    return null;
+  public boolean delete() {
+    return false;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return name;
@@ -79,7 +79,7 @@ abstract public class NavigationConnectorEntity implements ConnectorEntity {
     this.name = name;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorContext getContext() {
     return context;
@@ -90,13 +90,13 @@ abstract public class NavigationConnectorEntity implements ConnectorEntity {
     return parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;

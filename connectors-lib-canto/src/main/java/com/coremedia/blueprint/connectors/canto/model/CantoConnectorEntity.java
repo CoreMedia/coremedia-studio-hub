@@ -8,7 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 
 public abstract class CantoConnectorEntity {
@@ -18,7 +18,7 @@ public abstract class CantoConnectorEntity {
   ConnectorId connectorId;
   CantoConnectorServiceImpl connectorService;
 
-  CantoConnectorEntity(ConnectorId connectorId, @Nonnull CantoConnectorServiceImpl connectorService) {
+  CantoConnectorEntity(ConnectorId connectorId, @NonNull CantoConnectorServiceImpl connectorService) {
     this.connectorId = connectorId;
     this.connectorService = connectorService;
   }
@@ -31,7 +31,7 @@ public abstract class CantoConnectorEntity {
     return connectorService;
   }
 
-  @Nonnull
+  @NonNull
   public ConnectorContext getContext() {
     return connectorService.getContext();
   }

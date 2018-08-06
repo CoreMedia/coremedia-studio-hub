@@ -25,8 +25,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -88,7 +88,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
     properties.remove("data");
   }
 
-  protected void setConnectorId(@Nonnull Content content, @Nonnull ConnectorId id) {
+  protected void setConnectorId(@NonNull Content content, @NonNull ConnectorId id) {
     CapPropertyDescriptor descriptor = content.getType().getDescriptor(LOCAL_SETTINGS);
     if (descriptor != null && descriptor.getType().equals(CapPropertyDescriptorType.STRUCT)) {
       Struct struct = content.getStruct(LOCAL_SETTINGS);
@@ -176,7 +176,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
    * @param contentType the content type of the new content
    * @return the newly created content
    */
-  protected Content createContent(@Nonnull String folder, @Nonnull String name, @Nonnull String contentType) {
+  protected Content createContent(@NonNull String folder, @NonNull String name, @NonNull String contentType) {
     ContentType ct = contentRepository.getContentType(contentType);
     Content folderContent = contentRepository.getChild(folder);
     if (ct != null) {

@@ -8,8 +8,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.multisite.Site;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class ConnectorContextImpl implements ConnectorContext {
     return 0;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<String> getNotificationsUserGroups() {
     if(properties.containsKey(NOTIFICATION_GROUPS)) {
@@ -97,7 +97,7 @@ public class ConnectorContextImpl implements ConnectorContext {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<String> getNotificationsUsers() {
     if(properties.containsKey(NOTIFICATION_USERS)) {
@@ -108,13 +108,13 @@ public class ConnectorContextImpl implements ConnectorContext {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getConnectionId() {
     return (String) properties.get(CONNECTION_ID);
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getType() {
     return (String) properties.get(TYPE);
@@ -125,7 +125,7 @@ public class ConnectorContextImpl implements ConnectorContext {
     return getBooleanProperty(ROOT_NODE_VISIBLE, true);
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getTypeName() {
     return (String) properties.getOrDefault(NAME, "-empty type name-");
@@ -137,7 +137,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   }
 
   @Override
-  public Boolean getBooleanProperty(String key, boolean defaultValue) {
+  public boolean getBooleanProperty(String key, boolean defaultValue) {
     if(properties.containsKey(key) && properties.get(key) instanceof Boolean) {
       return (Boolean) properties.get(key);
 
@@ -235,7 +235,7 @@ public class ConnectorContextImpl implements ConnectorContext {
     this.siteId = siteId;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public Locale getLocale() {
     if(locale == null) {
@@ -258,7 +258,7 @@ public class ConnectorContextImpl implements ConnectorContext {
     this.site = site;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<String> getDefaultColumns() {
     return defaultColumns;

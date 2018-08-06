@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.studio.connectors.library {
 import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
-import com.coremedia.cms.editor.sdk.context.ComponentContextManager;
+import com.coremedia.ui.context.ComponentContextManager;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 

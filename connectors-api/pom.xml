@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1804.3-1</version>
+    <version>1807.1-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,13 +14,9 @@
     <!-- CoreMedia Dependencies -->
     <!-- Thirdparty Dependencies -->
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

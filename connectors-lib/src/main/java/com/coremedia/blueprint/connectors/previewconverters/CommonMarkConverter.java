@@ -8,8 +8,8 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class CommonMarkConverter implements ConnectorPreviewConverter {
 
   @Nullable
   @Override
-  public PreviewConversionResult convert(@Nonnull ConnectorContext context, @Nonnull ConnectorItem connectorItem, @Nonnull File itemTempFile) {
+  public PreviewConversionResult convert(@NonNull ConnectorContext context, @NonNull ConnectorItem connectorItem, @NonNull File itemTempFile) {
     try {
       Parser parser = Parser.builder().build();
       FileInputStream fileInputStream = new FileInputStream(itemTempFile);

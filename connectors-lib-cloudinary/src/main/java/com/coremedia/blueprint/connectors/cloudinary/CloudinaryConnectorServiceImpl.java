@@ -18,8 +18,8 @@ import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.annotation.Resource;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
 
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) throws ConnectorException {
+  public boolean init(@NonNull ConnectorContext context) throws ConnectorException {
     String apiKey = context.getProperty(API_KEY);
     String apiSecret = context.getProperty(API_SECRET);
     String cloudName = context.getProperty(CLOUD_NAME);
@@ -76,7 +76,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     String externalId = id.getExternalId();
     CloudinaryAsset asset = cloudinaryService.getAsset(context, externalId);
     if(asset != null) {
@@ -90,7 +90,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     if (id.isRootId()) {
       return getRootCategory(context);
     }
@@ -98,9 +98,9 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return createCategory(context, id);
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       String name = context.getProperty("displayName");
       ConnectorId id = ConnectorId.createRootId(context.getConnectionId());
@@ -118,13 +118,13 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
-  public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
+  public InvalidationResult invalidate(@NonNull ConnectorContext context) {
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     CloudinaryConnectorCategory cloudinaryCateggory = (CloudinaryConnectorCategory) category;
     List<ConnectorEntity> result = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return new ConnectorSearchResult<>(result);
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     CacheManager cacheManager = CacheManager.getCacheManager(CLOUDINARY_CACHE);
     cacheManager.getCache("cloudinaryFolderCache").removeAll();
     clearAssetCache();
@@ -172,7 +172,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return true;
   }
 
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     CloudinaryConnectorCategory cloudinaryCategory = (CloudinaryConnectorCategory) category;
     String folder = "";
     if(cloudinaryCategory.getFolder() != null) {
@@ -192,7 +192,7 @@ public class CloudinaryConnectorServiceImpl implements ConnectorService {
     return cloudinaryService.stream(asset);
   }
 
-  public Boolean delete(ConnectorContext context, CloudinaryAsset asset) {
+  public boolean delete(ConnectorContext context, CloudinaryAsset asset) {
     Boolean result = cloudinaryService.delete(asset);
     clearAssetCache();
     CacheManager cacheManager = CacheManager.getCacheManager(CLOUDINARY_CACHE);

@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -28,8 +28,8 @@ public class ConnectorId {
     this.externalId = externalId;
   }
 
-  @Nonnull
-  public static ConnectorId createCategoryId(@Nonnull String connectionId, @Nonnull Object externalId) {
+  @NonNull
+  public static ConnectorId createCategoryId(@NonNull String connectionId, @NonNull Object externalId) {
     String connectorId = PREFIX + connectionId + "/" + CATEGORY + "/" + externalId;
     return new ConnectorId(connectorId, connectionId, String.valueOf(externalId));
   }
@@ -39,13 +39,13 @@ public class ConnectorId {
    * Every ConnectorItem should now their parent. If the external API
    * the concrete connector implementation is based on, does not provide this information,
    * the
-   * <pre>ConnectorId createItemId(@Nonnull ConnectorId parentId, @Nonnull Object externalId)</pre>
+   * <pre>ConnectorId createItemId(@NonNull ConnectorId parentId, @NonNull Object externalId)</pre>
    * method should be used instead.
    * @param connectionId the connection id to create the ID for
    * @param externalId the external id used to identify the external API item
    */
-  @Nonnull
-  public static ConnectorId createItemId(@Nonnull String connectionId, @Nonnull Object externalId) {
+  @NonNull
+  public static ConnectorId createItemId(@NonNull String connectionId, @NonNull Object externalId) {
     String connectorId = PREFIX + connectionId + "/" + ITEM + "/" + externalId;
     return new ConnectorId(connectorId, connectionId, String.valueOf(externalId));
   }
@@ -56,8 +56,8 @@ public class ConnectorId {
    * @param parentId the parent category id the item belongs to
    * @param externalId the external id used to identify the external API item
    */
-  @Nonnull
-  public static ConnectorId createItemId(@Nonnull ConnectorId parentId, @Nonnull Object externalId) {
+  @NonNull
+  public static ConnectorId createItemId(@NonNull ConnectorId parentId, @NonNull Object externalId) {
     String parentExternalId = parentId.getExternalId();
     String fullExternalId = externalId + PARENT_ID_SEPARATOR + parentExternalId;
     String connectorId = PREFIX + parentId.getConnectionId() + "/" + ITEM + "/" + fullExternalId;
@@ -78,8 +78,8 @@ public class ConnectorId {
     return null;
   }
 
-  @Nonnull
-  public static ConnectorId toId(@Nonnull String id) {
+  @NonNull
+  public static ConnectorId toId(@NonNull String id) {
     String externalSegment = id;
     for (int i = 0; i < 5; i++) {
       externalSegment = externalSegment.substring(externalSegment.indexOf("/") + 1, externalSegment.length());
@@ -103,8 +103,8 @@ public class ConnectorId {
     return externalId.equals(ROOT);
   }
 
-  @Nonnull
-  public static ConnectorId createRootId(@Nonnull String connectionId) {
+  @NonNull
+  public static ConnectorId createRootId(@NonNull String connectionId) {
     return new ConnectorId(PREFIX + connectionId + "/" + CATEGORY + "/" + ROOT, connectionId, ROOT);
   }
 

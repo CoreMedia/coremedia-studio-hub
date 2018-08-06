@@ -3,7 +3,7 @@ package com.coremedia.blueprint.connectors.api;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Represents the actual connection to an external system.
@@ -22,12 +22,12 @@ public class ConnectorConnection implements BeanNameAware {
   private String connectorType;
   private ConnectorContext context;
 
-  @Nonnull
+  @NonNull
   public ConnectorService getConnectorService() {
     return connectorService;
   }
 
-  @Nonnull
+  @NonNull
   public ConnectorContext getContext() {
     return context;
   }
@@ -42,12 +42,12 @@ public class ConnectorConnection implements BeanNameAware {
     this.connectorContentService = connectorContentService;
   }
 
-  @Nonnull
+  @NonNull
   public ConnectorContentService getConnectorContentService() {
     return connectorContentService;
   }
 
-  @Nonnull
+  @NonNull
   public String getConnectorType() {
     return connectorType;
   }
@@ -57,7 +57,7 @@ public class ConnectorConnection implements BeanNameAware {
   }
 
   @Override
-  public void setBeanName(@Nonnull String beanName) {
+  public void setBeanName(@NonNull String beanName) {
     if(!beanName.startsWith(CONNECTOR_PREFIX + ":")) {
       throw new UnsupportedOperationException("ConnectorConnection bean name must have a leading " + CONNECTOR_PREFIX + ": prefix");
     }

@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -124,7 +124,7 @@ public class ConnectorContentServiceResource {
     return connector.getConnection(connectorContext);
   }
 
-  @Nonnull
+  @NonNull
   private ConnectorContext getConnectorContext(String connectionId) {
     return connectorContextProvider.createContext(connectionId);
   }

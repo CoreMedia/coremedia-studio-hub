@@ -314,5 +314,9 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   private function isConnectorId(id:String):Boolean {
     return getConnector().getUriPath() === id;
   }
+
+  public function getTextCls(nodeId:String):String {
+    return "";
+  }
 }
 }

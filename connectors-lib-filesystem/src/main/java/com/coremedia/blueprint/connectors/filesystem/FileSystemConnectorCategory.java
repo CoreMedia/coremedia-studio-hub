@@ -5,8 +5,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,13 +43,13 @@ public class FileSystemConnectorCategory extends FileSystemConnectorEntity imple
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return items;
@@ -69,12 +69,12 @@ public class FileSystemConnectorCategory extends FileSystemConnectorEntity imple
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return service.refresh(context, this);
   }
 
   @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
     return service.upload(context, this, itemName, inputStream);
   }
 }

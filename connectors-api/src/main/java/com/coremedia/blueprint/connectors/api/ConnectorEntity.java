@@ -1,9 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
-import org.springframework.lang.NonNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,19 +11,19 @@ import java.util.List;
  */
 public interface ConnectorEntity {
 
-  @Nonnull
+  @NonNull
   ConnectorId getConnectorId();
 
-  @Nonnull
+  @NonNull
   String getName();
 
-  @Nonnull
+  @NonNull
   ConnectorContext getContext();
 
   @Nullable
   ConnectorCategory getParent();
 
-  @Nonnull
+  @NonNull
   String getDisplayName();
 
   /**
@@ -64,13 +62,13 @@ public interface ConnectorEntity {
   /**
    * Returns true if it is possible to delete the given item or category.
    */
-  Boolean isDeleteable();
+  boolean isDeleteable();
 
   /**
    * Method to be implemented when a connector item or category should be deleted.
    * @return true if the deletion operation was successful.
    */
-  Boolean delete();
+  boolean delete();
 
   /**
    * Optional additional metadata that will be used for the metadata-preview-panel in the library.

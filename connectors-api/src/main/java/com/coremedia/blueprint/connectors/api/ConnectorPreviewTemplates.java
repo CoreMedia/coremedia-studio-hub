@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.api;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Encapsulated the preview template configuration.

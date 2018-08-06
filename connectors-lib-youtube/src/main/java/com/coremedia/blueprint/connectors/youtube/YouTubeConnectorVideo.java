@@ -12,8 +12,8 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatistics;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -49,7 +49,7 @@ public class YouTubeConnectorVideo extends YouTubeConnectorEntity implements Con
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getItemType() {
     return "youtube";

@@ -1,6 +1,8 @@
 package com.coremedia.blueprint.studio.connectors.dnd {
+import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentCreationResult;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
 import com.coremedia.cap.content.Content;
@@ -67,10 +69,15 @@ public class ConnectorLinkListDropAreaTarget extends DropTarget {
     var items:Array = dragInfo.getContents();
     var llContentType:ContentType = linkListWrapper.getContentType();
 
-    for each(var item:ConnectorItem in items) {
-      if (!item) {
+    for each(var connectorObject:ConnectorObject in items) {
+      if (!connectorObject) {
         continue;
       }
+      if(connectorObject is ConnectorCategory) {
+        return true;
+      }
+
+      var item:ConnectorItem = connectorObject as ConnectorItem;
       var itemType:String = item.getItemType();
       var targetContentType:String = item.getTargetContentType();
       if (!targetContentType) {

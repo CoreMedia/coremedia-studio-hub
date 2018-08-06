@@ -9,8 +9,8 @@ import com.coremedia.cap.multisite.SitesService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ConnectorContextProvider {
 
   private String globalConfigPath, siteConfigPath;
 
-  public ConnectorContext createContext(@Nonnull String connectionId) {
+  public ConnectorContext createContext(@NonNull String connectionId) {
     for (ConnectorContext context : getContexts()) {
       if(context.getConnectionId().equals(connectionId)) {
         return context;
@@ -38,7 +38,7 @@ public class ConnectorContextProvider {
     return null;
   }
 
-  @Nonnull
+  @NonNull
   public List<ConnectorContext> findContexts(@Nullable Site site) {
     List<ConnectorContext> result = new ArrayList<>();
     for (ConnectorContext context : getContexts()) {

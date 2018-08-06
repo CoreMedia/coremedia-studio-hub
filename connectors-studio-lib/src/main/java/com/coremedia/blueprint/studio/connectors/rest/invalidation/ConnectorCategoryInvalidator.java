@@ -9,7 +9,7 @@ import com.coremedia.rest.linking.Linker;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class ConnectorCategoryInvalidator extends SimpleInvalidationSource imple
   private Connectors connectors;
 
   @Override
-  public void categoryChanged(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public void categoryChanged(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     Set<String> links = new HashSet<>();
     URI link = linker.link(category);
     links.add(link.toString());

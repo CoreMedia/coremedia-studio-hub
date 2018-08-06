@@ -104,7 +104,9 @@ public class ConnectorPageGridService {
     if (targetStruct != null) {
       if (targetStruct.toNestedMaps().containsKey(PLACEMENTS)) {
         List<Content> placementItems = getPlacementItems(targetStruct, page, section);
-        result.addAll(placementItems);
+        if(placementItems != null) {
+          result.addAll(placementItems);
+        }
       }
 
       if (targetStruct.toNestedMaps().containsKey(PLACEMENTS_2)) {

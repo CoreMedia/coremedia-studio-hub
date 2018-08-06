@@ -29,8 +29,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -67,7 +67,7 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
   private ConnectorContextProvider connectorContextProvider;
 
   @Override
-  public Content createContent(@Nonnull ConnectorId connectorId, @Nonnull String folder, Site site) {
+  public Content createContent(@NonNull ConnectorId connectorId, @NonNull String folder, Site site) {
     ConnectorContext context = connectorContextProvider.createContext(connectorId.getConnectionId());
     ConnectorConnection connection = connectors.getConnection(context);
     if (connection != null) {
@@ -97,7 +97,7 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
   }
 
   @Override
-  public Content findContent(@Nonnull ConnectorEntity entity, @Nullable String folder, @Nullable Site site) {
+  public Content findContent(@NonNull ConnectorEntity entity, @Nullable String folder, @Nullable Site site) {
     ConnectorId connectorId = entity.getConnectorId();
     if (connectorId.isItemId()) {
       return findContentItem(connectorId, entity, site);
@@ -107,8 +107,8 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
   }
 
   @Override
-  public void processContent(@Nonnull Content content,
-                             @Nonnull ConnectorEntity entity,
+  public void processContent(@NonNull Content content,
+                             @NonNull ConnectorEntity entity,
                              boolean wait) {
     try {
       ConnectorContext context = connectorContextProvider.createContext(entity.getConnectorId().getConnectionId());
@@ -123,7 +123,7 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
   }
 
   @Override
-  public void setConnectorId(@Nonnull Content content, @Nonnull ConnectorId id) {
+  public void setConnectorId(@NonNull Content content, @NonNull ConnectorId id) {
     CapPropertyDescriptor descriptor = content.getType().getDescriptor(LOCAL_SETTINGS);
     if (descriptor != null && descriptor.getType().equals(CapPropertyDescriptorType.STRUCT)) {
       Struct struct = content.getStruct(LOCAL_SETTINGS);
@@ -177,7 +177,7 @@ public class ConnectorContentServiceImpl implements ConnectorContentService, Ini
   }
 
   //------------------- Helper -----------------------------------------------------------------------------------------
-  private Content findContentCategory(@Nonnull ConnectorEntity entity, @Nullable String folder) {
+  private Content findContentCategory(@NonNull ConnectorEntity entity, @Nullable String folder) {
     Content parentFolder = contentRepository.getChild(folder);
     Set<Content> children = parentFolder.getChildren();
     for (Content child : children) {

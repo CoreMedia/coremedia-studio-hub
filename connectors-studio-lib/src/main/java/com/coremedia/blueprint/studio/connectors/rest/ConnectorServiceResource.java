@@ -16,8 +16,8 @@ import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.multisite.SitesService;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -67,7 +67,7 @@ public class ConnectorServiceResource {
 
   @GET
   @Path("suggestions/{connectorType}/{connectorConnectionId:[^/]+}/{siteId:[^/]+}")
-  @Nonnull
+  @NonNull
   public ConnectorSuggestionResultRepresentation searchSuggestions(@PathParam(CONNECTOR_TYPE) String connectorType,
                                                                    @PathParam(CONNECTOR_CONNECTION_ID) String connectionId,
                                                                    @PathParam(SITE_ID_PARAM) String siteId,

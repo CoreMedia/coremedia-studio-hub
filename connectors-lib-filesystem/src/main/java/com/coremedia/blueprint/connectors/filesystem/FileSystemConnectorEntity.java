@@ -6,8 +6,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.util.Date;
 
@@ -32,12 +32,12 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return true;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     if (file.isFile()) {
       return file.delete();
     }
@@ -49,7 +49,7 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
     return new Date(getFile().lastModified());
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return name;
@@ -59,7 +59,7 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
     this.name = name;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorContext getContext() {
     return context;
@@ -78,13 +78,13 @@ public class FileSystemConnectorEntity implements ConnectorEntity {
     this.parent = parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;

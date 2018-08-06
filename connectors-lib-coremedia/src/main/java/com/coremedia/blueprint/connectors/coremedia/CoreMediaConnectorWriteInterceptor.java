@@ -142,11 +142,13 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
         }
         else if (type.equals(CapPropertyDescriptorType.STRUCT.name())) {
           Struct struct = original.getStruct(key);
-          Markup originalMarkup = struct.toMarkup();
-          String xml = originalMarkup.asXml();
-          Markup newMarkup = MarkupFactory.fromString(xml);
-          Struct newStruct = contentRepository.getConnection().getStructService().fromMarkup(newMarkup);
-          content.set(key, newStruct);
+          if(struct != null) {
+            Markup originalMarkup = struct.toMarkup();
+            String xml = originalMarkup.asXml();
+            Markup newMarkup = MarkupFactory.fromString(xml);
+            Struct newStruct = contentRepository.getConnection().getStructService().fromMarkup(newMarkup);
+            content.set(key, newStruct);
+          }
         }
       }
     } catch (Exception e) {

@@ -4,7 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.Serializable;
 
 /**
@@ -25,13 +25,13 @@ abstract public class CloudinaryConnectorEntity implements Serializable, Connect
     this.context = context;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return id;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorContext getContext() {
     return context;

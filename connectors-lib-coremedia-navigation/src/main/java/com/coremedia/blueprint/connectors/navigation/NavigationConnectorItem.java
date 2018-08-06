@@ -12,8 +12,8 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class NavigationConnectorItem extends NavigationConnectorEntity implement
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getItemType() {
     ConnectorContext context = getContext();

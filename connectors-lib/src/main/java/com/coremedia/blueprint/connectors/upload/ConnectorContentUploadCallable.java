@@ -6,7 +6,7 @@ import com.coremedia.cap.content.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -21,7 +21,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
   private final List<Content> contents;
   private final Boolean defaultAction;
 
-  ConnectorContentUploadCallable(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category, @Nonnull List<Content> contents, Boolean defaultAction) {
+  ConnectorContentUploadCallable(@NonNull ConnectorContext context, @NonNull ConnectorCategory category, @NonNull List<Content> contents, Boolean defaultAction) {
     this.context = context;
     this.category = category;
     this.contents = contents;

@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public interface ConnectorItemTypes {
   /**
    * Returns all mappings of the Content Item Types configuration.
    */
-  @Nonnull
+  @NonNull
   Map<String, Object> getTypes();
 
   /**
@@ -29,6 +29,6 @@ public interface ConnectorItemTypes {
    * Returns the target content type for the given type
    * @param type the item type without leading prefix
    */
-  @Nonnull
+  @NonNull
   List<String> getTypes(String type);
 }

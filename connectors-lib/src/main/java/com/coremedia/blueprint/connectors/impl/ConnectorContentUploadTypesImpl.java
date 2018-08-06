@@ -5,8 +5,8 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.struct.Struct;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class ConnectorContentUploadTypesImpl implements ConnectorContentUploadTy
     properties = settings.getProperties();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public Map<String, Object> getProperties() {
     return properties;

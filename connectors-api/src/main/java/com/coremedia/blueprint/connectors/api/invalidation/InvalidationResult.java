@@ -3,7 +3,7 @@ package com.coremedia.blueprint.connectors.api.invalidation;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class InvalidationResult {
    * @param entity the entity that should be shown when the message is clicked
    * @param values the optional values that are used to render the message.
    */
-  public void addMessage(@Nonnull String key, @Nonnull ConnectorEntity entity, List<Object> values) {
+  public void addMessage(@NonNull String key, @NonNull ConnectorEntity entity, List<Object> values) {
     this.messages.add(new InvalidationMessage(entity, key, values));
   }
 

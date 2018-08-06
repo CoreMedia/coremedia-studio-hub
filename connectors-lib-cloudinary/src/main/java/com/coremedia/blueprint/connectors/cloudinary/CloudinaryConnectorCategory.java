@@ -7,8 +7,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryFolder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,13 +47,13 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
     return folder;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return childCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return childItems;
@@ -78,7 +78,7 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
     return () -> data;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     if (name != null) {
@@ -93,7 +93,7 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
     return parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
@@ -119,12 +119,12 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return true;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return false;
   }
 
@@ -133,12 +133,12 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return service.refresh(context, this);
   }
 
   @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
     return service.upload(context, this, itemName, inputStream);
   }
 }

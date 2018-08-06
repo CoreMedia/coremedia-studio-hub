@@ -22,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
 
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) throws ConnectorException {
+  public boolean init(@NonNull ConnectorContext context) throws ConnectorException {
     try {
       List<String> scopes = Lists.newArrayList(HTTPS_WWW_GOOGLEAPIS_COM_AUTH_YOUTUBE_FORCE_SSL);
       String credentialsJson = context.getProperty(CREDENTIALS_JSON);
@@ -75,7 +75,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     Playlist playlist = getPlaylist(context, id.getParentId().getExternalId());
     Video video = youTubeService.getVideo(context.getConnectionId(), id.getExternalId());
     ConnectorId categoryId = ConnectorId.createRootId(context.getConnectionId());
@@ -91,7 +91,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     if (id.isRootId()) {
       return rootCategory;
     }
@@ -103,9 +103,9 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     return category;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) {
 //    if (rootCategory == null) {
     String displayName = context.getProperty(DISPLAY_NAME);
     ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
@@ -116,9 +116,9 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> result = new ArrayList<>();
     query = query.replaceAll("\\*", " ");
 
@@ -153,7 +153,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
     return new ConnectorSearchResult<>(result);
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     CacheManager cacheManager = CacheManager.getCacheManager(CACHE_MANAGER);
     cacheManager.getCache("youTubePlayListByUserCache").removeAll();
     cacheManager.getCache("youTubePlayListByChannelCache").removeAll();
@@ -206,7 +206,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
    * There are only one kind of subcategories which are the playlists that are children
    * of the root channel, so we don't have to care about the tree relation here
    */
-  private List<ConnectorCategory> getSubCategories(@Nonnull ConnectorContext context) {
+  private List<ConnectorCategory> getSubCategories(@NonNull ConnectorContext context) {
     List<ConnectorCategory> result = new ArrayList<>();
     List<Playlist> playlists = getPlaylists(context);
 
@@ -223,7 +223,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   /**
    * Helper to find the items for the given category
    */
-  private List<ConnectorItem> getItems(@Nonnull ConnectorContext context, ConnectorCategory category) {
+  private List<ConnectorItem> getItems(@NonNull ConnectorContext context, ConnectorCategory category) {
     List<ConnectorItem> result = new ArrayList<>();
 
     String playlistId = category.getConnectorId().getExternalId();

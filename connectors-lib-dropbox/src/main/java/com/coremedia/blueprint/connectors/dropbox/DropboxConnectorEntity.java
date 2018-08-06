@@ -7,8 +7,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.dropbox.core.v2.files.Metadata;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 abstract public class DropboxConnectorEntity implements ConnectorEntity {
 
@@ -29,7 +29,7 @@ abstract public class DropboxConnectorEntity implements ConnectorEntity {
     }
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return name;
@@ -39,7 +39,7 @@ abstract public class DropboxConnectorEntity implements ConnectorEntity {
     this.name = name;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorContext getContext() {
     return context;
@@ -50,13 +50,13 @@ abstract public class DropboxConnectorEntity implements ConnectorEntity {
     return parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;

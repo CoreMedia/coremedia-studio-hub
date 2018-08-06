@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +24,7 @@ public class ConnectorContentUploadService {
 
   private Connectors connectors;
 
-  public void upload(@Nonnull ConnectorContext context, ConnectorCategory category, @Nonnull List<Content> contents, Boolean defaultAction) {
+  public void upload(@NonNull ConnectorContext context, ConnectorCategory category, @NonNull List<Content> contents, Boolean defaultAction) {
     try {
       ConnectorContentUploadCallable callable = new ConnectorContentUploadCallable(context, category, contents, defaultAction);
       Future<Void> submit = service.submit(callable);

@@ -3,8 +3,8 @@ import com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryList
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
-import com.coremedia.cms.editor.sdk.context.ComponentContextManager;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
+import com.coremedia.ui.context.ComponentContextManager;
 import com.coremedia.ui.data.ValueExpression;
 
 import ext.Action;

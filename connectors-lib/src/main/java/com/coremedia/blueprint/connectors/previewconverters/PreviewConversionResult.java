@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.previewconverters;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Collections;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class PreviewConversionResult {
     this.metaData = metaData;
   }
 
-  @Nonnull
+  @NonNull
   public Map<String, Object> getMetaData() {
     return metaData;
   }

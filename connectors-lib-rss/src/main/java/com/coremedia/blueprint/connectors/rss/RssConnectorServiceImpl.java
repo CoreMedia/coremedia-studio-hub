@@ -9,19 +9,23 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.api.invalidation.InvalidationResult;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames;
 import com.coremedia.cap.content.ContentType;
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
+import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.XmlReader;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,14 +43,14 @@ public class RssConnectorServiceImpl implements ConnectorService {
   private RssConnectorCategory rootCategory;
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     this.context = context;
-    return getFeed() != null;
+    return getFeed(context) != null;
   }
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     List<ConnectorItem> items = getRootCategory(false).getItems();
     for (ConnectorItem item : items) {
       if (item.getConnectorId().equals(connectorId)) {
@@ -58,7 +62,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     //only 1x category which is root
     if (rootCategory == null) {
       rootCategory = getRootCategory(true);
@@ -66,15 +70,15 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     return getRootCategory(true);
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
     if (searchType == null || searchType.equals(ConnectorItem.DEFAULT_TYPE) || searchType.equals(ContentType.CONTENT)) {
 
@@ -101,12 +105,12 @@ public class RssConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
-  public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
+  public InvalidationResult invalidate(@NonNull ConnectorContext context) {
     InvalidationResult result = new InvalidationResult(context);
 
     if (this.rootCategory != null) {
       List<String> oldTitles = this.rootCategory.getItems().stream().map(ConnectorItem::getName).collect(Collectors.toList());
-      List<SyndEntry> entries = getFeed().getEntries();
+      List<SyndEntry> entries = getFeed(context).getEntries();
       int count = 0;
       for (SyndEntry entry : entries) {
         ConnectorItem item = createRssAsset(entry);
@@ -126,7 +130,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return result;
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     rootCategory = getRootCategory(true);
     return true;
   }
@@ -138,7 +142,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return new RssConnectorItem(rootCategory, context, rootCategory.getFeed(), entry, id);
   }
 
-  private List<ConnectorItem> getItems(@Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorItem> getItems(@NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorItem> result = new ArrayList<>();
     RssConnectorCategory rssConnectorCategory = (RssConnectorCategory) category;
     SyndFeed feed = rssConnectorCategory.getFeed();
@@ -158,7 +162,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
         displayName = url;
       }
 
-      SyndFeed feed = getFeed();
+      SyndFeed feed = getFeed(context);
 
       ConnectorId id = ConnectorId.createRootId(context.getConnectionId());
       rootCategory = new RssConnectorCategory(this, context, feed, id);
@@ -170,16 +174,29 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  private SyndFeed getFeed() {
-    String url = context.getProperty(URL);
+  private SyndFeed getFeed(ConnectorContext context) {
+    String url = this.context.getProperty(URL);
     try {
+      SyndFeedInput input = new SyndFeedInput();
       URL feedSource = new URL(url);
+
+      String proxyHost = context.getProperty(ConnectorPropertyNames.PROXY_HOST);
+      String proxyPort = context.getProperty(ConnectorPropertyNames.PROXY_PORT);
+      String proxyType = context.getProperty(ConnectorPropertyNames.PROXY_TYPE);
+
+      if(proxyType != null && proxyHost != null && proxyPort != null) {
+        Proxy proxy = new Proxy(Proxy.Type.valueOf(proxyType.toUpperCase()), new InetSocketAddress(proxyPort, Integer.parseInt(proxyPort)));
+        URLConnection urlConnection = feedSource.openConnection(proxy);
+        XmlReader.setDefaultEncoding("utf8");
+        XmlReader reader = new XmlReader(urlConnection);
+        return input.build(reader);
+      }
+
       XmlReader.setDefaultEncoding("utf8");
       XmlReader reader = new XmlReader(feedSource);
-      SyndFeedInput input = new SyndFeedInput();
       return input.build(reader);
     } catch (Exception e) {
-      LOGGER.error("Error reading RSS stream '" + url + "': " + e.getMessage(), e);
+      LOGGER.error("Error reading RSS stream '" + url + "': " + e.getMessage());
     }
     return null;
   }

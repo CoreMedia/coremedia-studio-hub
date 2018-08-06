@@ -188,6 +188,9 @@ The S3 connector allows to show the content of Amazon S3 buckets in the Studio l
 | secretAccessKey |the secretAccessKey used for authentication |
 | region | the region the bucket is located in |
 | bucketName | the name of the S3 bucket |
+| proxyHost | the (optional) proxy host, only applied if proxy port and type is set too |
+| proxyPort | the (optional) proxy port |
+| proxyType | the (optional) proxy type (HTTP, HTTPS) |
 
 
 
@@ -219,6 +222,9 @@ the integrated Dropbox preview.
 | ------------- | ------------- |
 | accessToken | the accessToken value used for authentication |
 | appName | the (optional) app name if an app is accessed and not the full Dropbox |
+| proxyHost | the (optional) proxy host, only applied if proxy port and type is set too |
+| proxyPort | the (optional) proxy port |
+| proxyType | the (optional) proxy type (HTTP, HTTPS, FTP) |
 
 
 ### Cloudinary Configuration
@@ -337,7 +343,9 @@ Each feed entry's article can be opened by using the corresponding toolbar butto
 | Property  | Description |
 | ------------- | ------------- |
 | url | the RSS feed URL |
-
+| proxyHost | the (optional) proxy host, only applied if proxy port and type is set too |
+| proxyPort | the (optional) proxy port |
+| proxyType | the (optional) proxy type (HTTP, HTTPS, FTP) |
 
 
 

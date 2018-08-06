@@ -9,8 +9,8 @@ import org.apache.tika.sax.ExpandedTitleContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -45,7 +45,7 @@ public class OfficeConverter implements ConnectorPreviewConverter {
 
   @Nullable
   @Override
-  public PreviewConversionResult convert(@Nonnull ConnectorContext context, @Nonnull ConnectorItem connectorItem, @Nonnull File itemTempFile) {
+  public PreviewConversionResult convert(@NonNull ConnectorContext context, @NonNull ConnectorItem connectorItem, @NonNull File itemTempFile) {
     try {
       AutoDetectParser tikaParser = new AutoDetectParser();
       ByteArrayOutputStream out = new ByteArrayOutputStream();

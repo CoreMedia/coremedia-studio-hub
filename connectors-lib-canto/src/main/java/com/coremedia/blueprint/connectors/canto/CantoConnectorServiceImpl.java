@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.annotation.Resource;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CantoConnectorServiceImpl implements ConnectorService {
 
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     this.context = context;
 
     String host = context.getProperty(HOST);
@@ -74,16 +74,16 @@ public class CantoConnectorServiceImpl implements ConnectorService {
 
 
   // --- Category ---
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     rootCategory = new CantoCategory(this);
     return rootCategory;
   }
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     return new CantoCategory(id, this);
   }
 
@@ -91,7 +91,7 @@ public class CantoConnectorServiceImpl implements ConnectorService {
   // --- Item ---
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId id) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     AssetEntity a = metadataService.getAssetById(getCatalogId(), Integer.parseInt(id.getExternalId()));
     ConnectorCategory parent = getRootCategory(context);
     if(!id.isRootId()) {
@@ -103,9 +103,9 @@ public class CantoConnectorServiceImpl implements ConnectorService {
 
   // --- Search ---
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
 
     SearchResultEntity searchResult = metadataService.quickSearch(getCatalogId(), query);
@@ -123,7 +123,7 @@ public class CantoConnectorServiceImpl implements ConnectorService {
   }
 
   @CacheEvict(cacheNames = {"cantoCategoryCache", "cantoCategoryAssignmentsCache"}, key = "#root.target.catalogId + '_' + #category.connectorId.externalId", beforeInvocation = true, cacheManager = "cacheManagerCanto")
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     try {
       if (category instanceof CantoCategory) {
         CantoCategory cat = (CantoCategory) category;
@@ -138,7 +138,7 @@ public class CantoConnectorServiceImpl implements ConnectorService {
   }
 
   @CacheEvict(cacheNames = {"cantoCategoryCache", "cantoCategoryAssignmentsCache"}, key = "#root.target.catalogId + '_' + #category.connectorId.externalId", cacheManager = "cacheManagerCanto")
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     int categoryId = -1;
     if (category != null) {
       categoryId = Integer.parseInt(category.getConnectorId().getExternalId());

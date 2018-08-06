@@ -6,8 +6,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +35,13 @@ public class S3ConnectorCategory extends S3ConnectorEntity implements ConnectorC
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     return items;
@@ -60,12 +60,12 @@ public class S3ConnectorCategory extends S3ConnectorEntity implements ConnectorC
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return s3Service.refresh(context, this);
   }
 
   @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
     return s3Service.upload(context, this, itemName, inputStream);
   }
 }

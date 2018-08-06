@@ -23,8 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
   private List<String> ignoredTypes = new ArrayList<>();
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     try {
       String username = context.getProperty(USERNAME);
       String pwd = context.getProperty(PASSWORD);
@@ -74,14 +74,14 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
 
       return true;
     } catch (Exception e) {
-      LOGGER.error("Failed to initialized connector for CoreMedia repository: " + e.getMessage(), e);
+      LOGGER.error("Failed to initialized connector for CoreMedia repository: " + e.getMessage());
     }
     return false;
   }
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     String capId = connectorId.getExternalId();
     Content content = repository.getContent(capId);
 
@@ -97,7 +97,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     ConnectorId parentId = null;
     Content content = null;
     String contentId = rootContent.getId();
@@ -124,9 +124,9 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     return category;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
       rootCategory = new CoreMediaConnectorCategory(this, null, context, rootContent, rootId);
@@ -138,9 +138,9 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
 
     if (repository.isContentManagementServer()) {
@@ -164,7 +164,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
-  public InvalidationResult invalidate(@Nonnull ConnectorContext context) {
+  public InvalidationResult invalidate(@NonNull ConnectorContext context) {
     return null;
   }
 
@@ -219,7 +219,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     return repository.getAccessControl().mayRead(content);
   }
 
-  private void search(@Nonnull ConnectorContext context, String query, List<ConnectorEntity> results, CoreMediaConnectorCategory category, boolean includeSubFolders, ContentType searchContentType) {
+  private void search(@NonNull ConnectorContext context, String query, List<ConnectorEntity> results, CoreMediaConnectorCategory category, boolean includeSubFolders, ContentType searchContentType) {
     boolean includeSubTypes = searchContentType.isAbstract();
     SearchService searchService = repository.getSearchService();
 

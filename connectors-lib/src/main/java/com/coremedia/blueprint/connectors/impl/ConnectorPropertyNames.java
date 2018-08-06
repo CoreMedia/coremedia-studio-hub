@@ -11,6 +11,10 @@ public interface ConnectorPropertyNames {
   String FOLDER = "folder";
   String URL = "url";
 
+  String PROXY_HOST = "proxyHost";
+  String PROXY_PORT = "proxyPort";
+  String PROXY_TYPE = "proxyType";
+
   String PROFILE = "profile";
   String REGION = "region";
   String BUCKET_NAME = "bucketName";

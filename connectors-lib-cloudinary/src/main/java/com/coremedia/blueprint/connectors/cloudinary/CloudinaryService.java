@@ -67,7 +67,7 @@ public class CloudinaryService {
     return cloudinaryConnector.upload(folder, itemName, inputStream);
   }
 
-  public Boolean delete(CloudinaryAsset asset) {
+  public boolean delete(CloudinaryAsset asset) {
     return cloudinaryConnector.delete(asset);
   }
 

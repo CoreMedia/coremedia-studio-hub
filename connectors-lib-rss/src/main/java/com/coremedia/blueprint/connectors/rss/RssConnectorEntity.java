@@ -5,10 +5,10 @@ import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndFeed;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Date;
 
 public class RssConnectorEntity implements ConnectorEntity {
@@ -29,12 +29,12 @@ public class RssConnectorEntity implements ConnectorEntity {
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return false;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return false;
   }
 
@@ -42,7 +42,7 @@ public class RssConnectorEntity implements ConnectorEntity {
     return feed.getPublishedDate();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return name;
@@ -52,7 +52,7 @@ public class RssConnectorEntity implements ConnectorEntity {
     this.name = name;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorContext getContext() {
     return context;
@@ -71,13 +71,13 @@ public class RssConnectorEntity implements ConnectorEntity {
     this.parent = parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;

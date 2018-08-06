@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -93,7 +93,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Boolean delete() {
+  public boolean delete() {
     ConnectorEntity entity = getEntity();
     return entity.delete();
   }

@@ -3,9 +3,8 @@ package com.coremedia.blueprint.connectors.impl;
 import com.coremedia.blueprint.connectors.api.ConnectorContentMappings;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.struct.Struct;
-import org.springframework.lang.NonNull;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,13 +21,13 @@ public class ConnectorContentMappingsImpl implements ConnectorContentMappings {
     properties = settings.getProperties();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public Map<String, Object> getProperties() {
     return properties;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String get(String type) {
     if(properties.containsKey(type)) {

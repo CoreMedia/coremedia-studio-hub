@@ -24,8 +24,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
@@ -254,7 +254,7 @@ public class CantoConnector {
     return responseInputStream;
   }
 
-  public int uploadResource(@Nonnull String resourcePath, Map<String, String> pathParams, MultiValueMap<String, String> queryParams, @Nonnull String fileName, @Nullable Map<String, Object> fieldData, @Nonnull InputStream inputStream) {
+  public int uploadResource(@NonNull String resourcePath, Map<String, String> pathParams, MultiValueMap<String, String> queryParams, @NonNull String fileName, @Nullable Map<String, Object> fieldData, @NonNull InputStream inputStream) {
     String url = buildRequestUrl(resourcePath, pathParams, queryParams);
     HttpHeaders headers = buildHeaders();
 

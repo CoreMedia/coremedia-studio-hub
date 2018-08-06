@@ -11,8 +11,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,11 +29,11 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
 
   private CantoCategoryEntity delegate;
 
-  public CantoCategory(@Nonnull CantoConnectorServiceImpl connectorService) {
+  public CantoCategory(@NonNull CantoConnectorServiceImpl connectorService) {
     this(null, connectorService);
   }
 
-  public CantoCategory(ConnectorId connectorId, @Nonnull CantoConnectorServiceImpl connectorService) {
+  public CantoCategory(ConnectorId connectorId, @NonNull CantoConnectorServiceImpl connectorService) {
     super(connectorId, connectorService);
 
     if (connectorId == null || connectorId.isRootId()) {
@@ -45,7 +45,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
 
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorCategory> getSubCategories() {
     List<ConnectorCategory> subCategories = new ArrayList<>();
@@ -62,7 +62,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     return subCategories;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<ConnectorItem> getItems() {
     List<ConnectorItem> children = new ArrayList<>();
@@ -87,14 +87,14 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     return true;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public ConnectorId getConnectorId() {
     return connectorId;
   }
 
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     if (connectorId.isRootId()) {
@@ -109,7 +109,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
@@ -134,13 +134,13 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return false;
   }
 
   @Override
-  public Boolean delete() {
-    return null;
+  public boolean delete() {
+    return false;
   }
 
   public CantoCategoryEntity getDelegate() {
@@ -152,12 +152,12 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
   }
 
   @Override
-  public Boolean refresh(@Nonnull ConnectorContext context) {
+  public boolean refresh(@NonNull ConnectorContext context) {
     return connectorService.refresh(context, this);
   }
 
   @Override
-  public ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
     return connectorService.upload(context, this, itemName, inputStream);
   }
 }

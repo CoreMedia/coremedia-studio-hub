@@ -7,8 +7,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.canto.CantoConnectorServiceImpl;
 import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class CantoAsset extends CantoConnectorEntity implements ConnectorItem {
   private AssetEntity delegate;
   private ConnectorCategory parent;
 
-  public CantoAsset(@Nonnull ConnectorCategory category, @Nonnull AssetEntity delegate, @Nonnull CantoConnectorServiceImpl connectorService) {
+  public CantoAsset(@NonNull ConnectorCategory category, @NonNull AssetEntity delegate, @NonNull CantoConnectorServiceImpl connectorService) {
     super(ConnectorId.createItemId(category.getConnectorId(), Integer.toString(delegate.getId())), connectorService);
     this.parent = category;
     this.delegate = delegate;
@@ -73,7 +73,7 @@ public class CantoAsset extends CantoConnectorEntity implements ConnectorItem {
     return true;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return delegate.getName();
@@ -85,7 +85,7 @@ public class CantoAsset extends CantoConnectorEntity implements ConnectorItem {
     return parent;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     return getName();
@@ -107,12 +107,12 @@ public class CantoAsset extends CantoConnectorEntity implements ConnectorItem {
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return true;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return getConnectorService().getAssetService().deleteAsset(getCatalogId(), delegate.getId());
   }
 }

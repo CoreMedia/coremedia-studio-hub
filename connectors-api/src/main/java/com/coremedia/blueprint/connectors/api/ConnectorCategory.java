@@ -6,8 +6,8 @@ import com.coremedia.cap.common.CapPropertyDescriptorType;
 import com.coremedia.cap.content.Content;
 
 import javax.activation.MimeType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -25,20 +25,20 @@ public interface ConnectorCategory extends ConnectorEntity {
    */
   String DEFAULT_TYPE = "folder";
 
-  @Nonnull
+  @NonNull
   List<ConnectorCategory> getSubCategories();
 
   /**
    * Returns a list of child items for this category.
    */
-  @Nonnull
+  @NonNull
   List<ConnectorItem> getItems();
 
   /**
    * Optional method that can be implemented to provide a custom column model inside the Studio library.
    * The given column models will be shown in the the order they are added to the list.
    */
-  @Nonnull
+  @NonNull
   default List<ConnectorColumn> getColumns() {
     return Collections.emptyList();
   }
@@ -64,7 +64,7 @@ public interface ConnectorCategory extends ConnectorEntity {
    * @param defaultAction true, if the default action was used (no CTRL was pressed)
    * @return true if the drop was successful
    */
-  default boolean uploadContent(@Nonnull ConnectorContext context, @Nonnull List<Content> contents, Boolean defaultAction) {
+  default boolean uploadContent(@NonNull ConnectorContext context, @NonNull List<Content> contents, Boolean defaultAction) {
     for (Content content : contents) {
       List<CapPropertyDescriptor> descriptors = content.getType().getDescriptors();
       for (CapPropertyDescriptor descriptor : descriptors) {
@@ -96,7 +96,7 @@ public interface ConnectorCategory extends ConnectorEntity {
    * Called to refresh the service
    * @return true if the operation was successful
    */
-  default Boolean refresh(@Nonnull ConnectorContext context) {
+  default boolean refresh(@NonNull ConnectorContext context) {
     return true;
   }
 
@@ -108,7 +108,7 @@ public interface ConnectorCategory extends ConnectorEntity {
    * @return the newly created item created from the stream or null if not upload is provided
    */
   @Nullable
-  default ConnectorItem upload(@Nonnull ConnectorContext context, String itemName, InputStream inputStream) {
+  default ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
     return null;
   }
 }

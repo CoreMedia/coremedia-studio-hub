@@ -88,7 +88,7 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   @GET
   @Path("refresh")
   @Produces(MediaType.APPLICATION_JSON)
-  public Boolean refresh() {
+  public boolean refresh() {
     ConnectorCategory category = getEntity();
     ConnectorContext context = getContext(category.getConnectorId());
     tempFileCacheService.clear(context);

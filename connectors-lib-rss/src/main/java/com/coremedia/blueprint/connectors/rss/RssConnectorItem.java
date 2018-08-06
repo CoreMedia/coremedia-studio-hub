@@ -8,11 +8,11 @@ import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.library.DefaultConnectorColumnValue;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
     setName(entry.getTitle());
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getItemType() {
     return "rss";

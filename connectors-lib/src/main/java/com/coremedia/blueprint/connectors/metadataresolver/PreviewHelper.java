@@ -4,7 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,8 +41,8 @@ public class PreviewHelper {
     return result;
   }
 
-  @Nonnull
-  public static String createStudioLink(@Nonnull ConnectorItem item, @Nonnull String label) {
+  @NonNull
+  public static String createStudioLink(@NonNull ConnectorItem item, @NonNull String label) {
     return "<a style=\"color:black;\" href=\"javascript:Ext.getCmp('connectorRepositoryList').showItem('" + item.getConnectorId() + "');\">" + label + "</a>";
   }
 }

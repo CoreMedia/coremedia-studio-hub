@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.api.search;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ConnectorSearchResult<T> {
   private List<T> searchResult = new ArrayList<>();
 
-  public ConnectorSearchResult(@Nonnull List<T> searchResult) {
+  public ConnectorSearchResult(@NonNull List<T> searchResult) {
     this.searchResult = searchResult;
   }
 

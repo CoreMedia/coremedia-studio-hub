@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 
 /**
@@ -82,7 +82,7 @@ public interface ConnectorItem extends ConnectorEntity {
    * The Context is used to analyze the document name mapping with the item name.
    * @return the type of the item or null if the type could not be determined or not item types have been configured
    */
-  @Nonnull
+  @NonNull
   default String getItemType() {
     ConnectorContext context = getContext();
     ConnectorItemTypes itemTypes = context.getItemTypes();

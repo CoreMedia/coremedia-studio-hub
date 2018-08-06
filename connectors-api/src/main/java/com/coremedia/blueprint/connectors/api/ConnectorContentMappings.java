@@ -1,8 +1,6 @@
 package com.coremedia.blueprint.connectors.api;
 
-import org.springframework.lang.NonNull;
-
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 
 /**
@@ -13,7 +11,7 @@ public interface ConnectorContentMappings {
   /**
    * Returns all content mapping properties as map
    */
-  @Nonnull
+  @NonNull
   Map<String,Object> getProperties();
 
   /**
@@ -21,7 +19,7 @@ public interface ConnectorContentMappings {
    * @param type the type name of a connector item
    * @return null or a target content content
    */
-  @Nonnull
+  @NonNull
   String get(String type);
 
   /**

@@ -6,8 +6,8 @@ import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.struct.Struct;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +39,12 @@ public class ContentTagger {
    * @param taxonomyDocType  the document type of the tag, e.g. CMTaxonomy or CMLocTaxonomy.
    * @param tags             the list of tags to apply to the content
    */
-  public void tag(@Nonnull Content content,
+  public void tag(@NonNull Content content,
                   @Nullable String parentTag,
-                  @Nonnull String taxonomyName,
-                  @Nonnull String taxonomyProperty,
-                  @Nonnull String taxonomyDocType,
-                  @Nonnull List<String> tags) {
+                  @NonNull String taxonomyName,
+                  @NonNull String taxonomyProperty,
+                  @NonNull String taxonomyDocType,
+                  @NonNull List<String> tags) {
     Content taxonomiesFolder = contentRepository.getChild(taxonomyPath);
     Content taxonomyFolder = taxonomiesFolder.getChild(taxonomyName);
     ContentType ct = contentRepository.getContentType(taxonomyDocType);

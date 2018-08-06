@@ -8,7 +8,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,17 +71,17 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
   abstract public String getName(T entry);
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     this.context = context;
     return true;
   }
 
   @Override
-  public void shutdown(@Nonnull ConnectorContext context) throws ConnectorException {
+  public void shutdown(@NonNull ConnectorContext context) throws ConnectorException {
     fileSystemService.invalidate();
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     fileSystemService.invalidate();
     return true;
   }
@@ -142,7 +142,7 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
    *
    * @param categoryId the categoryId to retrieve the parent for
    */
-  protected ConnectorCategory getParentCategory(@Nonnull ConnectorContext context, ConnectorId categoryId) {
+  protected ConnectorCategory getParentCategory(@NonNull ConnectorContext context, ConnectorId categoryId) {
     if(isRootCategoryId(context, categoryId)) {
       return null;
     }
@@ -220,7 +220,7 @@ abstract public class FileBasedConnectorService<T> implements ConnectorService {
 
   //--------------------- Helper ---------------------------------------------------------------------------------------
 
-  private boolean isRootCategoryId(@Nonnull ConnectorContext context, ConnectorId categoryId) {
+  private boolean isRootCategoryId(@NonNull ConnectorContext context, ConnectorId categoryId) {
     ConnectorId rootCategoryId = getRootCategory(context).getConnectorId();
     if (rootCategoryId.getId().equals(categoryId.getId())) {
       return true;

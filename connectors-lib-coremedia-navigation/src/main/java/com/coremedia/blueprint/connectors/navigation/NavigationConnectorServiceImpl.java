@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +34,13 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   private ConnectorPageGridService pageGridService;
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     return true;
   }
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     String capId = connectorId.getExternalId();
     Content content = repository.getContent(capId);
 
@@ -55,7 +55,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId connectorId) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
     Content rootContent = context.getPreferredSite().getSiteRootDocument();
     String contentId = rootContent.getId();
     ConnectorCategory parent = null;
@@ -88,9 +88,9 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
     return category;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     if (context.getPreferredSite() == null) {
       throw new ConnectorException("No preferred site selected");
     }
@@ -105,9 +105,9 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
     return new ConnectorSearchResult<>(results);
   }

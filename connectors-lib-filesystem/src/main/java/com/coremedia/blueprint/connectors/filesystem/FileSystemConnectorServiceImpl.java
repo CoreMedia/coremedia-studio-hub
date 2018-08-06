@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +37,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
   private FileSystemConnectorCategory rootCategory;
 
   @Override
-  public boolean init(@Nonnull ConnectorContext context) {
+  public boolean init(@NonNull ConnectorContext context) {
     super.init(context);
     String rootPath = context.getProperty(FOLDER);
     File file = new File(rootPath);
@@ -47,9 +47,9 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return file.exists();
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorCategory getRootCategory(@Nonnull ConnectorContext context) throws ConnectorException {
+  public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
     if (rootCategory == null) {
       String rootPath = context.getProperty(FOLDER);
       String displayName = context.getProperty(DISPLAY_NAME);
@@ -86,7 +86,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
 
   @Nullable
   @Override
-  public ConnectorItem getItem(@Nonnull ConnectorContext context, @Nonnull ConnectorId itemId) throws ConnectorException {
+  public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId itemId) throws ConnectorException {
     ConnectorId parentFolderId = getFolderId(itemId);
     File file = getCachedFileOrFolderEntity(context, itemId);
     return new FileSystemConnectorItem(getCategory(context, parentFolderId), context, itemId, file);
@@ -94,7 +94,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
 
   @Nullable
   @Override
-  public ConnectorCategory getCategory(@Nonnull ConnectorContext context, @Nonnull ConnectorId categoryId) throws ConnectorException {
+  public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId categoryId) throws ConnectorException {
     ConnectorCategory parentCategory = getParentCategory(context, categoryId);
     if (parentCategory == null) {
       return getRootCategory(context);
@@ -107,9 +107,9 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return subCategory;
   }
 
-  @Nonnull
+  @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@Nonnull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
 
     FileSystemConnectorCategory fileSystemCategory = (FileSystemConnectorCategory) category;
@@ -153,7 +153,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return new ConnectorSearchResult<>(results);
   }
 
-  public Boolean refresh(@Nonnull ConnectorContext context, @Nonnull ConnectorCategory category) {
+  public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
     if (category.getConnectorId().isRootId()) {
       rootCategory = null;
       rootCategory = (FileSystemConnectorCategory) getRootCategory(context);
@@ -161,7 +161,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
     return super.refresh(context, category);
   }
 
-  public ConnectorItem upload(@Nonnull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
     ConnectorId newItemId = ConnectorId.createItemId(context.getConnectionId(), uniqueObjectName);
     File file = new File(newItemId.getExternalId());
@@ -216,7 +216,7 @@ public class FileSystemConnectorServiceImpl extends FileBasedConnectorService<Fi
 
   //----------------------------- Helper -------------------------------------------------------------------------------
 
-  private List<ConnectorCategory> getSubCategories(ConnectorContext context, @Nonnull ConnectorCategory category) throws ConnectorException {
+  private List<ConnectorCategory> getSubCategories(ConnectorContext context, @NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorCategory> subCategories = new ArrayList<>();
 
     List<File> subfolders = getSubfolderEntities(context, category.getConnectorId());

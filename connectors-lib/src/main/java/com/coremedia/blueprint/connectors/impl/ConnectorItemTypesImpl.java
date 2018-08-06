@@ -6,8 +6,8 @@ import com.coremedia.cap.struct.Struct;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class ConnectorItemTypesImpl implements ConnectorItemTypes {
     types = settings.toNestedMaps();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public Map<String, Object> getTypes() {
     return types;
@@ -52,7 +52,7 @@ public class ConnectorItemTypesImpl implements ConnectorItemTypes {
     return null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public List<String> getTypes(String type) {
     Set<Map.Entry<String, Object>> entries = types.entrySet();

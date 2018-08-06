@@ -9,8 +9,8 @@ import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryAsset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -70,7 +70,7 @@ public class CloudinaryConnectorItem extends CloudinaryConnectorEntity implement
     return () -> data;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getItemType() {
    return asset.getConnectorItemType(context);
@@ -86,7 +86,7 @@ public class CloudinaryConnectorItem extends CloudinaryConnectorEntity implement
     return true;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return asset.getName();
@@ -98,7 +98,7 @@ public class CloudinaryConnectorItem extends CloudinaryConnectorEntity implement
     return category;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getDisplayName() {
     String itemType = getItemType();
@@ -136,12 +136,12 @@ public class CloudinaryConnectorItem extends CloudinaryConnectorEntity implement
   }
 
   @Override
-  public Boolean isDeleteable() {
+  public boolean isDeleteable() {
     return true;
   }
 
   @Override
-  public Boolean delete() {
+  public boolean delete() {
     return service.delete(context, asset);
   }
 
