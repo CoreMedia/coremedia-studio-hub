@@ -36,7 +36,6 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.USE
 /**
  *
  */
-@Component("youTubeService")
 public class YouTubeService {
   private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeService.class);
 
