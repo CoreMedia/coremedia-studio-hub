@@ -30,7 +30,6 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
   static final String CONNECTIONS_STRUCT = "connections";
 
   private static final String TYPES_DOCUMENT = "Connector Types";
-  private static final String TYPES_STRUCT = "types";
   private static final String CONNECTOR_TYPE = "connectorType";
 
   ContentRepository contentRepository;
@@ -84,7 +83,7 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
     List<ConnectorContext> filteredList = new ArrayList<>();
 
     //finally apply connector types data
-    List connectorTypes = findConnectorSettings(globalConfigPath + "/" + TYPES_DOCUMENT, TYPES_STRUCT);
+    List connectorTypes = findConnectorSettings(globalConfigPath + "/" + TYPES_DOCUMENT, ConnectorContextImpl.TYPES_STRUCT);
     Map<String, Struct> connectorTypeMapping = new HashMap<>();
     for (Object connectorType : connectorTypes) {
       if (connectorType instanceof Struct) {
@@ -118,7 +117,9 @@ public class ConnectorContextCacheKey extends CacheKey<List<ConnectorContext>> {
       }
 
       if (struct.get(ConnectorContextImpl.CONTENT_UPLOAD_TYPES) != null) {
-        context.setContentUploadTypes(new ConnectorContentUploadTypesImpl(struct.getLink(ConnectorContextImpl.CONTENT_UPLOAD_TYPES)));
+        Content uploadTypes = struct.getLink(ConnectorContextImpl.CONTENT_UPLOAD_TYPES);
+        Struct settings = uploadTypes.getStruct(ConnectorContextImpl.SETTINGS).getStruct(ConnectorContextImpl.TYPES_STRUCT);
+        context.setContentUploadTypes(new ConnectorContentUploadTypesImpl(settings));
       }
 
       if (struct.get(ConnectorContextImpl.DEFAULT_COLUMNS) != null) {

@@ -6,18 +6,16 @@ import com.coremedia.blueprint.connectors.api.ConnectorColumnValue;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.library.DefaultConnectorColumnValue;
 import com.coremedia.cap.common.Blob;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
-import com.coremedia.cap.content.ContentType;
-import org.apache.commons.lang3.StringUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
@@ -70,8 +68,7 @@ public class CoreMediaConnectorItem extends CoreMediaConnectorEntity implements 
   public List<ConnectorColumnValue> getColumnValues() {
     String lifecycle = service.getLifecycle(content);
     String docType = content.getType().getName();
-    return Arrays.asList(new DefaultConnectorColumnValue(lifecycle, "status", null, lifecycle),
-            new DefaultConnectorColumnValue(docType, "docType"));
+    return Arrays.asList(new DefaultConnectorColumnValue(lifecycle, "status", null, lifecycle));
   }
 
   @Override
@@ -102,20 +99,7 @@ public class CoreMediaConnectorItem extends CoreMediaConnectorEntity implements 
   @NonNull
   @Override
   public String getItemType() {
-    ConnectorContext context = getContext();
-    ConnectorItemTypes itemTypes = context.getItemTypes();
-    if (itemTypes != null) {
-      ContentType contentType = content.getType();
-      while (contentType != null) {
-        String typeForName = itemTypes.getTypeForName(contentType.getName());
-        if (typeForName != null) {
-          return typeForName;
-        }
-
-        contentType = contentType.getParent();
-      }
-    }
-    return "download";
+    return content.getType().getName();
   }
 
   @Nullable

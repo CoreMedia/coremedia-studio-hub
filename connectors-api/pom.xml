@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1807.1-2</version>
+    <version>1810.1-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -11,8 +11,6 @@
 
 
   <dependencies>
-    <!-- CoreMedia Dependencies -->
-    <!-- Thirdparty Dependencies -->
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
@@ -21,14 +19,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.cms</groupId>
-      <artifactId>cap-unified-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.cms</groupId>
-      <artifactId>cap-multisite</artifactId>
     </dependency>
   </dependencies>
 

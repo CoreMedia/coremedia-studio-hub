@@ -7,7 +7,6 @@ import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCatalogsSearc
 import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCategoryEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.SearchResultEntity;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -16,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component("cantoMetaDataService")
 public class MetadataService extends AbstractCantoService {
 
   @Cacheable(value = "cantoCatalogCache", cacheManager = "cacheManagerCanto")

@@ -22,7 +22,6 @@ import java.util.List;
 /**
  *
  */
-@Component("cloudinaryService")
 public class CloudinaryService {
   private static final Logger LOGGER = LoggerFactory.getLogger(CloudinaryService.class);
 

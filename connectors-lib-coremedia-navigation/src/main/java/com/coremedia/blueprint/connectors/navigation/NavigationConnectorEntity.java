@@ -112,8 +112,6 @@ abstract public class NavigationConnectorEntity implements ConnectorEntity {
   @Override
   public List<ConnectorColumnValue> getColumnValues() {
     String lifecycle = service.getLifecycle(content);
-    String docType = content.getType().getName();
-    return Arrays.asList(new DefaultConnectorColumnValue(lifecycle, "status", null, lifecycle),
-            new DefaultConnectorColumnValue(docType, "docType"));
+    return Arrays.asList(new DefaultConnectorColumnValue(lifecycle, "status", null, lifecycle));
   }
 }

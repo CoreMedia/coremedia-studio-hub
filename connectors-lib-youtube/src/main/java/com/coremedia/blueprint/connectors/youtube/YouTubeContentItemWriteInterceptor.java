@@ -45,7 +45,7 @@ public class YouTubeContentItemWriteInterceptor extends ConnectorItemWriteInterc
 
           if (url != null) {
             String imageName = owner.getName() + " - Thumbnail";
-            Content pictureFromUrl = super.createPictureFromUrl(owner, imageName, url);
+            Content pictureFromUrl = getContentCreateService().createPictureFromUrl(owner, imageName, url);
             pictures.add(pictureFromUrl);
           }
         }

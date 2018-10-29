@@ -85,7 +85,7 @@ public class RssConnectorItem extends RssConnectorEntity implements ConnectorIte
     if (rssEntry.getDescription() != null) {
       return rssEntry.getDescription().getValue();
     }
-    return null;
+    return rssEntry.getTitle();
   }
 
   @Nullable

@@ -7,17 +7,7 @@
                            http://www.coremedia.com/2007/coremedia-spring-beans-customization
                            http://www.coremedia.com/2007/coremedia-spring-beans-customization.xsd">
 
-
-  <import resource="classpath:/com/coremedia/blueprint/base/settings/impl/bpbase-settings-services.xml"/>
-  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
-  <bean id="connectorFreemarkerFacade" class="com.coremedia.blueprint.connectors.cae.web.taglib.ConnectorFreemarkerFacade">
-    <property name="settingsService" ref="settingsService"/>
-    <property name="contextProvider" ref="connectorContextProvider" />
-    <property name="connector" ref="connector" />
-  </bean>
-
-  <bean id="connectorLinkSchemes" class="com.coremedia.blueprint.connectors.cae.link.ConnectorLinkScheme"/>
+  <bean id="connectorsCaeConfiguration" class="com.coremedia.blueprint.connectors.cae.ConnectorsCaeConfiguration"/>
 
   <customize:append id="connectorFreemarkerSharedVariablesCustomizer" bean="freemarkerSharedVariables">
     <map>

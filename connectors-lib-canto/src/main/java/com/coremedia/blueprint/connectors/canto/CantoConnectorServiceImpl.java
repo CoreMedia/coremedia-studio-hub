@@ -16,8 +16,6 @@ import com.coremedia.blueprint.connectors.canto.rest.entities.SearchResultEntity
 import com.coremedia.blueprint.connectors.canto.rest.services.AssetService;
 import com.coremedia.blueprint.connectors.canto.rest.services.MetadataService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -29,16 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CantoConnectorServiceImpl implements ConnectorService {
-
-  private static final Logger LOG = LoggerFactory.getLogger(CantoConnectorServiceImpl.class);
-
-  private static final String ASSETS_ID = "assets";
-  private static final String TYPE_ASSET = "asset";
-  private static final String CONTENTS_ID = "contents";
-  private static final String TYPE_CONTENT = "content";
   private static final String HOST = "host";
-  private static final String USERNAME = "username";
-  private static final String PASSWORD = "password";
+  private static final String USERNAME_KEY = "username";
+  private static final String PASSWORD_KEY = "password";
   private static final String CATALOG = "catalog";
 
   private CantoCategory rootCategory;
@@ -54,8 +45,8 @@ public class CantoConnectorServiceImpl implements ConnectorService {
     this.context = context;
 
     String host = context.getProperty(HOST);
-    String username = context.getProperty(USERNAME);
-    String password = context.getProperty(PASSWORD);
+    String username = context.getProperty(USERNAME_KEY);
+    String password = context.getProperty(PASSWORD_KEY);
     catalogId = context.getProperty(CATALOG);
 
     if (StringUtils.isEmpty(host) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -93,9 +84,19 @@ public class CantoConnectorServiceImpl implements ConnectorService {
   @Override
   public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     AssetEntity a = metadataService.getAssetById(getCatalogId(), Integer.parseInt(id.getExternalId()));
-    ConnectorCategory parent = getRootCategory(context);
-    if(!id.isRootId()) {
-      parent = getCategory(context, id);
+    ConnectorCategory parent = null;
+    try {
+      if(!id.isRootId()) {
+        parent = getCategory(context, id);
+      }
+      else {
+        parent = getRootCategory(context);
+      }
+    } catch (Exception e) {
+      //e.printStackTrace();
+    }
+    if (parent == null) {
+      return null;
     }
     return new CantoAsset(parent, a, this);
   }

@@ -4,6 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorRepresentation;
+import com.coremedia.cache.Cache;
 import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.rest.linking.EntityResource;
@@ -20,8 +21,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +44,7 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
   private String siteId;
   private String locale;
   private Connectors connector;
+  private Cache cache;
 
   private SitesService sitesService;
 
@@ -96,14 +96,6 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
 
   @PathParam(CONNECTOR_TYPE)
   public void setConnectorType(@NonNull String connectorType) {
-    if (connectorType != null) {
-      try {
-        this.connectorType = URLDecoder.decode(connectorType, "UTF-8");
-        return;
-      } catch (UnsupportedEncodingException e) { //NOSONAR - exception ignored on purpose
-        //ignore
-      }
-    }
     this.connectorType = connectorType;
   }
 
@@ -113,14 +105,6 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
 
   @PathParam(SITE_ID)
   public void setSiteId(@Nullable String siteId) {
-    if (siteId != null) {
-      try {
-        this.siteId = URLDecoder.decode(siteId, "UTF-8");
-        return;
-      } catch (UnsupportedEncodingException e) { //NOSONAR - exception ignored on purpose
-        //ignore
-      }
-    }
     this.siteId = siteId;
   }
 

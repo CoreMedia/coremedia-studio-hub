@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:customize="http://www.coremedia.com/2007/coremedia-spring-beans-customization"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.coremedia.com/2007/coremedia-spring-beans-customization
+        http://www.coremedia.com/2007/coremedia-spring-beans-customization.xsd">
 
   <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
   <import resource="classpath:com/coremedia/rest/cap/cap-rest-service.xml"/>
@@ -24,6 +30,7 @@
     <property name="sitesService" ref="sitesService" />
     <property name="connector" ref="connector" />
     <property name="contentRepository" ref="contentRepository" />
+    <property name="connectorContentService" ref="connectorContentService" />
   </bean>
 
   <!-- Invalidation -->
@@ -43,7 +50,7 @@
   </bean>
 
   <!-- Content -->
-  <bean id="connectorContentService" class="com.coremedia.blueprint.studio.connectors.rest.content.ConnectorContentServiceImpl" scope="prototype">
+  <bean id="connectorContentService" class="com.coremedia.blueprint.studio.connectors.rest.content.ConnectorContentService" scope="prototype">
     <property name="solrSearchService" ref="solrSearchService" />
     <property name="connectorContextProvider" ref="connectorContextProvider" />
     <property name="contentRepository" ref="contentRepository" />
@@ -81,5 +88,14 @@
     <property name="contentRepository" ref="contentRepository" />
     <property name="connectorContentUploadService" ref="connectorContentUploadService" />
   </bean>
+
+  <bean id="connectorHttpFirewall"
+        class="org.springframework.security.web.firewall.StrictHttpFirewall">
+    <property name="allowSemicolon" value="true"/>
+    <property name="allowUrlEncodedSlash" value="true" />
+    <property name="allowUrlEncodedPercent" value="true"/>
+  </bean>
+
+  <customize:replace order="9999" id="customHttpFilterwall" bean="httpFirewall" custom-ref="connectorHttpFirewall"/>
 
 </beans>

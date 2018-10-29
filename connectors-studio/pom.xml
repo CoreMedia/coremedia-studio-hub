@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1807.1-2</version>
+    <version>1810.1-1</version>
   </parent>
 
   <artifactId>connectors-studio</artifactId>
@@ -57,12 +57,6 @@
    </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/sencha</directory>
-        <targetPath>../packages/${project.groupId}__${project.artifactId}</targetPath>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <groupId>net.jangaroo</groupId>
@@ -70,6 +64,9 @@
         <version>${jangaroo.version}</version>
         <extensions>true</extensions>
         <configuration>
+          <additionalCssNonBundle>
+            <value>resources/css/studio-hub-ui.css</value>
+          </additionalCssNonBundle>
           <namespaces>
             <namespace>
               <uri>exml:com.coremedia.blueprint.studio.config.connectors</uri>

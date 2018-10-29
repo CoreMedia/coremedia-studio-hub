@@ -17,13 +17,13 @@ import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.Video;
 import com.google.common.collect.Lists;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -106,13 +106,13 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   @NonNull
   @Override
   public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) {
-//    if (rootCategory == null) {
-    String displayName = context.getProperty(DISPLAY_NAME);
-    ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
-    rootCategory = new YouTubeConnectorCategory(this, null, context, rootId, null, displayName);
-    rootCategory.setSubCategories(getSubCategories(context));
-    rootCategory.setItems(getItems(context, rootCategory));
-//    }
+    if (rootCategory == null) {
+      String displayName = context.getProperty(DISPLAY_NAME);
+      ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
+      rootCategory = new YouTubeConnectorCategory(this, null, context, rootId, null, displayName);
+      rootCategory.setSubCategories(getSubCategories(context));
+      rootCategory.setItems(getItems(context, rootCategory));
+    }
     return rootCategory;
   }
 

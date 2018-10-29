@@ -43,7 +43,7 @@ public class RssContentItemWriteInterceptor extends ConnectorItemWriteIntercepto
             imageName = imageName.substring(0, imageName.indexOf("."));
           }
           imageName = imageName + " - Thumbnail";
-          Content pictureFromUrl = super.createPictureFromUrl(owner, imageName, imageUrl);
+          Content pictureFromUrl = getContentCreateService().createPictureFromUrl(owner, imageName, imageUrl);
           images.add(pictureFromUrl);
         }
 

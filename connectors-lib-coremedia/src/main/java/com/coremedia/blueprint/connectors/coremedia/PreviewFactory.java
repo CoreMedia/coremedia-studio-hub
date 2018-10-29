@@ -5,6 +5,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
 import com.coremedia.cap.content.Content;
+import com.coremedia.cap.struct.Struct;
+import com.coremedia.xml.Markup;
 import com.coremedia.xml.MarkupUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,10 +23,17 @@ public class PreviewFactory {
     StringBuilder buffer = new StringBuilder();
     Content content = item.getContent();
     ConnectorContext context = item.getContext();
+    ConnectorPreviewTemplates previewTemplates = context.getPreviewTemplates();
 
     if (content.getType().isSubtypeOf("CMCollection")) {
-      buffer.append("<b>" + content.getString("title") + "</b><br>");
+      String title = content.getString("title");
       List<Content> items = content.getLinks("items");
+
+      if(StringUtils.isEmpty(title) && items.isEmpty()) {
+        return null;
+      }
+
+      buffer.append("<b>" + title + "</b><br>");
       for (Content contentItem : items) {
         buffer.append("<hr/>");
         ConnectorId connectorId = ConnectorId.createItemId(context.getConnectionId(), contentItem.getId());
@@ -35,8 +44,53 @@ public class PreviewFactory {
     else if (content.getType().isSubtypeOf("CMDownload")) {
       return null;
     }
-    else if (content.getType().isSubtypeOf("CMMedia")) {
-      return null;
+    else if (content.getType().isSubtypeOf("CMSettings")) {
+      Struct settings = content.getStruct("settings");
+
+      if(settings != null) {
+        Markup markup = settings.toMarkup();
+        String xml = markup.asXml();
+
+        String template = previewTemplates.getTemplate("text");
+        MessageFormat form = new MessageFormat(template);
+        String html = form.format(new Object[]{xml});
+        buffer.append(html);
+      }
+    }
+    else if (content.getType().isSubtypeOf("CMPicture")) {
+      String template = previewTemplates.getTemplate("picture");
+      MessageFormat form = new MessageFormat(template);
+      String url = item.getStreamUrl();
+      String html = form.format(new Object[]{url});
+      buffer.append(html);
+    }
+    else if (content.getType().isSubtypeOf("CMGallery")) {
+      List<Content> items = content.getLinks("items");
+      if(!items.isEmpty()) {
+        Content pic = items.get(0);
+        ConnectorId connectorId = ConnectorId.createItemId(context.getConnectionId(), pic.getId());
+        ConnectorItem pictureConnectorItem = service.getItem(context, connectorId);
+
+        String template = previewTemplates.getTemplate("picture");
+        MessageFormat form = new MessageFormat(template);
+        String url = pictureConnectorItem.getStreamUrl();
+        String html = form.format(new Object[]{url});
+        buffer.append(html);
+      }
+    }
+    else if (content.getType().isSubtypeOf("CMSpinner")  ) {
+      List<Content> items = content.getLinks("sequence");
+      if(!items.isEmpty()) {
+        Content pic = items.get(0);
+        ConnectorId connectorId = ConnectorId.createItemId(context.getConnectionId(), pic.getId());
+        ConnectorItem pictureConnectorItem = service.getItem(context, connectorId);
+
+        String template = previewTemplates.getTemplate("picture");
+        MessageFormat form = new MessageFormat(template);
+        String url = pictureConnectorItem.getStreamUrl();
+        String html = form.format(new Object[]{url});
+        buffer.append(html);
+      }
     }
     else if (content.getType().isSubtypeOf("CMTeasable")) {
       buffer.append(teaseable(service, item));
@@ -51,7 +105,12 @@ public class PreviewFactory {
   private static String teaseable(CoreMediaConnectorServiceImpl service, CoreMediaConnectorItem item) {
     Content content = item.getContent();
     StringBuilder buffer = new StringBuilder();
-    buffer.append("<b>" + content.getString("title") + "</b><br>");
+
+    String title = content.getString("title");
+    if(StringUtils.isEmpty(title)) {
+      title = content.getName();
+    }
+    buffer.append("<b>" + title + "</b><br>");
 
     String teaserText = MarkupUtil.asPlainText(content.getMarkup("teaserText"));
     if (!StringUtils.isEmpty(teaserText)) {

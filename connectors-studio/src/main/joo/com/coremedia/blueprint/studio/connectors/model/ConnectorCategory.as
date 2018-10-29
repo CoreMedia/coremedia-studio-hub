@@ -13,7 +13,7 @@ public interface ConnectorCategory extends ConnectorEntity {
 
   function isContentUploadEnabled():Boolean;
 
-  function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined);
+  function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined):void;
 
   function getColumns():Array;
 

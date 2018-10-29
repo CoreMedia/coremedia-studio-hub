@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1807.1-2</version>
+    <version>1810.1-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -18,67 +18,71 @@
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-canto</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-cloudinary</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-coremedia</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-coremedia-navigation</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-dropbox</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-filesystem</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-youtube</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-rss</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib-s3</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-spring</artifactId>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint</groupId>
@@ -94,12 +98,18 @@
       <groupId>com.coremedia.blueprint.base</groupId>
       <artifactId>bpbase-settings-api</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

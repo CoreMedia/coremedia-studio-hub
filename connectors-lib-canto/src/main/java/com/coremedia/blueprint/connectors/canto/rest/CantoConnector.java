@@ -210,16 +210,16 @@ public class CantoConnector {
       }
     }
 
-    return responseEntity.getBody();
+    if (responseEntity != null) {
+      return responseEntity.getBody();
+    }
+
+    return null;
   }
 
   public InputStream streamResource(String resourcePath, Map<String, String> pathParams, MultiValueMap<String, String> queryParams) {
     String url = buildRequestUrl(resourcePath, pathParams, queryParams);
     HttpHeaders headers = buildHeaders();
-
-    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-    ResponseEntity<Resource> responseEntity = null;
-    InputStream responseInputStream = null;
 
     Stopwatch stopwatch = null;
     if (LOG.isInfoEnabled()) {
@@ -227,14 +227,19 @@ public class CantoConnector {
     }
 
     try {
-      responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Resource.class);
-      responseInputStream = responseEntity.getBody().getInputStream();
+      ResponseEntity<Resource> responseEntity = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Resource.class);
+      Resource body = responseEntity.getBody();
+      if(body == null) {
+        LOG.error("Empty resource body, streaming of " + this + " failed.");
+        return null;
+      }
 
+      InputStream responseInputStream = responseEntity.getBody().getInputStream();
       if (LOG.isInfoEnabled() && stopwatch != null && stopwatch.isRunning()) {
         stopwatch.stop();
         LOG.info("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
       }
-
+      return responseInputStream;
     } catch (HttpServerErrorException e) {
       LOG.warn("REST call to '{}' failed. Exception:\n{}", url, e.getResponseBodyAsString());
 
@@ -251,7 +256,7 @@ public class CantoConnector {
       }
     }
 
-    return responseInputStream;
+    return null;
   }
 
   public int uploadResource(@NonNull String resourcePath, Map<String, String> pathParams, MultiValueMap<String, String> queryParams, @NonNull String fileName, @Nullable Map<String, Object> fieldData, @NonNull InputStream inputStream) {

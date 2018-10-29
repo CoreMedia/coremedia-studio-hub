@@ -10,10 +10,13 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObjectImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorPropertyNames;
+import com.coremedia.cap.common.SESSION;
+import com.coremedia.cap.content.ContentType;
 import com.coremedia.cms.editor.sdk.columns.grid.TypeIconColumn;
 import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.sites.SitesService;
+import com.coremedia.cms.editor.sdk.util.ContentLocalizationUtil;
 import com.coremedia.ui.bem.IconWithTextBEMEntities;
 import com.coremedia.ui.data.Bean;
 import com.coremedia.ui.data.RemoteBean;
@@ -21,6 +24,7 @@ import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.beanFactory;
 import com.coremedia.ui.store.BeanRecord;
+import com.coremedia.ui.util.EncodingUtil;
 import com.coremedia.ui.util.EventUtil;
 
 import ext.DateUtil;
@@ -34,6 +38,7 @@ import joo.localeSupport;
 import mx.resources.ResourceManager;
 
 public class ConnectorHelper {
+  public static const TYPE_COREMEDIA_CONNECTOR:String = "coremedia";
   public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
 
@@ -126,96 +131,24 @@ public class ConnectorHelper {
   }
 
   public static function getTypeLabel(connectorObject:ConnectorObject):String {
-    if (connectorObject is Connector) {
-      var connector:Connector = connectorObject as Connector;
-      var connectorLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'connector_type_' + connector.getConnectorType() + "_name");
-      if (!connectorLabel) {
-        connectorLabel = connector.getConnectorType();
-      }
-      return connectorLabel;
+    if (!(connectorObject is ConnectorObject) || !connectorObject.isLoaded()) {
+      return undefined;
     }
 
-    if (connectorObject is ConnectorCategory) {
-      var category:ConnectorCategory = connectorObject as ConnectorCategory;
-      var label:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + category.getType() + "_name");
-      if (label) {
-        return label;
-      }
-
-      return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_folder_name');
+    var label:String = connectorObject.getTypeLabel();
+    if(!label) {
+      label =ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_label');
     }
 
-    if (connectorObject is ConnectorItem) {
-      var item:ConnectorItem = connectorObject as ConnectorItem;
-      if (item.getItemType()) {
-        var itemKey:String = item.getItemType();
-        if (itemKey.indexOf('/') !== -1) {
-          itemKey = itemKey.substr(itemKey.indexOf('/') + 1, itemKey.length);
-        }
-        var itemLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'item_type_' + itemKey + '_name');
-        if (itemLabel) {
-          return itemLabel;
-        }
-
-        return camelizeWithWhitespace(item.getItemType());
-      }
-    }
-
-    return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_label');
+    return EncodingUtil.encodeForHTML(label);
   }
 
-  public static function getTypeCls(object:Object):String {
-    var icon:String = null;
-    if (object is ConnectorObject) {
-      var connectorObject:ConnectorObject = object as ConnectorObject;
-      if (!connectorObject.isLoaded()) {
-        return undefined;
-      }
-
-      if (connectorObject is Connector) {
-        var connector:Connector = connectorObject as Connector;
-        var connectorType:String = connector.getConnectorType();
-        icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "connector_type_" + connectorType + "_icon");
-        if (!icon) {
-          icon = ResourceManager.getInstance().getString('com.coremedia.icons.CoreIcons', 'folder_open');
-        }
-
-        return icon;
-      }
-
-      if (connectorObject is ConnectorItem) {
-        var itemKey:String = (connectorObject as ConnectorItem).getItemType();
-        if (itemKey.indexOf('/') !== -1) {
-          itemKey = itemKey.substr(itemKey.indexOf('/') + 1, itemKey.length);
-        }
-
-        icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + itemKey + "_icon");
-        if (icon) {
-          return icon;
-        }
-
-        var name:String = (connectorObject as ConnectorItem).getName();
-        var suffix:String = null;
-        if (name.indexOf(".") !== -1) {
-          suffix = name.substr(name.lastIndexOf(".") + 1, name.length);
-          if (suffix.length === 4) {
-            suffix = suffix.substr(0, 3);
-          }
-
-          icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + suffix + "_icon");
-          if (icon) {
-            return icon;
-          }
-        }
-        return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_icon');
-      }
-
-      if (connectorObject is ConnectorCategory) {
-        var category:ConnectorCategory = connectorObject as ConnectorCategory;
-        var categoryType:String = category.getType();
-        return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + categoryType + '_icon');
-      }
+  public static function getTypeCls(connectorObject:ConnectorObject):String {
+    if (!(connectorObject is ConnectorObject) || !connectorObject.isLoaded()) {
+      return undefined;
     }
+
+    return connectorObject.getTypeCls();
   }
 
   public static function camelizeWithWhitespace(str:String):String {
@@ -253,6 +186,20 @@ public class ConnectorHelper {
       return Number((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     }
     return "";
+  }
+
+  public static function nameRenderer(value:*, _:*, record:BeanRecord):String {
+    var connectorObject:ConnectorObject = record.getBean() as ConnectorObject;
+    if (!(connectorObject is ConnectorObject) || !connectorObject.isLoaded()) {
+      return undefined;
+    }
+
+    var textCls:String = connectorObject.getTextCls();
+    if(textCls) {
+      return '<span class="' + textCls + '">' + value + '</span>';
+    }
+
+    return value;
   }
 
   public static function fileSizeRenderer(value:*, _:*, record:Model):String {
@@ -306,6 +253,7 @@ public class ConnectorHelper {
         dataIndex: 'name',
         header: title,
         resizable: true,
+        renderer: nameRenderer,
         defaultSortColumn: true,
         flex: 1
       });
@@ -383,6 +331,7 @@ public class ConnectorHelper {
       return "...";
     }
 
+    value = EncodingUtil.encodeForHTML(value);
     var item:ConnectorEntity = record.getBean() as ConnectorEntity;
     if (item is ConnectorItem) {
       if (isUnread(record.data.id)) {
@@ -459,6 +408,16 @@ public class ConnectorHelper {
         callback(markAsRead);
       });
     });
+  }
+
+  public static function isIgnoredForSearch(ct:ContentType):Boolean {
+    var excludedTypes:Array = editorContext.getContentTypesExcludedFromSearch();
+    for each(var cTypeName:ContentType in excludedTypes) {
+      if(cTypeName === ct.getName()) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 }

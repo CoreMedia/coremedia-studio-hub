@@ -89,7 +89,7 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
     List<ConnectorConnection> connections = getConnections(filtered);
     for (ConnectorConnection connection : connections) {
       ((ConnectorContextImpl)connection.getContext()).setLocale(locale);
-      ((ConnectorContextImpl)connection.getContext()).setPreferredSite(sitesService.getSite(siteId));
+      ((ConnectorContextImpl)connection.getContext()).setPreferredSiteId(siteId);
     }
     return connections;
   }

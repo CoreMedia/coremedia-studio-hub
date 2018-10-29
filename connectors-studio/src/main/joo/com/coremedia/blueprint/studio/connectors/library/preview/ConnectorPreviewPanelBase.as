@@ -122,6 +122,12 @@ public class ConnectorPreviewPanelBase extends Panel {
    */
   private function isPreviewable(entity:ConnectorEntity):Boolean {
     var columnValues:Array = entity.getColumnValues();
+
+    //still loading?
+    if(!columnValues) {
+      return false;
+    }
+
     for each(var cValue:Object in columnValues) {
       if(cValue.dataIndex === "docType") {
         var docType:String = cValue.value;

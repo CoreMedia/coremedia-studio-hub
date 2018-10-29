@@ -10,5 +10,11 @@ public interface ConnectorObject extends RemoteBean {
   function getDisplayName():String;
 
   function getConnectorId():String;
+
+  function getTypeLabel():String;
+
+  function getTypeCls():String;
+
+  function getTextCls():String;
 }
 }

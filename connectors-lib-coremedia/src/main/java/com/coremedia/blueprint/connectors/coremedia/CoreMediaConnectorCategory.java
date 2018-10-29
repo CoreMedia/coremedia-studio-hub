@@ -49,8 +49,7 @@ public class CoreMediaConnectorCategory extends CoreMediaConnectorEntity impleme
   @NonNull
   @Override
   public List<ConnectorColumn> getColumns() {
-    return Arrays.asList(new DefaultConnectorColumn("status", "status", 50, 2),
-            new DefaultConnectorColumn("docType", "docType", 100, 3));
+    return Arrays.asList(new DefaultConnectorColumn("status", "status", 50, 2));
   }
 
   @Nullable

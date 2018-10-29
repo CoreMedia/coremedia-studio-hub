@@ -1,4 +1,8 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+import com.coremedia.cap.common.SESSION;
+import com.coremedia.cms.editor.sdk.util.ContentLocalizationUtil;
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 
@@ -37,6 +41,60 @@ public class ConnectorItemImpl extends ConnectorEntityImpl implements ConnectorI
 
   public function getTargetContentType():String {
     return get(ConnectorPropertyNames.TARGET_CONTENT_TYPE);
+  }
+
+  override public function getTypeLabel():String {
+    var itemType:String = getItemType();
+    var connectorType:String = getConnector().getConnectorType();
+    if (itemType) {
+      if(connectorType.indexOf(ConnectorHelper.TYPE_COREMEDIA_CONNECTOR) !== -1) {
+        return ContentLocalizationUtil.getLabelForContentType(SESSION.getConnection().getContentRepository().getContentType(itemType));
+      }
+
+      if (itemType.indexOf('/') !== -1) {
+        itemType = itemType.substr(itemType.indexOf('/') + 1, itemType.length);
+      }
+      var itemLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'item_type_' + itemType + '_name');
+      if (itemLabel) {
+        return itemLabel;
+      }
+
+      return ConnectorHelper.camelizeWithWhitespace(itemType);
+    }
+  }
+
+
+  override public function getTypeCls():String {
+    var connectorType:String = getConnector().getConnectorType();
+    var itemType:String = getItemType();
+
+    if(connectorType.indexOf(ConnectorHelper.TYPE_COREMEDIA_CONNECTOR) !== -1) {
+      return ContentLocalizationUtil.getIconStyleClassForContentType(SESSION.getConnection().getContentRepository().getContentType(itemType));
+    }
+
+    if (itemType.indexOf('/') !== -1) {
+      itemType = itemType.substr(itemType.indexOf('/') + 1, itemType.length);
+    }
+
+    var icon:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + itemType + "_icon");
+    if (icon) {
+      return icon;
+    }
+
+    var name:String = getName();
+    var suffix:String = null;
+    if (name.indexOf(".") !== -1) {
+      suffix = name.substr(name.lastIndexOf(".") + 1, name.length);
+      if (suffix.length === 4) {
+        suffix = suffix.substr(0, 3);
+      }
+
+      icon = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + suffix + "_icon");
+      if (icon) {
+        return icon;
+      }
+    }
+    return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_icon');
   }
 
   public function download():void {

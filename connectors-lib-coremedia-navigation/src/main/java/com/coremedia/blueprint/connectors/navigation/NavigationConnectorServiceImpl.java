@@ -11,13 +11,18 @@ import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.blueprint.connectors.navigation.util.ConnectorPageGridService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
+import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.content.Version;
+import com.coremedia.cap.content.search.SearchResult;
+import com.coremedia.cap.content.search.SearchService;
+import com.coremedia.cap.multisite.Site;
+import com.coremedia.cap.multisite.SitesService;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   private NavigationConnectorCategory rootCategory;
   private ContentRepository repository;
   private ConnectorPageGridService pageGridService;
+  private SitesService sitesService;
 
   @Override
   public boolean init(@NonNull ConnectorContext context) {
@@ -45,7 +51,9 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
     Content content = repository.getContent(capId);
 
     ConnectorId parentId = connectorId.getParentId();
-    if (parentId.getExternalId().equals(context.getPreferredSite().getSiteRootFolder().getId())) {
+    String siteId = context.getPreferredSiteId();
+    Site site = sitesService.getSite(siteId);
+    if (parentId.getExternalId().equals(site.getSiteRootFolder().getId())) {
       parentId = ConnectorId.createRootId(context.getConnectionId());
     }
 
@@ -56,13 +64,15 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @Nullable
   @Override
   public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
-    Content rootContent = context.getPreferredSite().getSiteRootDocument();
+    String siteId = context.getPreferredSiteId();
+    Site site = sitesService.getSite(siteId);
+    Content rootContent = site.getSiteRootDocument();
     String contentId = rootContent.getId();
     ConnectorCategory parent = null;
     Content content = null;
 
     if (connectorId.isRootId() || connectorId.getExternalId().equals(contentId)) {
-      content = context.getPreferredSite().getSiteRootDocument();
+      content = site.getSiteRootDocument();
     }
     else {
       String capId = connectorId.getExternalId();
@@ -91,16 +101,18 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @NonNull
   @Override
   public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
-    if (context.getPreferredSite() == null) {
+    String siteId = context.getPreferredSiteId();
+    if (siteId == null || sitesService.getSite(siteId) == null) {
       throw new ConnectorException("No preferred site selected");
     }
 
+    Site site = sitesService.getSite(siteId);
     ConnectorId rootId = ConnectorId.createRootId(context.getConnectionId());
-    rootCategory = new NavigationConnectorCategory(this, null, context, context.getPreferredSite().getSiteRootDocument(), rootId);
+    rootCategory = new NavigationConnectorCategory(this, null, context, site.getSiteRootDocument(), rootId);
     addSubCategories(rootCategory, context);
     addItems(rootCategory, context);
 
-    String name = context.getPreferredSite().getSiteRootDocument().getName() + " (Navigation)";
+    String name = site.getSiteRootDocument().getName() + " (Navigation)";
     rootCategory.setName(name);
     return rootCategory;
   }
@@ -109,6 +121,22 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @Override
   public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
     List<ConnectorEntity> results = new ArrayList<>();
+
+    if (repository.isContentManagementServer()) {
+      NavigationConnectorCategory navigationConnectorCategory = (NavigationConnectorCategory) category;
+      Content folder = navigationConnectorCategory.getContent();
+      ContentType searchContentType = repository.getContentType("CMChannel");
+      SearchService searchService = repository.getSearchService();
+
+      SearchResult search = searchService.search(query, "name", true, folder, true, searchContentType, true, 0, 200);
+      List<Content> matches = search.getMatches();
+      for (Content match : matches) {
+        ConnectorId id = ConnectorId.createItemId(context.getConnectionId(), match.getId());
+        NavigationConnectorItem item = new NavigationConnectorItem(this, null, context, match, id);
+        results.add(item);
+      }
+    }
+
     return new ConnectorSearchResult<>(results);
   }
 
@@ -144,7 +172,9 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
 
   private ConnectorCategory createParentCategory(ConnectorContext context, ConnectorId connectorId) {
     String capId = connectorId.getExternalId();
-    if (connectorId.isRootId() || capId.equals(context.getPreferredSite().getSiteRootDocument().getId())) {
+    String siteId = context.getPreferredSiteId();
+    Site site = sitesService.getSite(siteId);
+    if (connectorId.isRootId() || capId.equals(site.getSiteRootDocument().getId())) {
       return rootCategory;
     }
 
@@ -196,5 +226,10 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @Required
   public void setPageGridService(ConnectorPageGridService pageGridService) {
     this.pageGridService = pageGridService;
+  }
+
+  @Required
+  public void setSitesService(SitesService sitesService) {
+    this.sitesService = sitesService;
   }
 }

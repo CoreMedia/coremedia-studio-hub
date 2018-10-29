@@ -76,6 +76,7 @@
                 resizable="true"
                 u:defaultSortColumn="true"
                 dataIndex="name"
+                renderer="{ConnectorHelper.nameRenderer}"
                 flex="1"/>
     <GridColumn header="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'size_header')}"
                 stateId="size"

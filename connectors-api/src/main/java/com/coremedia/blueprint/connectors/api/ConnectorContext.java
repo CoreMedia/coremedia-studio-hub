@@ -1,9 +1,8 @@
 package com.coremedia.blueprint.connectors.api;
 
-import com.coremedia.cap.multisite.Site;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -136,7 +135,7 @@ public interface ConnectorContext {
    * Returns the preferred site of the current user
    */
   @Nullable
-  Site getPreferredSite();
+  String getPreferredSiteId();
 
   /**
    * Returns the type of date format that should be used when displayed in the Studio.

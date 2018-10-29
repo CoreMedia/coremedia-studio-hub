@@ -19,12 +19,12 @@ import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.content.Version;
 import com.coremedia.cap.content.search.SearchResult;
 import com.coremedia.cap.content.search.SearchService;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +108,7 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
     else {
       String capId = connectorId.getExternalId();
       content = repository.getContent(capId);
-      if(content == null) {
+      if (content == null) {
         LOGGER.error("No content found for content id " + capId);
         return null;
       }
@@ -147,17 +147,8 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
       CoreMediaConnectorCategory coreMediaConnectorCategory = (CoreMediaConnectorCategory) category;
 
       boolean includeSubFolders = !StringUtils.isEmpty(query) && query.equals("*");
-      ContentType searchContentType = repository.getContentType(ContentType.CONTENT);
-      List<String> types = context.getItemTypes().getTypes(searchType);
-      if (!types.isEmpty()) {
-        for (String type : types) {
-          searchContentType = repository.getContentType(type);
-          search(context, query, results, coreMediaConnectorCategory, includeSubFolders, searchContentType);
-        }
-      }
-      else {
-        search(context, query, results, coreMediaConnectorCategory, includeSubFolders, searchContentType);
-      }
+      ContentType searchContentType = repository.getContentType(searchType);
+      search(context, query, results, coreMediaConnectorCategory, includeSubFolders, searchContentType);
     }
 
     return new ConnectorSearchResult<>(results);

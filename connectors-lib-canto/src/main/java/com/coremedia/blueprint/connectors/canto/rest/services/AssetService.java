@@ -1,6 +1,5 @@
 package com.coremedia.blueprint.connectors.canto.rest.services;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.InputStream;
@@ -16,7 +15,6 @@ import java.util.Map;
  * <li>deleting</li>
  * </ul> an asset.
  */
-@Component("cantoAssetService")
 public class AssetService extends AbstractCantoService {
 
   /**

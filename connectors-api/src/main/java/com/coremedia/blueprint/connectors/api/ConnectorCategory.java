@@ -1,13 +1,8 @@
 package com.coremedia.blueprint.connectors.api;
 
-import com.coremedia.cap.common.Blob;
-import com.coremedia.cap.common.CapPropertyDescriptor;
-import com.coremedia.cap.common.CapPropertyDescriptorType;
-import com.coremedia.cap.content.Content;
-
-import javax.activation.MimeType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -55,31 +50,6 @@ public interface ConnectorCategory extends ConnectorEntity {
    */
   default boolean isContentUploadEnabled() {
     return isWriteable();
-  }
-
-  /**
-   * Default interface for content drop.
-   * The methods has to be implemented for categories that allow content drops
-   * @param contents the contents that have been dropped on the category.
-   * @param defaultAction true, if the default action was used (no CTRL was pressed)
-   * @return true if the drop was successful
-   */
-  default boolean uploadContent(@NonNull ConnectorContext context, @NonNull List<Content> contents, Boolean defaultAction) {
-    for (Content content : contents) {
-      List<CapPropertyDescriptor> descriptors = content.getType().getDescriptors();
-      for (CapPropertyDescriptor descriptor : descriptors) {
-        if(descriptor.getType().equals(CapPropertyDescriptorType.BLOB)) {
-          Blob blob = content.getBlob(descriptor.getName());
-          if(blob != null && blob.getContentType() != null) {
-            MimeType contentType = blob.getContentType();
-            String name = content.getName() + "." + contentType.getSubType();
-            return upload(context, name, blob.getInputStream()) != null;
-          }
-        }
-      }
-    }
-
-    return false;
   }
 
   /**

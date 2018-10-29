@@ -7,6 +7,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.library.DefaultConnectorColumn;
+import com.coremedia.blueprint.connectors.navigation.util.ConnectorStudioUtil;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 
@@ -30,15 +31,15 @@ public class NavigationConnectorCategory extends NavigationConnectorEntity imple
   @Override
   public String getType() {
     if (getConnectorId().isRootId()) {
-      return "navigation";
+      return "coremedia-navigation";
     }
 
     Integer hidden = content.getInteger("hidden");
     if(hidden != null && hidden == 1) {
-      return "navigation_hidden";
+      return "coremedia-navigation_hidden";
     }
 
-    return "navigation";
+    return content.getType().getName();
   }
 
   @Nullable
@@ -49,7 +50,7 @@ public class NavigationConnectorCategory extends NavigationConnectorEntity imple
     data.put("path", content.getPath());
 
     int contentId = IdHelper.parseContentId(content.getId());
-    String link = "<a href=\"javascript:Ext.getCmp('collection-view').showInRepositoryMode(com.coremedia.ui.data.beanFactory.getRemoteBean('content/" + contentId + "'))\">" + content.getName() + "</a>";
+    String link = ConnectorStudioUtil.generateOpenEntityLink("content/" + contentId, content.getName());
     data.put("link", link);
     return () -> data;
   }
@@ -57,8 +58,7 @@ public class NavigationConnectorCategory extends NavigationConnectorEntity imple
   @NonNull
   @Override
   public List<ConnectorColumn> getColumns() {
-    return Arrays.asList(new DefaultConnectorColumn("status", "status", 50, 2),
-            new DefaultConnectorColumn("docType", "docType", 100, 3));
+    return Arrays.asList(new DefaultConnectorColumn("status", "status", 50, 2));
   }
 
   @NonNull

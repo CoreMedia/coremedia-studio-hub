@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <context:annotation-config/>
 
-  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
-  <bean id="connectorCoreMediaService" class="com.coremedia.blueprint.connectors.coremedia.CoreMediaConnectorServiceImpl"
-        scope="prototype"/>
-
-  <bean id="connector:coremedia" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
-    <property name="connectorService" ref="connectorCoreMediaService"/>
-    <property name="connectorContentService" ref="connectorContentService"/>
-  </bean>
-
-  <!-- Content Creation-->
-  <bean id="coreMediaConnectorWriteInterceptor" class="com.coremedia.blueprint.connectors.coremedia.CoreMediaConnectorWriteInterceptor" parent="connectorItemWriteInterceptor" />
+  <bean id="connectorCoreMediaConfiguration" class="com.coremedia.blueprint.connectors.coremedia.ConnectorCoreMediaConfiguration"/>
 
 </beans>

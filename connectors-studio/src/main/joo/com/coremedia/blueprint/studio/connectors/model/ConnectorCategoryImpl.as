@@ -1,9 +1,14 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+import com.coremedia.cap.common.SESSION;
 import com.coremedia.cap.undoc.content.Content;
+import com.coremedia.cms.editor.sdk.util.ContentLocalizationUtil;
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 
 import ext.JSON;
+
+import mx.resources.ResourceManager;
 
 [RestResource(uriTemplate="connector/category/{externalId:.+}")]
 public class ConnectorCategoryImpl extends ConnectorEntityImpl implements ConnectorCategory {
@@ -49,7 +54,34 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     return get(ConnectorPropertyNames.CONTENT_UPLOAD_ENABLED);
   }
 
-  public function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined) {
+
+  override public function getTypeCls():String {
+    var categoryType:String = getType();
+    var icon:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + categoryType + '_icon');
+    if(!icon) {
+      var connectorType:String = getConnector().getConnectorType();
+      if(connectorType.indexOf(ConnectorHelper.TYPE_COREMEDIA_CONNECTOR) !== -1) {
+        icon = ContentLocalizationUtil.getIconStyleClassForContentType(SESSION.getConnection().getContentRepository().getContentType(categoryType));
+      }
+    }
+    return icon;
+  }
+
+  override public function getTypeLabel():String {
+    var label:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_' + getType() + "_name");
+    if (label) {
+      return label;
+    }
+
+    var connectorType:String = getConnector().getConnectorType();
+    if(connectorType.indexOf(ConnectorHelper.TYPE_COREMEDIA_CONNECTOR) !== -1) {
+      label = ContentLocalizationUtil.getLabelForContentType(SESSION.getConnection().getContentRepository().getContentType(getType()));
+    }
+
+    return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_folder_name');
+  }
+
+  public function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined):void {
     var method:RemoteServiceMethod = new RemoteServiceMethod(getContentDropUri(), 'POST');
     var contentIds:Array = [];
     for each(var c:Content in contents) {

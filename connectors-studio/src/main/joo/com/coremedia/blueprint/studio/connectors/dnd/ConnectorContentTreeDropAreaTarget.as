@@ -9,7 +9,7 @@ import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.collectionview.tree.LibraryTree;
 import com.coremedia.cms.editor.sdk.dragdrop.DragInfo;
 import com.coremedia.cms.editor.sdk.editorContext;
-import com.coremedia.cms.editor.sdk.premular.fields.plugins.LibraryTreeViewDragDropPlugin;
+import com.coremedia.cms.editor.sdk.premular.fields.plugins.ContentTreeViewDragDropPlugin;
 import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.util.AccessControlUtil;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
@@ -38,7 +38,7 @@ public class ConnectorContentTreeDropAreaTarget extends DropTarget {
   private var libraryTree:LibraryTree;
   private var loadMask:LoadMask;
   private var tableView:TableView;
-  private var treeDnDPlugin:LibraryTreeViewDragDropPlugin;
+  private var treeDnDPlugin:ContentTreeViewDragDropPlugin;
   private var folderBlacklist:Array;
 
   public function ConnectorContentTreeDropAreaTarget(dropArea:Component, view:TableView, folderBlacklist:Array) {
@@ -61,8 +61,8 @@ public class ConnectorContentTreeDropAreaTarget extends DropTarget {
     this.libraryTree = dropArea as LibraryTree;
     var plugins:Array = this.tableView['getPlugins']();
     for each(var plugin:Plugin in plugins) {
-      if (plugin is LibraryTreeViewDragDropPlugin) {
-        treeDnDPlugin = plugin as LibraryTreeViewDragDropPlugin;
+      if (plugin is ContentTreeViewDragDropPlugin) {
+        treeDnDPlugin = plugin as ContentTreeViewDragDropPlugin;
         break;
       }
     }

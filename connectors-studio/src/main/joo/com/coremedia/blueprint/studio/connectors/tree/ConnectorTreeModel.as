@@ -103,14 +103,6 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
       }
       //don't change the original list of sub categories.
       subCategories = subCategories.slice();
-      subCategories = subCategories.sort(
-              function (a:ConnectorCategory, b:ConnectorCategory):int {
-                var aDisplayName:String = a.getDisplayName();
-                if (!aDisplayName) {
-                  return -1;
-                }
-                return aDisplayName.localeCompare(b.getDisplayName());
-              });
     }
 
     return getChildrenFor(subCategories, category.getChildrenByName(), ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Category_icon'));
@@ -143,13 +135,15 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
     var childIds:Array = [];
     var namesById:Object = {};
     var iconById:Object = {};
+    var clsByChildId:Object = computeTextClsByChildId(childrenByName);
     for (var i:uint = 0; i < children.length; i++) {
       var childId:String = getNodeId(children[i]);
       childIds.push(childId);
       namesById[childId] = nameByChildId[childId];
       iconById[childId] = computeIconCls(childId, iconCls);
+      clsByChildId[childIds] = clsByChildId[childId];
     }
-    return new NodeChildren(childIds, namesById, iconById);
+    return new NodeChildren(childIds, namesById, iconById, clsByChildId);
   }
 
   private function computeIconCls(childId:String, defaultIconCls:String):String {
@@ -175,6 +169,14 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
     return nameByUriPath;
   }
 
+  private function computeTextClsByChildId(childrenByIds:Object):Object {
+    var nameByUriPath:Object = {};
+    for (var childId:String in childrenByIds) {
+      var child:ConnectorObject = childrenByIds[childId].child as ConnectorObject;
+      nameByUriPath[getNodeId(child)] = child.getTextCls();
+    }
+    return nameByUriPath;
+  }
 
   /**
    * Creates an array that contains the tree path for the node with the given id.
@@ -316,7 +318,7 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   }
 
   public function getTextCls(nodeId:String):String {
-    return "";
+    return ".x-slider.x-disabled";
   }
 }
 }

@@ -30,9 +30,9 @@ public class CommonMarkConverter implements ConnectorPreviewConverter {
   @Nullable
   @Override
   public PreviewConversionResult convert(@NonNull ConnectorContext context, @NonNull ConnectorItem connectorItem, @NonNull File itemTempFile) {
-    try {
+    try (FileInputStream fileInputStream = new FileInputStream(itemTempFile)){
       Parser parser = Parser.builder().build();
-      FileInputStream fileInputStream = new FileInputStream(itemTempFile);
+
       Reader targetReader = new InputStreamReader(fileInputStream);
       Node document = parser.parseReader(targetReader);
       HtmlRenderer renderer = HtmlRenderer.builder().build();

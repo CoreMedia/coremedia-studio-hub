@@ -47,7 +47,11 @@ public class ContentTagger {
                   @NonNull List<String> tags) {
     Content taxonomiesFolder = contentRepository.getChild(taxonomyPath);
     Content taxonomyFolder = taxonomiesFolder.getChild(taxonomyName);
+
     ContentType ct = contentRepository.getContentType(taxonomyDocType);
+    if (ct == null) {
+      throw new RuntimeException("Requested taxonomy content type " + taxonomyDocType + " does not exist.");
+    }
 
     List<Content> result = new ArrayList<>();
     for (String tag : tags) {
@@ -75,7 +79,10 @@ public class ContentTagger {
    * @param tag            that name of the tag to create or search for
    * @return the tag docment that will be linked
    */
-  private synchronized Content getOrCreateTag(Content taxonomyFolder, ContentType contenType, String parentTag, String tag) {
+  private synchronized Content getOrCreateTag(@NonNull Content taxonomyFolder,
+                                              @NonNull ContentType contenType,
+                                              @Nullable String parentTag,
+                                              @NonNull String tag) {
     //exists check
     Content existingTag = taxonomyFolder.getChild(tag);
     if (existingTag != null) {
@@ -113,7 +120,9 @@ public class ContentTagger {
    * @param parentTag      the name of the parent
    * @return the parent tag document
    */
-  private Content getOrCreateParent(Content taxonomyFolder, ContentType contentType, String parentTag) {
+  private Content getOrCreateParent(@NonNull Content taxonomyFolder,
+                                    @NonNull ContentType contentType,
+                                    @NonNull String parentTag) {
     Content parent = taxonomyFolder.getChild(parentTag);
     if (parent != null) {
       return parent;
@@ -130,7 +139,7 @@ public class ContentTagger {
   /**
    * Check if taxonomy is root settings linked
    */
-  private void rootLinkCheck(Content taxonomyFolder, Content tagContent) {
+  private void rootLinkCheck(@NonNull Content taxonomyFolder, Content tagContent) {
     Content rootSettings = taxonomyFolder.getChild(ROOT_SETTINGS_DOCUMENT);
     if (rootSettings != null && rootSettings.getType().getName().equals("CMSettings")) {
       if (!rootSettings.isCheckedOut()) {

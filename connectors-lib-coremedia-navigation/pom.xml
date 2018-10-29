@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1807.1-2</version>
+    <version>1810.1-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -15,12 +15,12 @@
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>1807.1-2</version>
+      <version>1810.1-1</version>
       <scope>provided</scope>
     </dependency>
 
@@ -31,6 +31,10 @@
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-unified-api-boot</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-multisite</artifactId>
     </dependency>
     <dependency>
@@ -38,8 +42,16 @@
       <artifactId>cap-rest-plugins</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-spring</artifactId>
+    </dependency>
 
     <!-- Thirdparty Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>

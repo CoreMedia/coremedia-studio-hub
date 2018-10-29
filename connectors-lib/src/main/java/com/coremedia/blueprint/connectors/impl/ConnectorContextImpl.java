@@ -1,15 +1,15 @@
 package com.coremedia.blueprint.connectors.impl;
 
 import com.coremedia.blueprint.connectors.api.ConnectorContentMappings;
+import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
-import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.cap.content.Content;
-import com.coremedia.cap.multisite.Site;
-
+import com.coremedia.cap.struct.Struct;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +42,8 @@ public class ConnectorContextImpl implements ConnectorContext {
   static final String PREVIEW_TEMPLATES = "previewTemplates";
   static final String CONTENT_MAPPING = "contentMapping";
   public static final String CONTENT_UPLOAD_TYPES = "contentUploadTypes";
+  static final String TYPES_STRUCT = "types";
+  static final String SETTINGS = "settings";
 
   private Map<String, Object> properties;
   private List<String> defaultColumns = Collections.emptyList();
@@ -52,8 +54,8 @@ public class ConnectorContextImpl implements ConnectorContext {
   private ConnectorPreviewTemplates previewTemplates;
 
   private boolean dirty;
-  private String siteId;
-  private Site site;
+  private String siteId; //the siteId the connections is configured for
+  private String preferredSite; //the preferred site of the current request
   private Locale locale;
 
   ConnectorContextImpl(Map<String, Object> properties) {
@@ -69,7 +71,9 @@ public class ConnectorContextImpl implements ConnectorContext {
       this.contentMapping = new ConnectorContentMappingsImpl((Content) properties.get(CONTENT_MAPPING));
     }
     if (properties.get(CONTENT_UPLOAD_TYPES) != null) {
-      this.contentUploadTypes = new ConnectorContentUploadTypesImpl((Content) properties.get(CONTENT_UPLOAD_TYPES));
+      Content uploadTypes = (Content) properties.get(CONTENT_UPLOAD_TYPES);
+      Struct settings = uploadTypes.getStruct(SETTINGS).getStruct(TYPES_STRUCT);
+      this.contentUploadTypes = new ConnectorContentUploadTypesImpl(settings);
     }
 
     setDirty(true);
@@ -250,12 +254,12 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   @Nullable
   @Override
-  public Site getPreferredSite() {
-    return site;
+  public String getPreferredSiteId() {
+    return preferredSite;
   }
 
-  public void setPreferredSite(Site site) {
-    this.site = site;
+  public void setPreferredSiteId(String preferredSite) {
+    this.preferredSite = preferredSite;
   }
 
   @NonNull

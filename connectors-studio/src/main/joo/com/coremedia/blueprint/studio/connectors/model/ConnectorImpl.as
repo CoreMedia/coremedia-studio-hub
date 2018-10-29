@@ -1,4 +1,6 @@
 package com.coremedia.blueprint.studio.connectors.model {
+import mx.resources.ResourceManager;
+
 [RestResource(uriTemplate="connector/connector/{connectorType:[^/]+}/{locale:[^/]+}/{siteId:[^/]+}")]
 public class ConnectorImpl extends ConnectorObjectImpl implements Connector {
 
@@ -38,6 +40,23 @@ public class ConnectorImpl extends ConnectorObjectImpl implements Connector {
       }
     }
     return null;
+  }
+
+  override public function getTypeLabel():String {
+    var connectorLabel:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'connector_type_' + getConnectorType() + "_name");
+    if (!connectorLabel) {
+      connectorLabel = getConnectorType();
+    }
+    return connectorLabel;
+  }
+
+  override public function getTypeCls():String {
+    var connectorType:String = getConnectorType();
+    var icon:String = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "connector_type_" + connectorType + "_icon");
+    if (!icon) {
+      icon = ResourceManager.getInstance().getString('com.coremedia.icons.CoreIcons', 'folder_open');
+    }
+    return icon;
   }
 }
 }

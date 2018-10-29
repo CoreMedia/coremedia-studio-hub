@@ -18,7 +18,6 @@ public class ConnectorConnection implements BeanNameAware {
   public static final String CONNECTOR_PREFIX = "connector";
 
   private ConnectorService connectorService;
-  private ConnectorContentService connectorContentService;
   private String connectorType;
   private ConnectorContext context;
 
@@ -35,16 +34,6 @@ public class ConnectorConnection implements BeanNameAware {
   @Required
   public void setConnectorService(ConnectorService connectorService) {
     this.connectorService = connectorService;
-  }
-
-  @Required
-  public void setConnectorContentService(ConnectorContentService connectorContentService) {
-    this.connectorContentService = connectorContentService;
-  }
-
-  @NonNull
-  public ConnectorContentService getConnectorContentService() {
-    return connectorContentService;
   }
 
   @NonNull

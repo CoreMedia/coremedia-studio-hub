@@ -1,22 +1,22 @@
 package com.coremedia.blueprint.studio.connectors.rest;
 
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorContentService;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
+import com.coremedia.blueprint.studio.connectors.rest.content.ConnectorContentService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,6 +38,7 @@ public class ConnectorContentServiceResource {
   private ConnectorContextProvider connectorContextProvider;
   private SitesService sitesService;
   private ContentRepository contentRepository;
+  private ConnectorContentService connectorContentService;
 
   @POST
   @Path("content/{siteId:[^/]+}")
@@ -48,7 +49,6 @@ public class ConnectorContentServiceResource {
     try {
       ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
-      ConnectorContentService connectorContentService = connection.getConnectorContentService();
       ConnectorContext context = connection.getContext();
       Site site = sitesService.getSite(siteId);
 
@@ -75,10 +75,7 @@ public class ConnectorContentServiceResource {
                         @FormParam(ID_PARAM) String entityId) {
     try {
       ConnectorId connectorId = ConnectorId.toId(entityId);
-      ConnectorConnection connection = getConnection(connectorId.getConnectionId());
-      ConnectorContentService connectorContentService = connection.getConnectorContentService();
-      Site site = sitesService.getSite(siteId);
-      return connectorContentService.createContent(connectorId, folder, site);
+      return connectorContentService.createContent(connectorId, folder);
     } catch (Exception e) {
       LOGGER.error("Failed to create content for connector item " + entityId + ": " + e.getMessage(), e);
     }
@@ -107,8 +104,8 @@ public class ConnectorContentServiceResource {
         Content content = contentRepository.getContent(contentId);
         //note that this method is only called when the quick create was uses,
         //therefore we have to set the connector id which has not been set by the dialog
-        connection.getConnectorContentService().setConnectorId(content, connectorId);
-        connection.getConnectorContentService().processContent(content, entity, false);
+        connectorContentService.setConnectorId(content, connectorId);
+        connectorContentService.processContent(content, entity, false);
       }
       return null;
     } catch (Exception e) {
@@ -149,5 +146,10 @@ public class ConnectorContentServiceResource {
   @Required
   public void setContentRepository(ContentRepository contentRepository) {
     this.contentRepository = contentRepository;
+  }
+
+  @Required
+  public void setConnectorContentService(ConnectorContentService connectorContentService) {
+    this.connectorContentService = connectorContentService;
   }
 }

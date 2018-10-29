@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
@@ -184,7 +186,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
       String proxyPort = context.getProperty(ConnectorPropertyNames.PROXY_PORT);
       String proxyType = context.getProperty(ConnectorPropertyNames.PROXY_TYPE);
 
-      if(proxyType != null && proxyHost != null && proxyPort != null) {
+      if (proxyType != null && proxyHost != null && proxyPort != null) {
         Proxy proxy = new Proxy(Proxy.Type.valueOf(proxyType.toUpperCase()), new InetSocketAddress(proxyPort, Integer.parseInt(proxyPort)));
         URLConnection urlConnection = feedSource.openConnection(proxy);
         XmlReader.setDefaultEncoding("utf8");
@@ -196,8 +198,30 @@ public class RssConnectorServiceImpl implements ConnectorService {
       XmlReader reader = new XmlReader(feedSource);
       return input.build(reader);
     } catch (Exception e) {
-      LOGGER.error("Error reading RSS stream '" + url + "': " + e.getMessage());
+      String plainXML = getFeedXML(url);
+      LOGGER.error("Error reading RSS stream '" + url + "': " + e.getMessage() + ", feed XML:\n" + plainXML);
     }
     return null;
+  }
+
+  /**
+   * Just a helper to detect what went wrong when parsing RSS feed.
+   * E.g. the result may be a 301 moved permanently
+   */
+  private String getFeedXML(String url) {
+    StringBuilder response = new StringBuilder();
+    try {
+      URLConnection connection = new URL(url).openConnection();
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String inputLine = null;
+      while ((inputLine = in.readLine()) != null) {
+        response.append(inputLine);
+        response.append(System.getProperty("line.separator"));
+      }
+      in.close();
+    } catch (Exception e) {
+      //ignore
+    }
+    return response.toString();
   }
 }

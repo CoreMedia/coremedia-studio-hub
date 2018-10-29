@@ -18,6 +18,8 @@ import com.coremedia.rest.cap.intercept.ContentWriteInterceptorBase;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
 import com.coremedia.xml.Markup;
 import com.coremedia.xml.MarkupFactory;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +27,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -46,21 +46,17 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  * that has already been created before the interceptors is executed.
  */
 public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
-  private static final Logger LOG = LoggerFactory.getLogger(ConnectorItemWriteInterceptor.class);
   private static final String LOCAL_SETTINGS = "localSettings";
 
   public final static String CONNECTOR_ENTITY = "connectorEntity";
   public final static String CONTENT_ITEM = "content";
   public final static String CONNECTOR_CONTEXT = "connectorContext";
-  public static final String PICTURE_DOC_TYPE = "CMPicture";
-  public static final String VIDEO_DOC_TYPE = "CMVideo";
   public static final String MEDIA_DOC_TYPE = "CMMedia";
   public static final String ARTICLE_DOCTYPE = "CMArticle";
   public static final String COLLECTION_DOCTYPE = "CMCollection";
   public static final String PAGE_DOCTYPE = "CMChannel";
 
-  protected MimeTypeService mimeTypeService;
-  protected ContentRepository contentRepository;
+  private ContentCreateService contentCreateService;
 
   @Override
   public void intercept(ContentWriteRequest request) {
@@ -73,7 +69,8 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
         properties.put("title", entity.getDisplayName());
         properties.put("url", item.getOpenInTabUrl());
         properties.put("teaserText", createMarkup(item.getDescription()));
-        properties.put("data", createBlob(item.stream(), item.getName(), item.getMimeType()));
+        Blob blob = getContentCreateService().createBlob(item.stream(), item.getName(), item.getMimeType());
+        properties.put("data", blob);
       }
     }
   }
@@ -119,72 +116,6 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
     return null;
   }
 
-  protected Blob createBlob(InputStream in, String name, String mimeType) {
-    try {
-      if (in != null) {
-        if (mimeType == null) {
-          mimeType = mimeTypeService.getMimeTypeForResourceName(name);
-        }
-        MimeType mt = new MimeType(mimeType);
-        Blob blob = contentRepository.getConnection().getBlobService().fromInputStream(in, mt);
-        in.close();
-        return blob;
-      }
-    } catch (MimeTypeParseException e) {
-      LOG.error("Failed to resolve blob mime type for " + name + ": " + e.getMessage(), e);
-    } catch (IOException e) {
-      LOG.error("Error creating blob for item " + name + ": " + e.getMessage(), e);
-    }
-    return null;
-  }
-
-
-  /**
-   * Creates a picture out of an URL.
-   *
-   * @param imageUrl the URL the image should be loaded from
-   * @return the newly created image content
-   */
-  protected Content createPictureFromUrl(Content owner, String imageName, String imageUrl) {
-    Content picture = createContent(owner.getParent().getPath(), imageName, PICTURE_DOC_TYPE);
-    try {
-      picture.set("title", imageName);
-
-      URL url = new URL(imageUrl);
-      URLConnection con = url.openConnection();
-      InputStream in = con.getInputStream();
-      Blob blob = createBlob(in, imageName, "image/jpeg");
-      picture.set("data", blob);
-      in.close();
-
-      return picture;
-    } catch (Exception e) {
-      LOG.error("Failed to create image content: " + e.getMessage(), e);
-    } finally {
-      if (picture != null) {
-        picture.checkIn();
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Creates the content for the given attributes
-   *
-   * @param folder      the folder to create the new content for
-   * @param name        the name of the new content
-   * @param contentType the content type of the new content
-   * @return the newly created content
-   */
-  protected Content createContent(@NonNull String folder, @NonNull String name, @NonNull String contentType) {
-    ContentType ct = contentRepository.getContentType(contentType);
-    Content folderContent = contentRepository.getChild(folder);
-    if (ct != null) {
-      return ct.createByTemplate(folderContent, name, "{3} ({1})", new HashMap<>());
-    }
-    throw new ConnectorException("No content type '" + contentType + "' found for connector item content creation");
-  }
-
   /**
    * Tries to resolve a meaningful image name out of an image URL.
    *
@@ -194,7 +125,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
     String[] split = imageUrl.split("/");
     String nameSegment = split[split.length - 1];
     if (nameSegment.contains(".")) {
-      nameSegment = nameSegment.substring(0, nameSegment.indexOf("."));
+      nameSegment = nameSegment.substring(0, nameSegment.lastIndexOf("."));
     }
     else if (nameSegment.contains("?")) {
       nameSegment = nameSegment.substring(0, nameSegment.indexOf("?"));
@@ -210,12 +141,11 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
   //---------------------------- Spring --------------------------------------------------------------------------------
 
   @Required
-  public void setMimeTypeService(MimeTypeService mimeTypeService) {
-    this.mimeTypeService = mimeTypeService;
+  public void setContentCreateService(ContentCreateService contentCreateService) {
+    this.contentCreateService = contentCreateService;
   }
 
-  @Required
-  public void setContentRepository(ContentRepository contentRepository) {
-    this.contentRepository = contentRepository;
+  public ContentCreateService getContentCreateService() {
+    return this.contentCreateService;
   }
 }

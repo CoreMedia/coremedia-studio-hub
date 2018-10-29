@@ -10,13 +10,17 @@ import com.coremedia.cap.common.Blob;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.CapPropertyDescriptorType;
 import com.coremedia.cap.content.Content;
+import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.struct.Struct;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
 import com.coremedia.xml.Markup;
 import com.coremedia.xml.MarkupFactory;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +35,8 @@ import java.util.Set;
 public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterceptor {
   private static final Logger LOG = LoggerFactory.getLogger(CoreMediaConnectorWriteInterceptor.class);
 
+  private ContentRepository contentRepository;
+
   @Override
   public ContentType getType() {
     return contentRepository.getContentType(ContentType.CONTENT);
@@ -43,27 +49,30 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
   }
 
   @Override
-  public void intercept(ContentWriteRequest request) {
+  public void intercept(@NonNull ContentWriteRequest request) {
     Map<String, Object> properties = request.getProperties();
-    if (properties.containsKey(CONNECTOR_ENTITY)) {
-      ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
-      if (entity instanceof CoreMediaConnectorEntity) {
-        super.clearDefaultProperties(request);
-        Content content = (Content) properties.get(ConnectorItemWriteInterceptor.CONTENT_ITEM);
+    if (!properties.containsKey(CONNECTOR_ENTITY)) {
+      return;
+    }
 
-        if (entity instanceof CoreMediaConnectorItem) {
-          Content parent = content.getParent();
-          CoreMediaConnectorItem item = (CoreMediaConnectorItem) entity;
-          copyItem(parent, item, content);
+    ConnectorEntity entity = (ConnectorEntity) properties.get(CONNECTOR_ENTITY);
+    if (!(entity instanceof CoreMediaConnectorEntity)) {
+      return;
+    }
 
-          //re-set the connectorId since we have overwritten the localSettings
-          setConnectorId(content, item.getConnectorId());
-        }
-        else if (entity instanceof CoreMediaConnectorCategory) {
-          CoreMediaConnectorCategory category = (CoreMediaConnectorCategory) entity;
-          copyCategory(content.getParent(), category);
-        }
-      }
+    super.clearDefaultProperties(request);
+    Content content = (Content) properties.get(ConnectorItemWriteInterceptor.CONTENT_ITEM);
+
+    if (entity instanceof CoreMediaConnectorItem) {
+      Content parent = content.getParent();
+      CoreMediaConnectorItem item = (CoreMediaConnectorItem) entity;
+      copyItem(parent, item, content);
+
+      //re-set the connectorId since we have overwritten the localSettings
+      setConnectorId(content, item.getConnectorId());
+    } else if (entity instanceof CoreMediaConnectorCategory) {
+      CoreMediaConnectorCategory category = (CoreMediaConnectorCategory) entity;
+      copyCategory(content.getParent(), category);
     }
   }
 
@@ -72,7 +81,7 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
    *
    * @param category the category to copy
    */
-  private void copyCategory(Content parent, CoreMediaConnectorCategory category) {
+  private void copyCategory(@NonNull Content parent, @NonNull CoreMediaConnectorCategory category) {
     ConnectorContext context = category.getContext();
     ConnectorId id = category.getConnectorId();
     CoreMediaConnectorServiceImpl service = category.getService();
@@ -95,7 +104,8 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
     }
   }
 
-  private Content copyItem(Content folder, CoreMediaConnectorItem item, Content content) {
+  @NonNull
+  private Content copyItem(@NonNull Content folder, @NonNull CoreMediaConnectorItem item, @Nullable Content content) {
     Content original = item.getContent();
     ContentType ct = contentRepository.getContentType(original.getType().getName());
     if (content == null) {
@@ -125,7 +135,7 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
         else if (type.equals(CapPropertyDescriptorType.BLOB.name())) {
           Blob blob = original.getBlob(key);
           if (blob != null && blob.getSize() > 0) {
-            Blob newBlob = super.createBlob(blob.getInputStream(), null, blob.getContentType().toString());
+            Blob newBlob = getContentCreateService().createBlob(blob.getInputStream(), null, blob.getContentType().toString());
             content.set(key, newBlob);
           }
         }
@@ -158,5 +168,10 @@ public class CoreMediaConnectorWriteInterceptor extends ConnectorItemWriteInterc
     }
 
     return content;
+  }
+
+  @Required
+  public void setContentRepository(ContentRepository contentRepository) {
+    this.contentRepository = contentRepository;
   }
 }

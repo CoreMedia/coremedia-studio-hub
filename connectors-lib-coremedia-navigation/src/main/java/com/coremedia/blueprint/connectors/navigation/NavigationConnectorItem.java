@@ -5,15 +5,14 @@ import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.blueprint.connectors.navigation.util.ConnectorStudioUtil;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
-import com.coremedia.cap.content.ContentType;
-import org.apache.commons.lang3.StringUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,20 +57,7 @@ public class NavigationConnectorItem extends NavigationConnectorEntity implement
   @NonNull
   @Override
   public String getItemType() {
-    ConnectorContext context = getContext();
-    ConnectorItemTypes itemTypes = context.getItemTypes();
-    if (itemTypes != null) {
-      ContentType contentType = content.getType();
-      while (contentType != null) {
-        String typeForName = itemTypes.getTypeForName(contentType.getName());
-        if (typeForName != null) {
-          return typeForName;
-        }
-
-        contentType = contentType.getParent();
-      }
-    }
-    return "download";
+    return content.getType().getName();
   }
 
   @Nullable
@@ -117,7 +103,7 @@ public class NavigationConnectorItem extends NavigationConnectorEntity implement
       data.put("tags", String.join(", ", values));
     }
 
-    String link = "<a href=\"javascript:Ext.getCmp('collection-view').showInRepositoryMode(com.coremedia.ui.data.beanFactory.getRemoteBean('content/" + contentId + "'))\">" + content.getName() + "</a>";
+    String link = ConnectorStudioUtil.generateOpenEntityLink("content/" + contentId, content.getName());
     data.put("link", link);
 
     return () -> data;

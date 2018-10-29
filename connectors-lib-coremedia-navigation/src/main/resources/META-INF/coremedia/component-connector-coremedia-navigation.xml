@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <context:annotation-config/>
 
-  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
-  <!-- PageGrid -->
-  <bean id="navigationConnectorPageGridService" class="com.coremedia.blueprint.connectors.navigation.util.ConnectorPageGridService">
-    <property name="sitesService" ref="sitesService" />
-    <property name="placementPaths" value="Options/Settings/Pagegrid/Placements" />
-  </bean>
-
-
-  <bean id="connectorNavigationService" class="com.coremedia.blueprint.connectors.navigation.NavigationConnectorServiceImpl"
-        scope="prototype">
-    <property name="contentRepository" ref="contentRepository" />
-    <property name="pageGridService" ref="navigationConnectorPageGridService" />
-  </bean>
-
-  <bean id="connector:navigation" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
-    <property name="connectorService" ref="connectorNavigationService"/>
-    <property name="connectorContentService" ref="connectorContentService"/>
-  </bean>
-
-
+  <bean id="connectorCoreMediaNavigationConfiguration"
+        class="com.coremedia.blueprint.connectors.navigation.ConnectorCoreMediaNavigationConfiguration"/>
 </beans>

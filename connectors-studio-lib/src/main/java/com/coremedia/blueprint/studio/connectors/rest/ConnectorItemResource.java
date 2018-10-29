@@ -137,9 +137,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
       }
 
       //make sure to encode text as utf8
-      if (mimeType.startsWith("text/")) {
-        mimeType = mimeType + "; charset=utf-8";
-      }
+      mimeType = mimeType + "; charset=utf-8";
 
       response.setHeader("Content-Type", mimeType);
       response.setHeader("X-Frame-Options", "SAMEORIGIN");

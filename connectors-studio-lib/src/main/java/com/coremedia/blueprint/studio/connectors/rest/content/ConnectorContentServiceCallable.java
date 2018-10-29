@@ -29,8 +29,8 @@ import java.util.concurrent.Callable;
 /**
  * The callable used for asynchronous content creation.
  */
-class ConnectorContentCallable implements Callable<Void> {
-  private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentCallable.class);
+class ConnectorContentServiceCallable implements Callable<Void> {
+  private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentServiceCallable.class);
 
   private final ConnectorContext context;
   private final ConnectorEntity entity;
@@ -38,7 +38,7 @@ class ConnectorContentCallable implements Callable<Void> {
   private SolrSearchService solrSearchService;
   private final Content content;
 
-  ConnectorContentCallable(ConnectorContext context,
+  ConnectorContentServiceCallable(ConnectorContext context,
                            Content content,
                            ConnectorEntity entity,
                            List<ContentWriteInterceptor> contentWriteInterceptors,

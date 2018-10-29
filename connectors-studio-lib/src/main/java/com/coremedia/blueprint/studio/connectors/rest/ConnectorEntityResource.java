@@ -134,7 +134,10 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   protected ConnectorContext getContext(ConnectorId id) {
     ConnectorContext context = connectorContextProvider.createContext(id.getConnectionId());
     ((ConnectorContextImpl)context).setLocale(getLocale());
-    ((ConnectorContextImpl)context).setPreferredSite(getPreferredSite());
+    Site preferredSite = getPreferredSite();
+    if(preferredSite != null) {
+      ((ConnectorContextImpl)context).setPreferredSiteId(preferredSite.getId());
+    }
     return context;
   }
 

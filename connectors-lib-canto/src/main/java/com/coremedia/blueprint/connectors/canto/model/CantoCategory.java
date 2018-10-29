@@ -4,6 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
+import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.canto.CantoConnectorServiceImpl;
 import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCategoryEntity;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static com.coremedia.blueprint.connectors.canto.rest.services.AbstractCantoService.EXTERNAL_ROOT_CATEGORY_ID;
 
@@ -43,6 +45,9 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
       this.delegate = getMetadataService().getCategoryById(getCatalogId(), Integer.parseInt(connectorId.getExternalId()));
     }
 
+    if(this.delegate == null) {
+      LOG.error("Failed to initialize " + connectorId + ": no delegate found");
+    }
   }
 
   @NonNull
@@ -55,7 +60,12 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     }
     else if (delegate.hasSubCategories()) {
       for (CantoCategoryEntity subEntity : delegate.getSubCategories()) {
-        subCategories.add(new CantoCategory(ConnectorId.createCategoryId(getContext().getConnectionId(), Integer.toString(subEntity.getId())), connectorService));
+        ConnectorId categoryId = ConnectorId.createCategoryId(getContext().getConnectionId(), Integer.toString(subEntity.getId()));
+        CantoCategory cantoCategory = (CantoCategory) connectorService.getCategory(getContext(), categoryId);
+        if(cantoCategory.getDelegate() != null) {
+          subCategories.add(cantoCategory);
+        }
+
       }
     }
 
@@ -72,7 +82,8 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
       List<AssetEntity> assetEntities = getMetadataService().getAssignedAssets(getCatalogId(), categoryId);
       if (CollectionUtils.isNotEmpty(assetEntities)) {
         for (AssetEntity a : assetEntities) {
-          children.add(new CantoAsset(this, a, connectorService));
+          CantoAsset cantoAsset = new CantoAsset(this, a, connectorService);
+          children.add(cantoAsset);
         }
       }
     } catch (Exception e) {
@@ -80,6 +91,16 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     }
 
     return children;
+  }
+
+  @Nullable
+  @Override
+  public ConnectorMetaData getMetaData() {
+    return () -> {
+      Map<String, Object> result = new TreeMap<>();
+      result.put("id", delegate.getId());
+      return result;
+    };
   }
 
   @Override
@@ -100,7 +121,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
     if (connectorId.isRootId()) {
       return getContext().getProperty(DISPLAY_NAME);
     }
-    return delegate.getName();
+    return getDelegate().getName();
   }
 
   @Nullable

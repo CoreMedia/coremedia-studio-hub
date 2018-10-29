@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
-  <bean id="s3ConnectorCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemService" scope="singleton"/>
-
-  <bean id="connectorS3Service" class="com.coremedia.blueprint.connectors.s3.S3ConnectorServiceImpl" scope="prototype">
-    <property name="fileCache" ref="s3ConnectorCache" />
-  </bean>
-
-  <bean id="connector:s3" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
-    <property name="connectorService" ref="connectorS3Service"/>
-    <property name="connectorContentService" ref="connectorContentService" />
-  </bean>
-
-
+  <context:annotation-config/>
+  <bean id="connectorS3Configuration" class="com.coremedia.blueprint.connectors.s3.ConnectorS3Configuration"/>
 </beans>

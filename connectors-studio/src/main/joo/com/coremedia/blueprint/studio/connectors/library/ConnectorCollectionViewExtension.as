@@ -1,14 +1,16 @@
 package com.coremedia.blueprint.studio.connectors.library {
+import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
 import com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbarContainer;
 import com.coremedia.blueprint.studio.connectors.model.Connector;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.search.ConnectorSearchListContainer;
 import com.coremedia.blueprint.studio.connectors.search.toolbar.ConnectorSearchToolbarContainer;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorService;
+import com.coremedia.cap.common.SESSION;
+import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.content.ContentTypeNames;
 import com.coremedia.cap.content.search.SearchParameters;
 import com.coremedia.cms.editor.sdk.ContentTreeRelation;
@@ -20,6 +22,7 @@ import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.upload.FileWrapper;
 import com.coremedia.cms.editor.sdk.upload.UploadManager;
 import com.coremedia.cms.editor.sdk.upload.UploadSettings;
+import com.coremedia.cms.editor.sdk.util.ContentLocalizationUtil;
 import com.coremedia.ui.data.Bean;
 import com.coremedia.ui.data.ValueExpressionFactory;
 
@@ -50,7 +53,7 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
   }
 
   public function upload(files:Array, folder:Object, settings:UploadSettings):void {
-    if(files.length === 0) {
+    if (files.length === 0) {
       return;
     }
 
@@ -62,27 +65,27 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
     }
 
     var listView:ConnectorRepositoryList = Ext.getCmp(ConnectorRepositoryList.ID) as ConnectorRepositoryList;
-    UploadManager.bulkUpload(settings, null, files, false, function(result:Array):void {
+    UploadManager.bulkUpload(settings, null, files, false, function (result:Array):void {
       listView.setDisabled(true);
-      ValueExpressionFactory.createFromFunction(function():Array {
+      ValueExpressionFactory.createFromFunction(function ():Array {
         var items:Array = [];
         for each(var wrapper:FileWrapper in result) {
           var item:ConnectorItem = wrapper.getResultObject() as ConnectorItem;
-          if(!item.isLoaded()) {
+          if (!item.isLoaded()) {
             item.load();
             return undefined;
           }
           items.push(item);
         }
         return items;
-      }).loadValue(function(loadedResults:Array):void {
+      }).loadValue(function (loadedResults:Array):void {
         for each(var item:ConnectorItem in loadedResults) {
-          if(!item.getParent()) {
+          if (!item.getParent()) {
             trace('[ERROR]', "Parent model not set for connector item " + item.getUriPath());
             listView.setDisabled(false);
           }
           else {
-            item.getParent().refresh(function():void {
+            item.getParent().refresh(function ():void {
               listView.setDisabled(false);
             });
             return;
@@ -134,8 +137,8 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
       if (itemTypes) {
         for each(var itemType:String in itemTypes) {
           var itemKey:String = itemType;
-          if(itemKey.indexOf('/') !== -1) {
-            itemKey = itemKey.substr(itemKey.indexOf('/')+1, itemKey.length);
+          if (itemKey.indexOf('/') !== -1) {
+            itemKey = itemKey.substr(itemKey.indexOf('/') + 1, itemKey.length);
           }
           var recordSearchType:Object = {
             name: itemKey,
@@ -143,6 +146,20 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
             icon: ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', "item_type_" + itemKey + "_icon")
           };
           availableSearchTypes.push(recordSearchType);
+        }
+      }
+      else if (connector.getConnectorType().indexOf(ConnectorHelper.TYPE_COREMEDIA_CONNECTOR) !== -1) {
+        availableSearchTypes = [];
+        var contentTypes:Array = SESSION.getConnection().getContentRepository().getContentTypes();
+        for each(var ct:ContentType in contentTypes) {
+          if (!ConnectorHelper.isIgnoredForSearch(ct)) {
+            var recordSearchTypeCM:Object = {
+              name: ct.getName(),
+              label: ContentLocalizationUtil.getLabelForContentType(ct),
+              icon: ContentLocalizationUtil.getIconStyleClassForContentType(ct)
+            };
+            availableSearchTypes.push(recordSearchTypeCM);
+          }
         }
       }
 

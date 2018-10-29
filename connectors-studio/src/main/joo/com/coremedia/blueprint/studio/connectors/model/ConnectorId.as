@@ -5,7 +5,6 @@ public class ConnectorId {
 
   private static const PREFIX:String = "connector:///";
   private static const CATEGORY:String = "category";
-  private static const ITEM:String = "item";
   private static const ROOT:String = "root";
 
   private const PARENT_ID_SEPARATOR:String = "|";
@@ -25,13 +24,6 @@ public class ConnectorId {
     this.externalId = segment;
   }
 
-  public function connectorIdForSegments(id:String, connectionId:String, externalId:String) {
-    this.id = id;
-    this.connectionId = connectionId;
-    this.externalId = externalId;
-  }
-
-
   public static function createRootId(connectionId:String):ConnectorId {
     return new ConnectorId(PREFIX + connectionId + "/" + CATEGORY + "/" + ROOT);
   }
@@ -41,14 +33,14 @@ public class ConnectorId {
   }
 
   public function getExternalId():String {
-    if(externalId.indexOf(PARENT_ID_SEPARATOR) ===-1) {
+    if (externalId.indexOf(PARENT_ID_SEPARATOR) === -1) {
       return externalId;
     }
     return externalId.split(PARENT_ID_SEPARATOR)[0];
   }
 
   public function getParentId():ConnectorId {
-    if(externalId.indexOf(PARENT_ID_SEPARATOR) ===-1) {
+    if (externalId.indexOf(PARENT_ID_SEPARATOR) === -1) {
       var parentId:String = externalId.split(PARENT_ID_SEPARATOR)[1];
       return new ConnectorId(parentId);
     }
@@ -64,11 +56,11 @@ public class ConnectorId {
   }
 
   public function toConnectorEntity():ConnectorEntity {
-    if(id.indexOf('/item/') !== -1) {
+    if (id.indexOf('/item/') !== -1) {
       var itemUriPath:String = "connector/item/" + toUrl();
       return beanFactory.getRemoteBean(itemUriPath) as ConnectorItem;
     }
-    else if(id.indexOf('/category/') !== -1) {
+    else if (id.indexOf('/category/') !== -1) {
       var categoryUriPath:String = "connector/category/" + toUrl();
       return beanFactory.getRemoteBean(categoryUriPath) as ConnectorCategory;
     }

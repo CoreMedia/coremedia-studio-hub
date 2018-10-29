@@ -77,7 +77,6 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
       }
 
       client = new DbxClientV2(config, accessToken);
-      latestEntries = getAllEntries();
       return true;
     } catch (Exception e) {
       throw new ConnectorException("Failed to create Dropbox client: " + e.getMessage(), e);
@@ -88,11 +87,17 @@ public class DropboxConnectorServiceImpl extends FileBasedConnectorService<Metad
   public InvalidationResult invalidate(@NonNull ConnectorContext context) {
     InvalidationResult invalidationResult = new InvalidationResult(context);
 
+    List<String> refreshedEntries = getAllEntries();
+    if(latestEntries == null || latestEntries.isEmpty()) {
+      latestEntries = refreshedEntries;
+      return null;
+    }
+
+
     int added = 0;
     int deleted = 0;
 
     //find new entries
-    List<String> refreshedEntries = getAllEntries();
     List<String> dirtyItems = new ArrayList<>();
     for (String entry : refreshedEntries) {
       if(!latestEntries.contains(entry)) {

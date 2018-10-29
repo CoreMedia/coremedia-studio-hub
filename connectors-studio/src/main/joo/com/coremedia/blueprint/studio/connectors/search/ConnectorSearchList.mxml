@@ -59,6 +59,7 @@
             width="125"/>
     <GridColumn
             header="{resourceManager.getString('com.coremedia.cms.editor.sdk.columns.grid.GridColumns', 'name_header')}"
+            renderer="{ConnectorHelper.nameRenderer}"
             stateId="name"
             dataIndex="name"
             sortable="true"

@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <context:annotation-config/>
 
-  <import resource="classpath:META-INF/coremedia/component-connectors-lib.xml"/>
-
-  <bean id="connectorDropboxService" class="com.coremedia.blueprint.connectors.dropbox.DropboxConnectorServiceImpl" scope="prototype">
-    <property name="fileCache" ref="dropboxFileCache" />
-  </bean>
-
-  <bean id="dropboxFileCache" class="com.coremedia.blueprint.connectors.filesystems.FileSystemService" scope="singleton"/>
-
-  <bean id="connector:dropbox" class="com.coremedia.blueprint.connectors.api.ConnectorConnection" scope="prototype">
-    <property name="connectorService" ref="connectorDropboxService"/>
-    <property name="connectorContentService" ref="connectorContentService" />
-  </bean>
-
-
+  <bean id="connectorDropboxConfiguration" class="com.coremedia.blueprint.connectors.dropbox.ConnectorDropboxConfiguration"/>
 </beans>

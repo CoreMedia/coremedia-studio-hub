@@ -1,80 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/util
-                           http://www.springframework.org/schema/util/spring-util.xsd">
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 
   <context:annotation-config/>
-  <context:component-scan base-package="com.coremedia.blueprint.connectors.filesystems"/>
-
-  <import resource="classpath:/com/coremedia/cap/common/uapi-services.xml"/>
-  <import resource="classpath:/com/coremedia/cap/multisite/multisite-services.xml"/>
-  <import resource="classpath:/com/coremedia/blueprint/base/settings/impl/bpbase-settings-services.xml"/>
-
-  <bean id="connector" class="com.coremedia.blueprint.connectors.impl.Connectors" scope="singleton">
-    <property name="connectorContextProvider" ref="connectorContextProvider" />
-    <property name="sitesService" ref="sitesService" />
-  </bean>
-
-  <bean id="connectorContextProvider" class="com.coremedia.blueprint.connectors.impl.ConnectorContextProvider">
-    <property name="contentRepository" ref="contentRepository"/>
-    <property name="globalConfigPath" value="${connectors.configpath.global:/Settings/Options/Settings/Connectors}"/>
-    <property name="siteConfigPath" value="${connectors.configpath.site:/Options/Settings}"/>
-    <property name="settingsService" ref="settingsService"/>
-    <property name="sitesService" ref="sitesService"/>
-    <property name="cache" ref="cache" />
-  </bean>
-
-
-  <!-- Preview Converters-->
-  <bean id="connectorMdPreviewConverter" class="com.coremedia.blueprint.connectors.previewconverters.CommonMarkConverter" />
-  <bean id="connectorTextPreviewConverter" class="com.coremedia.blueprint.connectors.previewconverters.TextConverter" />
-  <bean id="connectorOfficePreviewConverter" class="com.coremedia.blueprint.connectors.previewconverters.OfficeConverter" />
-
-  <util:list id="connectorPreviewConverters" value-type="com.coremedia.blueprint.connectors.previewconverters.ConnectorPreviewConverter">
-    <ref bean="connectorMdPreviewConverter"/>
-    <ref bean="connectorTextPreviewConverter"/>
-    <ref bean="connectorOfficePreviewConverter"/>
-  </util:list>
-
-  <!-- MetaData Resolver-->
-  <bean id="connectorAudioMetaDataResolver" class="com.coremedia.blueprint.connectors.metadataresolver.AudioMetaDataResolver" />
-  <bean id="connectorPictureMetaDataResolver" class="com.coremedia.blueprint.connectors.metadataresolver.PictureMetaDataResolver" />
-  <bean id="connectorPdfMetaDataResolver" class="com.coremedia.blueprint.connectors.metadataresolver.PdfMetaDataResolver" />
-
-  <util:list id="connectorMetaDataResolvers" value-type="com.coremedia.blueprint.connectors.metadataresolver.ConnectorMetaDataResolver">
-    <ref bean="connectorAudioMetaDataResolver"/>
-    <ref bean="connectorPictureMetaDataResolver"/>
-    <ref bean="connectorPdfMetaDataResolver"/>
-  </util:list>
-
-  <!-- Write Interceptor for content creation -->
-  <bean id="connectorItemWriteInterceptor" class="com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor">
-    <property name="priority" value="0" />
-    <property name="type" value="CMTeasable" />
-    <property name="mimeTypeService" ref="mimeTypeService" />
-    <property name="contentRepository" ref="contentRepository" />
-  </bean>
-
-  <!-- Tagging-->
-  <bean id="connectorContentTagger" class="com.coremedia.blueprint.connectors.content.ContentTagger">
-    <property name="taxonomyPath" value="${connectors.taxonomies.path:/Settings/Taxonomies}" />
-    <property name="contentRepository" ref="contentRepository" />
-  </bean>
-
-  <!-- Temp Service-->
-  <bean id="tempFileCacheService" class="com.coremedia.blueprint.connectors.caching.TempFileCacheService" scope="singleton">
-    <property name="cacheSize" value="${connectors.preview.cacheSize:100}" />
-  </bean>
-
-  <!-- Content Upload -->
-  <bean id="connectorContentUploadService" class="com.coremedia.blueprint.connectors.upload.ConnectorContentUploadService" scope="singleton">
-    <property name="connectors" ref="connector" />
-  </bean>
-
+  <bean id="connectorBundleConfiguration" class="com.coremedia.blueprint.connectors.ConnectorBundleConfiguration"/>
 </beans>
