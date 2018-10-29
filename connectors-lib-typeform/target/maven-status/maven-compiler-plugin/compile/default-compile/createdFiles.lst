@@ -1,0 +1,11 @@
+com\coremedia\blueprint\connectors\typeform\data\Forms.class
+com\coremedia\blueprint\connectors\typeform\TypeformCategory.class
+com\coremedia\blueprint\connectors\typeform\TypeformConnectorClient.class
+com\coremedia\blueprint\connectors\typeform\data\Form.class
+com\coremedia\blueprint\connectors\typeform\data\Responses.class
+com\coremedia\blueprint\connectors\typeform\TypeformItem.class
+com\coremedia\blueprint\connectors\typeform\data\Answer.class
+com\coremedia\blueprint\connectors\typeform\TypeformItemWriteInterceptor.class
+com\coremedia\blueprint\connectors\typeform\TypeformConnectorService.class
+com\coremedia\blueprint\connectors\typeform\ConnectorTypeformConfiguration.class
+com\coremedia\blueprint\connectors\typeform\data\Response.class

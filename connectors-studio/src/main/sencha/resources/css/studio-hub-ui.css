@@ -1,0 +1,28 @@
+.connector-style-error > span {
+  color: #C41313;
+}
+
+.connector-style-warning > span {
+  color: #ED9B03;
+}
+
+.connector-style-ok > span {
+  color: #4D8735;
+}
+
+.connector-style-disabled > span {
+  opacity: 0.6;
+}
+
+.connector-style-bold > span {
+  font-weight: bold;
+}
+
+.connector-style-italic > span {
+  font-style: italic;
+}
+
+.connector-style-line-through > span {
+  text-decoration: line-through;
+}
+
