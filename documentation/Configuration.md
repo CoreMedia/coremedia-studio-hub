@@ -19,13 +19,19 @@ The following properties are available for all connector types:
 | Property | Mandatory | Description |
 | -------- |:---------:| ----------- |
 | name | no | The name of the root node shown in the Studio library. If not defined the fallback will be used as described in section 'Studio Customization'. |
-| type | yes | The type name of the connector, this will define the type of a connection. |
+| connectorType | yes | The type name of the connector, this will define the type of a connection. |
 | itemTypes | no | The _Connector Item Types_ document or empty if each connector item has it's own hard-coded type. |
 | previewTemplates | no | The _Preview Templates_ document or empty, when each connector item renders it's own preview HTML. |
 | contentMapping | yes | The _Content Mapping_ document for the connector item types. |
 | invalidationInterval | no | Interval in seconds used to check if the items of a connector are still up to date. |
 | notificationGroups | no | A list of comma separated values identifying the user groups to send notifications too. |
 | notificationUsers | no | A list of comma separated values identifying the user names to send notifications too. |
+
+## CoreMedia Connector Types
+
+If a connector type is based on CoreMedia content, the _connectorType_ name should begin with a leading _coremedia-_.
+This ensures that the type labels and icons of Connector items are localized and displayed using the existing
+document model the Studio is working on.
 
 ## Connector Item Types
 
@@ -39,6 +45,10 @@ of the item should be generated. By default, implementations of the _ConnectorIt
 will return a value of this configuration. Therefore, an empty 'default' value should always be
 provided in this configuration in case a file type has not been mapped yet. Alternatively, a _ConnectorItem_
 implementation can return it's own type.
+
+An exception here are CoreMedia connectors. Every connector item or category of a CoreMedia based connector should
+return the content type of the corresponding content. The Studio UI will display the localized type name
+and icon for the existing document model the Studio is working on.
 
 ## Content Mapping
 
@@ -105,7 +115,15 @@ E.g. for the RSS connector, the preview can contain several images and additiona
 In that case, the default implementation of the _getPreviewHtml()_ of the _ConnectorItem_ interface
 should be overwritten and return custom HTML.
 
-## Connections
+## User Specific Connections
+
+//TODO supported, not documented
+
+## Site Specific Connections
+
+//TODO supported, not documented
+
+## Connection Configuration
 
 The document defines the instances of the connector types.
 Each entry contains the actual connection credentials (if required) and
@@ -159,6 +177,29 @@ This can be a samba share or any other mounted filesystem.
 | ------------- | ------------- |
 | folder | the server side folder to embed in the Studio library |
 
+
+### Typeform Configuration
+
+#### Sample Connection Struct
+
+```xml
+<Struct>
+    <StringProperty Name="displayName">Typeform</StringProperty>
+    <StringProperty Name="connectionId">typeform1</StringProperty>
+    <StringProperty Name="contentScope">site</StringProperty>
+    <StringProperty Name="type">typeform</StringProperty>
+    <StringProperty Name="accessToken">Client ID</StringProperty>
+    <BooleanProperty Name="enabled">true</BooleanProperty>
+    <StringProperty Name="embedCode">embed template code</StringProperty>
+</Struct>
+```
+
+#### Connection Specific Properties
+
+| Property  | Description |
+| ------------- | ------------- |
+| accessToken | the access token generated from by Typeform  |
+| embedCode |  |
 
 
 ### S3 Configuration
