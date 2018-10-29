@@ -85,6 +85,11 @@
       <artifactId>coremedia-spring</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.coremedia.blueprint</groupId>
       <artifactId>contentbeans</artifactId>
       <version>17-BP-SNAPSHOT</version>
