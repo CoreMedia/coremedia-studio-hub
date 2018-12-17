@@ -21,7 +21,7 @@ public class PdfMetaDataResolver implements ConnectorMetaDataResolver {
   private static final Logger LOG = LoggerFactory.getLogger(PdfMetaDataResolver.class);
 
   @Override
-  public boolean include(ConnectorItem item) {
+  public boolean test(ConnectorItem item) {
     return item.getItemType().equals("pdf");
   }
 

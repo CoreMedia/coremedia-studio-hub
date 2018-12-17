@@ -2,9 +2,9 @@ package com.coremedia.blueprint.connectors.metadataresolver;
 
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
-import com.coremedia.common.util.Predicate;
 
 import java.io.File;
+import java.util.function.Predicate;
 
 /**
  * A metadata resolver used a local copy of a connector item to extract metadata from it.

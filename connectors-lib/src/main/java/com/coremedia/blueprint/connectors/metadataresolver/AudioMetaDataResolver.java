@@ -13,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,16 +27,17 @@ public class AudioMetaDataResolver implements ConnectorMetaDataResolver {
   private static final Logger LOG = LoggerFactory.getLogger(AudioMetaDataResolver.class);
 
   @Override
-  public boolean include(ConnectorItem item) {
+  public boolean test(ConnectorItem item) {
     return item.getItemType().equals("audio");
   }
 
   @Override
   public ConnectorMetaData resolveMetaData(ConnectorItem item, File itemTempFile) {
     final Map<String, Object> result = new HashMap<>();
+    InputStream input = null;
     try {
       org.apache.tika.metadata.Metadata metadata = new org.apache.tika.metadata.Metadata();
-      InputStream input = new BufferedInputStream(new FileInputStream(itemTempFile));
+      input = new BufferedInputStream(new FileInputStream(itemTempFile));
 
       ContentHandler handler = new DefaultHandler();
       Parser parser = new Mp3Parser();
@@ -49,9 +51,18 @@ public class AudioMetaDataResolver implements ConnectorMetaDataResolver {
       for (String name : metadataNames) {
         result.put(formatKey(name), metadata.get(name));
       }
-
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       LOG.warn("Error processing audio meta data of {}", item, e);
+    }
+    finally {
+      if(input != null) {
+        try {
+          input.close();
+        } catch (IOException e) {
+          //ignore
+        }
+      }
     }
     return () -> result;
   }

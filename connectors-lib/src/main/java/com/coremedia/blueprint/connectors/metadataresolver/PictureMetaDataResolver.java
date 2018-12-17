@@ -33,7 +33,7 @@ public class PictureMetaDataResolver implements ConnectorMetaDataResolver {
           "supplementalcategory(s)");
 
   @Override
-  public boolean include(ConnectorItem item) {
+  public boolean test(ConnectorItem item) {
     return item.getItemType().equals("picture");
   }
 

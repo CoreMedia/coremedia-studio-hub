@@ -112,21 +112,24 @@ public class RssConnectorServiceImpl implements ConnectorService {
 
     if (this.rootCategory != null) {
       List<String> oldTitles = this.rootCategory.getItems().stream().map(ConnectorItem::getName).collect(Collectors.toList());
-      List<SyndEntry> entries = getFeed(context).getEntries();
-      int count = 0;
-      for (SyndEntry entry : entries) {
-        ConnectorItem item = createRssAsset(entry);
-        if (!oldTitles.contains(item.getName())) {
-          count++;
+      SyndFeed feed = getFeed(context);
+      if(feed != null) {
+        List<SyndEntry> entries = feed.getEntries();
+        int count = 0;
+        for (SyndEntry entry : entries) {
+          ConnectorItem item = createRssAsset(entry);
+          if (!oldTitles.contains(item.getName())) {
+            count++;
+          }
         }
-      }
 
-      if (count > 0) {
-        getRootCategory(true);
-        result.addMessage("rss", rootCategory, Arrays.asList(rootCategory.getName(), count));
-        result.addEntity(rootCategory);
+        if (count > 0) {
+          getRootCategory(true);
+          result.addMessage("rss", rootCategory, Arrays.asList(rootCategory.getName(), count));
+          result.addEntity(rootCategory);
+        }
+        LOGGER.info("'" + this.context.getConnectionId() + "' invalidation found " + count + " new elements.");
       }
-      LOGGER.info("'" + this.context.getConnectionId() + "' invalidation found " + count + " new elements.");
     }
 
     return result;

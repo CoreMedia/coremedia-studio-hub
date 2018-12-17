@@ -209,7 +209,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
    */
   private void formatPreview(ConnectorPreviewRepresentation representation, ConnectorItem item) throws IOException {
     List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
-    List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
+    List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.test(item)).collect(Collectors.toList());
 
     if (!applicableConverters.isEmpty() || !applicableMetaDataResolvers.isEmpty()) {
       //check threshold before creating a temp file
