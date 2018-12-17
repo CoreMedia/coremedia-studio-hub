@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.studio.connectors.actions {
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.upload.FileWrapper;
 import com.coremedia.cms.editor.sdk.upload.UploadSettings;
 import com.coremedia.cms.editor.sdk.upload.dialog.UploadDialog;
@@ -53,7 +54,7 @@ public class UploadItemActionBase extends Action {
 
   private function getUploadSettings():UploadSettings {
     if (!uploadSettings) {
-      uploadSettings = new UploadSettings();
+      uploadSettings = new UploadSettings(editorContext.getSitesService().getPreferredSiteId());
     }
     return uploadSettings;
   }

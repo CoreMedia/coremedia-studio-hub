@@ -142,6 +142,7 @@ public class ConnectorLinkListGridPanelBase extends LinkListGridPanel {
 
     var entity:ConnectorEntity = record.getBean() as ConnectorEntity;
     if(!entity.isLoaded()) {
+      entity.load();
       return undefined;
     }
 
@@ -169,8 +170,8 @@ public class ConnectorLinkListGridPanelBase extends LinkListGridPanel {
               '    line-height: 1;\n' +
               '    margin-top: 0px;" class="' + connectorType + '" title="' + connectorEntity.getDisplayName() + '"/></div>'
     }
-    return '<div class="cm-image-thumbnail">' +
-            '<img class="cm-image-thumbnail__image" src="' + uri + '" /></div>'
+    return '<div class="cm-thumbnail-image cm-thumbnail-image--link-list">' +
+            '<img style="max-width:80px;max-height:54px;" class="cm-image-thumbnail__image" src="' + uri + '" /></div>'
   }
 
   protected function onDropAreaClick():void {

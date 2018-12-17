@@ -1,6 +1,8 @@
 package com.coremedia.blueprint.connectors.canto.rest;
 
 import com.google.common.base.Stopwatch;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -24,8 +26,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
@@ -82,7 +82,7 @@ public class CantoConnector {
     ResponseEntity<T> responseEntity = null;
 
     Stopwatch stopwatch = null;
-    if (LOG.isInfoEnabled()) {
+    if (LOG.isDebugEnabled()) {
       stopwatch = Stopwatch.createStarted();
     }
 
@@ -91,9 +91,9 @@ public class CantoConnector {
       //responseEntityDebug = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
       responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
 
-      if (LOG.isInfoEnabled() && stopwatch != null && stopwatch.isRunning()) {
+      if (LOG.isDebugEnabled() && stopwatch != null && stopwatch.isRunning()) {
         stopwatch.stop();
-        LOG.info("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
+        LOG.debug("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
       }
 
     } catch (HttpServerErrorException e) {
@@ -132,16 +132,16 @@ public class CantoConnector {
     ResponseEntity<T> responseEntity = null;
 
     Stopwatch stopwatch = null;
-    if (LOG.isInfoEnabled()) {
+    if (LOG.isDebugEnabled()) {
       stopwatch = Stopwatch.createStarted();
     }
 
     try {
       responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
 
-      if (LOG.isInfoEnabled() && stopwatch != null && stopwatch.isRunning()) {
+      if (LOG.isDebugEnabled() && stopwatch != null && stopwatch.isRunning()) {
         stopwatch.stop();
-        LOG.info("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
+        LOG.debug("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
       }
 
     } catch (HttpServerErrorException e) {
@@ -184,16 +184,16 @@ public class CantoConnector {
     ResponseEntity<T> responseEntity = null;
 
     Stopwatch stopwatch = null;
-    if (LOG.isInfoEnabled()) {
+    if (LOG.isDebugEnabled()) {
       stopwatch = Stopwatch.createStarted();
     }
 
     try {
       responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, responseType);
 
-      if (LOG.isInfoEnabled() && stopwatch != null && stopwatch.isRunning()) {
+      if (LOG.isDebugEnabled() && stopwatch != null && stopwatch.isRunning()) {
         stopwatch.stop();
-        LOG.info("POST Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
+        LOG.debug("POST Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
       }
 
     } catch (HttpServerErrorException e) {
@@ -222,7 +222,7 @@ public class CantoConnector {
     HttpHeaders headers = buildHeaders();
 
     Stopwatch stopwatch = null;
-    if (LOG.isInfoEnabled()) {
+    if (LOG.isDebugEnabled()) {
       stopwatch = Stopwatch.createStarted();
     }
 
@@ -235,9 +235,9 @@ public class CantoConnector {
       }
 
       InputStream responseInputStream = responseEntity.getBody().getInputStream();
-      if (LOG.isInfoEnabled() && stopwatch != null && stopwatch.isRunning()) {
+      if (LOG.isDebugEnabled() && stopwatch != null && stopwatch.isRunning()) {
         stopwatch.stop();
-        LOG.info("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
+        LOG.debug("GET Request '{}' returned with HTTP status code: {} (took {})", url, responseEntity.getStatusCode().value(), stopwatch);
       }
       return responseInputStream;
     } catch (HttpServerErrorException e) {

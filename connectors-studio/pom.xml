@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.coremedia.blueprint.connectors</groupId>
     <artifactId>connectors</artifactId>
-    <version>1810.1-1</version>
+    <version>1-SNAPSHOT</version>
   </parent>
 
   <artifactId>connectors-studio</artifactId>
@@ -77,18 +76,4 @@
     </plugins>
   </build>
 
-<distributionManagement>
-    <repository>
-      <id>contributions-releases</id>
-      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>localfs</id>
-      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target</url>
-    </snapshotRepository>
-    <site>
-      <id>localsite</id>
-      <url>file://C:\workspace\cm-master-release\blueprint\modules\extensions\connectors\target\site-deploy\modules\extensions\connectors</url>
-    </site>
-  </distributionManagement>
 </project>

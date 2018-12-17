@@ -7,29 +7,23 @@
     <groupId>com.coremedia.blueprint</groupId>
     <artifactId>extensions</artifactId>
     <version>1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.coremedia.blueprint.connectors</groupId>
   <artifactId>connectors</artifactId>
   <packaging>pom</packaging>
-  <version>1807.1-2</version>
 
   <properties>
     <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
   </properties>
-
-  <distributionManagement>
-    <repository>
-      <id>contributions-releases</id>
-      <url>https://repository.coremedia.com/nexus/content/repositories/contributions-releases/</url>
-    </repository>
-  </distributionManagement>
 
   <modules>
     <module>connectors-studio-lib</module>
     <module>connectors-studio</module>
     <module>connectors-lib</module>
     <module>connectors-lib-canto</module>
+    <module>connectors-lib-celum</module>
     <module>connectors-lib-cloudinary</module>
     <module>connectors-lib-coremedia</module>
     <module>connectors-lib-coremedia-navigation</module>
@@ -42,5 +36,22 @@
     <module>connectors-api</module>
     <module>connectors-cae</module>
   </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
