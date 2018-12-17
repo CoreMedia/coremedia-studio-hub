@@ -14,14 +14,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ConnectorContextImpl implements ConnectorContext {
 
   public static final String MARK_AS_READ = "markAsRead";
   public static final String PREVIEW_THRESHOLD = "previewThresholdMB";
-  public static final String CONTENT_SCOPE= "contentScope";
+  public static final String CONTENT_SCOPE = "contentScope";
   public static final String TYPE = "type";
   public static final String CONNECTION_ID = "connectionId";
   public static final String DATE_FORMAT = "dateFormat";
@@ -55,8 +54,6 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   private boolean dirty;
   private String siteId; //the siteId the connections is configured for
-  private String preferredSite; //the preferred site of the current request
-  private Locale locale;
 
   ConnectorContextImpl(Map<String, Object> properties) {
     this.properties = new HashMap<>(properties);
@@ -81,9 +78,9 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   @Override
   public long getInvalidationInterval() {
-    if(properties.containsKey(INVALIDATION_INTERVAL)) {
+    if (properties.containsKey(INVALIDATION_INTERVAL)) {
       Integer interval = (Integer) properties.get(INVALIDATION_INTERVAL);
-      if(interval != null) {
+      if (interval != null) {
         return interval.longValue();
       }
     }
@@ -93,7 +90,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   @NonNull
   @Override
   public List<String> getNotificationsUserGroups() {
-    if(properties.containsKey(NOTIFICATION_GROUPS)) {
+    if (properties.containsKey(NOTIFICATION_GROUPS)) {
       String groupsString = (String) properties.get(NOTIFICATION_GROUPS);
       String[] split = groupsString.split(",");
       return Arrays.asList(split);
@@ -104,7 +101,7 @@ public class ConnectorContextImpl implements ConnectorContext {
   @NonNull
   @Override
   public List<String> getNotificationsUsers() {
-    if(properties.containsKey(NOTIFICATION_USERS)) {
+    if (properties.containsKey(NOTIFICATION_USERS)) {
       String usersString = (String) properties.get(NOTIFICATION_USERS);
       String[] split = usersString.split(",");
       return Arrays.asList(split);
@@ -142,7 +139,7 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   @Override
   public boolean getBooleanProperty(String key, boolean defaultValue) {
-    if(properties.containsKey(key) && properties.get(key) instanceof Boolean) {
+    if (properties.containsKey(key) && properties.get(key) instanceof Boolean) {
       return (Boolean) properties.get(key);
 
     }
@@ -237,29 +234,6 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public void setSiteId(String siteId) {
     this.siteId = siteId;
-  }
-
-  @NonNull
-  @Override
-  public Locale getLocale() {
-    if(locale == null) {
-      return Locale.getDefault();
-    }
-    return locale;
-  }
-
-  public void setLocale(Locale locale) {
-    this.locale = locale;
-  }
-
-  @Nullable
-  @Override
-  public String getPreferredSiteId() {
-    return preferredSite;
-  }
-
-  public void setPreferredSiteId(String preferredSite) {
-    this.preferredSite = preferredSite;
   }
 
   @NonNull

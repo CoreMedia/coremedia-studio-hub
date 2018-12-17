@@ -9,16 +9,12 @@ import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorEntityRepresentation;
-import com.coremedia.cap.multisite.Site;
 import com.coremedia.rest.linking.EntityResource;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
@@ -29,14 +25,11 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.Locale;
 
 abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> implements EntityResource<Entity> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorEntityResource.class);
 
   private static final String ID = "id";
-  static final String SESSION_ATTRIBUTE_LOCALE = "studio-locale";
-  static final String SESSION_ATTRIBUTE_PREFERRED_SITE = "studio-preferred-site";
 
   private String decodedId;
   private ConnectorContextProvider connectorContextProvider;
@@ -102,8 +95,13 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   protected void fillRepresentation(ConnectorEntity entity, ConnectorEntityRepresentation representation) {
     representation.setDeleteable(entity.isDeleteable());
 
-    //fill dam data
-    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), getPreferredSite(), getLocale(), Collections.emptyList());
+    //fill data
+    ConnectorContextImpl context = (ConnectorContextImpl) getContext(entity.getConnectorId());
+    String siteId = context.getSiteId();
+    if(siteId == null) {
+      siteId = ConnectorResource.siteDefault;
+    }
+    ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), siteId, Collections.emptyList());
     representation.setConnector(model);
     representation.setConnectorType(model.getConnectorType());
 
@@ -117,28 +115,10 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     representation.setThumbnailUrl(entity.getThumbnailUrl());
   }
 
-  protected Locale getLocale() {
-    ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    HttpServletRequest req = sra.getRequest();
-    return (Locale) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_LOCALE);
-  }
-
-  protected Site getPreferredSite() {
-    ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    HttpServletRequest req = sra.getRequest();
-    return (Site) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_PREFERRED_SITE);
-  }
-
   protected abstract ConnectorEntityRepresentation getRepresentation() throws URISyntaxException;
 
   protected ConnectorContext getContext(ConnectorId id) {
-    ConnectorContext context = connectorContextProvider.createContext(id.getConnectionId());
-    ((ConnectorContextImpl)context).setLocale(getLocale());
-    Site preferredSite = getPreferredSite();
-    if(preferredSite != null) {
-      ((ConnectorContextImpl)context).setPreferredSiteId(preferredSite.getId());
-    }
-    return context;
+    return connectorContextProvider.createContext(id.getConnectionId());
   }
 
   protected ConnectorConnection getConnection(ConnectorId id) {

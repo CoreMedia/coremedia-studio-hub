@@ -95,10 +95,6 @@
     <!-- CoreMedia Dependencies -->
     <dependency>
       <groupId>com.coremedia.cms</groupId>
-      <artifactId>coremedia-cache</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-rest-plugins</artifactId>
     </dependency>
     <dependency>
@@ -155,10 +151,6 @@
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>

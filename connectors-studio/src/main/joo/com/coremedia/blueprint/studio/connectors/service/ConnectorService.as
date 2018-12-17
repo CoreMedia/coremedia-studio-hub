@@ -1,18 +1,10 @@
 package com.coremedia.blueprint.studio.connectors.service {
 import com.coremedia.blueprint.studio.connectors.model.*;
-import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.search.SearchParameters;
 import com.coremedia.cms.editor.sdk.editorContext;
-import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
-import com.coremedia.ui.data.impl.BeanFactoryImpl;
 import com.coremedia.ui.data.impl.RemoteServiceMethod;
 import com.coremedia.ui.data.impl.RemoteServiceMethodResponse;
 import com.coremedia.ui.util.ObjectUtils;
-
-import ext.JSON;
-import ext.StringUtil;
-
-import mx.resources.ResourceManager;
 
 /**
  * Utility class for accessing the ConnectorServiceResource

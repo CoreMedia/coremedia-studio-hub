@@ -8,6 +8,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.blueprint.connectors.impl.ConnectorContextImpl;
 import com.coremedia.blueprint.connectors.navigation.util.ConnectorPageGridService;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
@@ -51,7 +52,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
     Content content = repository.getContent(capId);
 
     ConnectorId parentId = connectorId.getParentId();
-    String siteId = context.getPreferredSiteId();
+    String siteId = ((ConnectorContextImpl)context).getSiteId();
     Site site = sitesService.getSite(siteId);
     if (parentId.getExternalId().equals(site.getSiteRootFolder().getId())) {
       parentId = ConnectorId.createRootId(context.getConnectionId());
@@ -64,7 +65,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @Nullable
   @Override
   public ConnectorCategory getCategory(@NonNull ConnectorContext context, @NonNull ConnectorId connectorId) throws ConnectorException {
-    String siteId = context.getPreferredSiteId();
+    String siteId = ((ConnectorContextImpl)context).getSiteId();
     Site site = sitesService.getSite(siteId);
     Content rootContent = site.getSiteRootDocument();
     String contentId = rootContent.getId();
@@ -101,7 +102,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
   @NonNull
   @Override
   public ConnectorCategory getRootCategory(@NonNull ConnectorContext context) throws ConnectorException {
-    String siteId = context.getPreferredSiteId();
+    String siteId = ((ConnectorContextImpl)context).getSiteId();
     if (siteId == null || sitesService.getSite(siteId) == null) {
       throw new ConnectorException("No preferred site selected");
     }
@@ -172,7 +173,7 @@ public class NavigationConnectorServiceImpl implements ConnectorService {
 
   private ConnectorCategory createParentCategory(ConnectorContext context, ConnectorId connectorId) {
     String capId = connectorId.getExternalId();
-    String siteId = context.getPreferredSiteId();
+    String siteId = ((ConnectorContextImpl)context).getSiteId();
     Site site = sitesService.getSite(siteId);
     if (connectorId.isRootId() || capId.equals(site.getSiteRootDocument().getId())) {
       return rootCategory;

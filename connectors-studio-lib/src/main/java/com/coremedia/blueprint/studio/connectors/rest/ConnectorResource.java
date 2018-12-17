@@ -4,60 +4,38 @@ import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorRepresentation;
-import com.coremedia.cache.Cache;
-import com.coremedia.cap.multisite.Site;
-import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.rest.linking.EntityResource;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.Locale;
 
-import static com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource.SESSION_ATTRIBUTE_LOCALE;
-import static com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource.SESSION_ATTRIBUTE_PREFERRED_SITE;
 import static com.coremedia.blueprint.studio.connectors.rest.ConnectorResource.CONNECTOR_TYPE;
-import static com.coremedia.blueprint.studio.connectors.rest.ConnectorResource.LOCALE;
 import static com.coremedia.blueprint.studio.connectors.rest.ConnectorResource.SITE_ID;
 
 /**
  * A resource to retrieve the basic information of a connector.
  */
 @Produces(MediaType.APPLICATION_JSON)
-@Path("connector/connector/{" + CONNECTOR_TYPE + ":[^/]+}/{" + LOCALE + ":[^/]+}/{" + SITE_ID + ":[^/]+}")
+@Path("connector/connector/{" + CONNECTOR_TYPE + ":[^/]+}/{" + SITE_ID + ":[^/]+}")
 public class ConnectorResource implements EntityResource<ConnectorModel> {
   static final String CONNECTOR_TYPE = "connectorType";
   static final String SITE_ID = "siteId";
-  static final String LOCALE = "locale";
 
   private String connectorType;
   private String siteId;
-  private String locale;
   private Connectors connector;
-  private Cache cache;
 
-  private SitesService sitesService;
-
-  private static final String siteDefault = "all";
+  public static final String siteDefault = "all";
 
   @GET
-  public ConnectorRepresentation getRepresentation(@Context HttpServletRequest request) {
-    request.getSession(true).setAttribute(SESSION_ATTRIBUTE_LOCALE, new Locale(locale));
-    if (siteId != null && !siteId.equals("all")) {
-      Site site = sitesService.getSite(siteId);
-      request.getSession(true).setAttribute(SESSION_ATTRIBUTE_PREFERRED_SITE, site);
-    }
-
+  public ConnectorRepresentation getRepresentation() {
     ConnectorRepresentation connectorRepresentation = new ConnectorRepresentation();
     ConnectorModel entity = getEntity();
     connectorRepresentation.setName(entity.getName());
@@ -70,28 +48,18 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
 
   @Override
   public ConnectorModel getEntity() {
-    Locale loc = new Locale(locale);
-    List<ConnectorConnection> connectionsByType = connector.getConnectionsByType(getSiteId(), loc, connectorType);
-    return new ConnectorModel(connectorType, getPreferredSite(), loc, connectionsByType);
+    String targetSiteId = getSiteId();
+    if(targetSiteId.equals(siteDefault)) {
+      targetSiteId = null;
+    }
+    List<ConnectorConnection> connectionsByType = connector.getConnectionsByType(connectorType, targetSiteId);
+    return new ConnectorModel(connectorType, siteId, connectionsByType);
   }
 
   @Override
   public void setEntity(ConnectorModel connectorModel) {
     connectorType = connectorModel.getConnectorType();
     siteId = connectorModel.getSiteId();
-    locale = connectorModel.getLocale().getLanguage();
-  }
-
-  @PathParam(LOCALE)
-  public void setLocale(@NonNull String locale) {
-    this.locale = locale;
-  }
-
-  public String getLocale() {
-    if (locale == null) {
-      return Locale.getDefault().getLanguage();
-    }
-    return locale;
   }
 
   @PathParam(CONNECTOR_TYPE)
@@ -99,6 +67,7 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
     this.connectorType = connectorType;
   }
 
+  @NonNull
   public String getConnectorType() {
     return connectorType;
   }
@@ -108,6 +77,7 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
     this.siteId = siteId;
   }
 
+  @Nullable
   public String getSiteId() {
     if (siteId != null) {
       return siteId;
@@ -115,19 +85,8 @@ public class ConnectorResource implements EntityResource<ConnectorModel> {
     return siteDefault;
   }
 
-  protected Site getPreferredSite() {
-    ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    HttpServletRequest req = sra.getRequest();
-    return (Site) req.getSession(false).getAttribute(SESSION_ATTRIBUTE_PREFERRED_SITE);
-  }
-
   @Required
   public void setConnector(Connectors connector) {
     this.connector = connector;
-  }
-
-  @Required
-  public void setSitesService(SitesService sitesService) {
-    this.sitesService = sitesService;
   }
 }

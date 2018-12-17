@@ -69,7 +69,6 @@
   <!-- Model Entities-->
   <bean id="connectorResource" class="com.coremedia.blueprint.studio.connectors.rest.ConnectorResource" scope="prototype">
     <property name="connector" ref="connector" />
-    <property name="sitesService" ref="sitesService" />
   </bean>
 
 

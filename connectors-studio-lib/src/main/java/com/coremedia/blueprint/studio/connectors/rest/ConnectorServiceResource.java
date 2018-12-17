@@ -102,8 +102,8 @@ public class ConnectorServiceResource {
     }
 
     List<ConnectorConnection> connections = new ArrayList<>();
-    if (connectionId == null || connectionId.equals("all")) {
-      List<ConnectorContext> contexts = connectorContextProvider.findContexts(sitesService.getSite(siteId));
+    if (connectionId == null || connectionId.equals(ConnectorResource.siteDefault)) {
+      List<ConnectorContext> contexts = connectorContextProvider.findContexts(siteId);
       for (ConnectorContext context : contexts) {
         ConnectorConnection connection = connector.getConnection(context);
         if (connection != null) {

@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.studio.connectors.model {
 import mx.resources.ResourceManager;
 
-[RestResource(uriTemplate="connector/connector/{connectorType:[^/]+}/{locale:[^/]+}/{siteId:[^/]+}")]
+[RestResource(uriTemplate="connector/connector/{connectorType:[^/]+}/{siteId:[^/]+}")]
 public class ConnectorImpl extends ConnectorObjectImpl implements Connector {
 
   public function ConnectorImpl(uri:String, vars:Object) {

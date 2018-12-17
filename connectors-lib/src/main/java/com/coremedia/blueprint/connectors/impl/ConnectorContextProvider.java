@@ -4,13 +4,12 @@ import com.coremedia.blueprint.base.settings.SettingsService;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.cache.Cache;
 import com.coremedia.cap.content.ContentRepository;
-import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class ConnectorContextProvider {
   }
 
   @NonNull
-  public List<ConnectorContext> findContexts(@Nullable Site site) {
+  public List<ConnectorContext> findContexts(@Nullable String siteId) {
     List<ConnectorContext> result = new ArrayList<>();
     for (ConnectorContext context : getContexts()) {
       String contextSiteId = ((ConnectorContextImpl)context).getSiteId();
@@ -47,7 +46,7 @@ public class ConnectorContextProvider {
       if(contextSiteId == null) {
         result.add(context);
       }
-      else if(site != null && site.getId().equals(contextSiteId)) { //site specific
+      else if(siteId != null && siteId.equals(contextSiteId)) { //site specific
         result.add(context);
       }
     }

@@ -10,13 +10,11 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObjectImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorPropertyNames;
-import com.coremedia.cap.common.SESSION;
 import com.coremedia.cap.content.ContentType;
 import com.coremedia.cms.editor.sdk.columns.grid.TypeIconColumn;
 import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.cms.editor.sdk.sites.Site;
 import com.coremedia.cms.editor.sdk.sites.SitesService;
-import com.coremedia.cms.editor.sdk.util.ContentLocalizationUtil;
 import com.coremedia.ui.bem.IconWithTextBEMEntities;
 import com.coremedia.ui.data.Bean;
 import com.coremedia.ui.data.RemoteBean;
@@ -33,8 +31,6 @@ import ext.data.Model;
 import ext.grid.GridPanel;
 import ext.grid.column.Column;
 
-import joo.localeSupport;
-
 import mx.resources.ResourceManager;
 
 public class ConnectorHelper {
@@ -48,7 +44,7 @@ public class ConnectorHelper {
     formattedId = encodeURIComponent(formattedId);
 
     var uriPath:String = 'connector/item/' + formattedId;
-    if(connectorId.indexOf('/category/') !== -1) {
+    if (connectorId.indexOf('/category/') !== -1) {
       uriPath = 'connector/category/' + formattedId;
     }
 
@@ -104,13 +100,12 @@ public class ConnectorHelper {
       var ve:ValueExpression = ValueExpressionFactory.createFromFunction(function ():Connector {
         var siteService:SitesService = editorContext.getSitesService();
         var preferredSite:Site = siteService.getPreferredSite();
-        var locale:String = localeSupport.getLocale();
         if (preferredSite) {
-          var connector:Connector = beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/" + preferredSite.getId()) as Connector;
+          var connector:Connector = beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + preferredSite.getId()) as Connector;
           return connector;
         }
 
-        return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/" + locale + "/all") as Connector;
+        return beanFactory.getRemoteBean("connector/connector/" + connectorType + "/all") as Connector;
       });
       connectorExpressions.set(connectorType, ve);
     }
@@ -136,8 +131,8 @@ public class ConnectorHelper {
     }
 
     var label:String = connectorObject.getTypeLabel();
-    if(!label) {
-      label =ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_label');
+    if (!label) {
+      label = ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'Item_label');
     }
 
     return EncodingUtil.encodeForHTML(label);
@@ -195,7 +190,7 @@ public class ConnectorHelper {
     }
 
     var textCls:String = connectorObject.getTextCls();
-    if(textCls) {
+    if (textCls) {
       return '<span class="' + textCls + '">' + value + '</span>';
     }
 
@@ -413,7 +408,7 @@ public class ConnectorHelper {
   public static function isIgnoredForSearch(ct:ContentType):Boolean {
     var excludedTypes:Array = editorContext.getContentTypesExcludedFromSearch();
     for each(var cTypeName:ContentType in excludedTypes) {
-      if(cTypeName === ct.getName()) {
+      if (cTypeName === ct.getName()) {
         return true;
       }
     }

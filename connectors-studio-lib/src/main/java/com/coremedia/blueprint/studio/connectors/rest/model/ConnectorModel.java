@@ -3,13 +3,12 @@ package com.coremedia.blueprint.studio.connectors.rest.model;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
-import com.coremedia.cap.multisite.Site;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A single connector representation for REST
@@ -19,16 +18,14 @@ public class ConnectorModel {
 
   private String connectorType;
   private String name;
-  private Locale locale;
-  private Site site;
+  private String siteId;
   private ConnectorItemTypes itemTypes;
 
   private List<ConnectorConnectionModel> connections = new ArrayList<>();
 
-  public ConnectorModel(String type, Site site, Locale locale, List<ConnectorConnection> cons) {
+  public ConnectorModel(@NonNull String type, @NonNull String siteId, @NonNull List<ConnectorConnection> cons) {
     this.connectorType = type;
-    this.locale = locale;
-    this.site = site;
+    this.siteId = siteId;
 
     for (ConnectorConnection con : cons) {
       try {
@@ -63,13 +60,6 @@ public class ConnectorModel {
   }
 
   public String getSiteId() {
-    if(site != null) {
-      return site.getId();
-    }
-    return null;
-  }
-
-  public Locale getLocale() {
-    return locale;
+    return siteId;
   }
 }

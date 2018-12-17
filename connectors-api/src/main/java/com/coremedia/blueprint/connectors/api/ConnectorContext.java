@@ -4,7 +4,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * The connector context contains all connection information for the external system,
@@ -41,13 +40,14 @@ public interface ConnectorContext {
    * Utility methods to access additional configuration parameters.
    */
   String getProperty(String key);
+
   boolean getBooleanProperty(String key, boolean defaultValue);
 
   /**
    * Returns the threshold im MB that is used for the item preview.
    * Since some items are not streamed, but downloaded for the preview this ensures that the preview
    * ignores files that are simply to large.
-   *
+   * <p>
    * If the system if files based, it's recommended to set the corresponding value in the connection settings.
    */
   int getPreviewThresholdMB();
@@ -61,6 +61,7 @@ public interface ConnectorContext {
    * Returns the scope to use during the content creation.
    * The scope defines what folder should be checked to avoid duplicate content creation.
    * Possible values are 'global', 'site' and 'domain'.
+   *
    * @return the scope defined in the settings or 'global' is no such property was set
    */
   String getContentScope();
@@ -79,6 +80,7 @@ public interface ConnectorContext {
 
   /**
    * Returns the list of user groups that are notified for this connection context.
+   *
    * @return a list with cap group names
    */
   @NonNull
@@ -86,6 +88,7 @@ public interface ConnectorContext {
 
   /**
    * Returns a list of user names that are notified for this connection context.
+   *
    * @return a list with cap user names
    */
   @NonNull
@@ -109,7 +112,7 @@ public interface ConnectorContext {
    * If no configuration given, the template can be provided by implemeting the method <code>getPreviewHtml()</code>
    * of the ConnectorItem interface.
    *
-    @see ConnectorItem#getPreviewHtml()
+   * @see ConnectorItem#getPreviewHtml()
    */
   @Nullable
   ConnectorPreviewTemplates getPreviewTemplates();
@@ -125,19 +128,6 @@ public interface ConnectorContext {
   ConnectorContentMappings getContentMappings();
 
   /**
-   * Returns the locale that should be used for this connector.
-   * The locale matches the one that is set for the current Studio user.
-   */
-  @NonNull
-  Locale getLocale();
-
-  /**
-   * Returns the preferred site of the current user
-   */
-  @Nullable
-  String getPreferredSiteId();
-
-  /**
    * Returns the type of date format that should be used when displayed in the Studio.
    * Possible values are 'long' and 'short'.
    */
@@ -146,6 +136,7 @@ public interface ConnectorContext {
   /**
    * Returns the default columns to show in the library list view.
    * Custom columns are not affected by this.
+   *
    * @return the list of default columns to display.
    */
   @NonNull

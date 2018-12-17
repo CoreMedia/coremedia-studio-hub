@@ -3,8 +3,9 @@ package com.coremedia.blueprint.connectors.impl;
 import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -14,14 +15,11 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -71,27 +69,16 @@ public class Connectors implements BeanFactoryAware, BeanNameAware, Initializing
   }
 
   @NonNull
-  public List<ConnectorConnection> getConnectionsByType(String siteId, Locale locale, String type) {
-    if(siteId == null) {
-      return Collections.emptyList();
-    }
-
+  public List<ConnectorConnection> getConnectionsByType(@NonNull String type, @Nullable String siteId) {
     List<ConnectorContext> filtered = new ArrayList<>();
-    Site site = sitesService.getSite(siteId);
-    List<ConnectorContext> contexts = connectorContextProvider.findContexts(site);
+    List<ConnectorContext> contexts = connectorContextProvider.findContexts(siteId);
     for (ConnectorContext context : contexts) {
       if(context.getType().equals(type)) {
         filtered.add(context);
       }
     }
 
-    //apply current locale to the actual used connections
-    List<ConnectorConnection> connections = getConnections(filtered);
-    for (ConnectorConnection connection : connections) {
-      ((ConnectorContextImpl)connection.getContext()).setLocale(locale);
-      ((ConnectorContextImpl)connection.getContext()).setPreferredSiteId(siteId);
-    }
-    return connections;
+    return getConnections(filtered);
   }
 
   public boolean isValid(ConnectorConnection connection) {
