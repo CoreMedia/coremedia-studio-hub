@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.coremedia.blueprint.connectors</groupId>
+    <groupId>com.coremedia.blueprint</groupId>
     <artifactId>connectors</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>

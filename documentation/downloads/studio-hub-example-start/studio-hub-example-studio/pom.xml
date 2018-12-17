@@ -17,7 +17,7 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.coremedia.blueprint.connectors</groupId>
+      <groupId>com.coremedia.blueprint</groupId>
       <artifactId>connectors-studio</artifactId>
       <version>1.4</version>
       <type>swc</type>
