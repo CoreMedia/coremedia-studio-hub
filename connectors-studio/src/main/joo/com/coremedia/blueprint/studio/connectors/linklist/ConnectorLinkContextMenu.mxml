@@ -7,7 +7,7 @@
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns="exml:ext.config"
         xmlns:ui="exml:com.coremedia.ui.config"
-        xmlns:actions="exml:com.coremedia.blueprint.studio.config.connectors"
+        xmlns:connectorAction="com.coremedia.blueprint.studio.connectors.actions.*">
         width="210"
         plain="true">
   <fx:Script><![CDATA[
@@ -52,7 +52,7 @@
     </MenuItem>
     <MenuItem itemId="showInLibrary">
       <baseAction>
-        <actions:ShowInLibraryAction selectedValuesExpression="{config.selectedValuesExpression}"/>
+        <connectorAction:ShowInLibraryAction selectedValuesExpression="{config.selectedValuesExpression}"/>
       </baseAction>
     </MenuItem>
 

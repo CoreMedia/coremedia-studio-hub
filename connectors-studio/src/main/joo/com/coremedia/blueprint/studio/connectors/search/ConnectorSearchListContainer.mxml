@@ -3,7 +3,7 @@
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
         xmlns:search2="com.coremedia.blueprint.studio.connectors.search.*"
-        xmlns:preview="exml:com.coremedia.blueprint.studio.config.connectors"
+        xmlns:preview="com.coremedia.blueprint.studio.connectors.library.preview.*"
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         itemId="{VIEW_CONTAINER_ITEM_ID}"
         activeItemValueExpression="{getActiveItemExpression()}">

@@ -4,7 +4,7 @@
       xmlns:exml="http://www.jangaroo.net/exml/0.8"
       xmlns:ui="exml:com.coremedia.ui.config"
       xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
-      xmlns:connectorAction="exml:com.coremedia.blueprint.studio.config.connectors"
+      xmlns:connectorAction="com.coremedia.blueprint.studio.connectors.actions.*">
       plain="true">
   <fx:Script><![CDATA[
     import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;

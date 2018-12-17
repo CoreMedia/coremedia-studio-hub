@@ -12,11 +12,6 @@
   <groupId>com.coremedia.blueprint.connectors</groupId>
   <artifactId>connectors</artifactId>
   <packaging>pom</packaging>
-  <version>1810.2</version>
-
-  <properties>
-    <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
-  </properties>
 
   <distributionManagement>
     <repository>

@@ -3,7 +3,7 @@
       xmlns:exml="http://www.jangaroo.net/exml/0.8"
       xmlns="exml:ext.config"
       xmlns:ui="exml:com.coremedia.ui.config"
-      xmlns:connectorAction="exml:com.coremedia.blueprint.studio.config.connectors"
+      xmlns:connectorAction="com.coremedia.blueprint.studio.connectors.actions.*"
       width="210"
       plain="true">
   <fx:Script><![CDATA[

@@ -14,7 +14,7 @@
     <coremedia.project.extension.for>studio</coremedia.project.extension.for>
   </properties>
 
-  <description>connectors Studio Plugin for the CoreMedia Studio</description>
+  <description>Connectors Studio Plugin for the CoreMedia Studio</description>
 
   <dependencies>
 
