@@ -13,6 +13,7 @@ connectors-lib-dropbox/target/
 connectors-lib-coremedia/target/
 connectors-lib-coremedia-navigation/target/
 connectors-lib-dropbox/target/
+connectors-lib-typeform/target/
 connectors-lib-filesystem/target/
 connectors-lib-rss/target/
 connectors-lib-s3/target/
