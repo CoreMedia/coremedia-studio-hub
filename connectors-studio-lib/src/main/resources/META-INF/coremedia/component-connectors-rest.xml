@@ -88,11 +88,7 @@
     <property name="connectorContentUploadService" ref="connectorContentUploadService" />
   </bean>
 
-  <bean id="connectorHttpFirewall"
-        class="org.springframework.security.web.firewall.StrictHttpFirewall">
-    <property name="allowSemicolon" value="true"/>
-    <property name="allowUrlEncodedSlash" value="true" />
-    <property name="allowUrlEncodedPercent" value="true"/>
+  <bean id="connectorHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall">
   </bean>
 
   <customize:replace order="9999" id="customHttpFilterwall" bean="httpFirewall" custom-ref="connectorHttpFirewall"/>
