@@ -4,24 +4,7 @@
 *.iws
 .idea/
 
-connectors-api/target/
-connectors-cae/target/
-connectors-lib/target/
-connectors-lib-brightcove/target/
-connectors-lib-canto/target/
-connectors-lib-cloudinary/target/
-connectors-lib-dropbox/target/
-connectors-lib-coremedia/target/
-connectors-lib-coremedia-navigation/target/
-connectors-lib-dropbox/target/
-connectors-lib-typeform/target/
-connectors-lib-filesystem/target/
-connectors-lib-rss/target/
-connectors-lib-s3/target/
-connectors-lib-s7/target/
-connectors-lib-youtube/target/
-connectors-studio/target/
-connectors-studio-lib/target/
+target/
 
 
 *.class
