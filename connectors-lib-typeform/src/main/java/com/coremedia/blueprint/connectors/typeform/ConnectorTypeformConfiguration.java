@@ -30,7 +30,7 @@ public class ConnectorTypeformConfiguration {
 
 
   @Bean
-  public TypeformItemWriteInterceptor rssContentItemWriteInterceptor(@NonNull ContentRepository contentRepository,
+  public TypeformItemWriteInterceptor typeformContentItemWriteInterceptor(@NonNull ContentRepository contentRepository,
                                                                      @NonNull ContentCreateService contentCreateService) {
     TypeformItemWriteInterceptor writeInterceptor = new TypeformItemWriteInterceptor();
     writeInterceptor.setPriority(0);
