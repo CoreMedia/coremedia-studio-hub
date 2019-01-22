@@ -11,14 +11,20 @@
 
   <artifactId>connectors-lib-cloudinary</artifactId>
 
+  <properties>
+    <cloudinary.version>1.18.0</cloudinary.version>
+  </properties>
+
 
   <dependencies>
-    <!-- Workspace Dependencies -->
+
+    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib</artifactId>
@@ -26,72 +32,84 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- CoreMedia Dependencies -->
 
-
-
-    <!-- Thirdparty Dependencies -->
-    <dependency>
-      <groupId>com.cloudinary</groupId>
-      <artifactId>cloudinary-http44</artifactId>
-      <version>1.18.0</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-    <groupId>com.cloudinary</groupId>
-      <artifactId>cloudinary-core</artifactId>
-      <version>1.18.0</version>
-    </dependency>
+    <!-- COREMEDIA dependencies -->
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-unified-api</artifactId>
     </dependency>
 
+
+    <!-- CLOUDINARY dependencies -->
+    <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-core</artifactId>
+      <version>${cloudinary.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http44</artifactId>
+      <version>${cloudinary.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+
+    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
-      <version>2.9.0</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
     </dependency>
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
     </dependency>
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

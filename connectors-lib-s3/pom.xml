@@ -13,12 +13,14 @@
 
 
   <dependencies>
-    <!-- Workspace Dependencies -->
+
+    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib</artifactId>
@@ -26,9 +28,8 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- CoreMedia Dependencies -->
 
-    <!-- Thirdparty Dependencies -->
+    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
@@ -60,11 +61,13 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

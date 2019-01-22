@@ -11,32 +11,40 @@
 
   <artifactId>connectors-lib-dropbox</artifactId>
 
+  <properties>
+    <dropbox.version>3.0.5</dropbox.version>
+  </properties>
 
   <dependencies>
-    <!-- Workspace Dependencies -->
+
+    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!-- CoreMedia Dependencies -->
 
-    <!-- Thirdparty Dependencies -->
+    <!-- DROPBOX dependencies -->
     <dependency>
       <groupId>com.dropbox.core</groupId>
       <artifactId>dropbox-core-sdk</artifactId>
-      <version>3.0.5</version>
+      <version>${dropbox.version}</version>
     </dependency>
+
+
+    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -47,11 +55,13 @@
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
