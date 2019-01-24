@@ -14,6 +14,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,7 +63,8 @@ public class SFMCConnectorItem extends SFMCConnectorEntity implements ConnectorI
     String type = getItemType();
     if(type.equals("mailTemplate")) {
       ConnectorPreviewTemplates previewTemplates = getContext().getPreviewTemplates();
-      return previewTemplates.getTemplate("html");
+      String template = previewTemplates.getTemplate("text");
+      return MessageFormat.format(template, asset.getViews().getHtml());
     }
 
     return ConnectorItem.super.getPreviewHtml();
@@ -79,7 +81,7 @@ public class SFMCConnectorItem extends SFMCConnectorEntity implements ConnectorI
   public ConnectorMetaData getMetaData() {
     return () -> {
       Map<String, Object> metaData = new LinkedHashMap<>();
-      metaData.put("assetType", AssetMapping.forType(asset.getAssetType().getId()));
+      metaData.put("assetType", AssetMapping.getBaseType(asset.getAssetType().getId()));
       metaData.put("status", asset.getStatus().getName());
 
       if (asset.getFileProperties() != null) {
@@ -101,7 +103,7 @@ public class SFMCConnectorItem extends SFMCConnectorEntity implements ConnectorI
   @NonNull
   @Override
   public String getItemType() {
-    return AssetMapping.forType(asset.getAssetType().getId());
+    return AssetMapping.getBaseType(asset.getAssetType().getId());
   }
 
   @Override

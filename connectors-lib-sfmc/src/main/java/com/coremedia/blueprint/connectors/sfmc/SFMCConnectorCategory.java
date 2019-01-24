@@ -69,6 +69,10 @@ public class SFMCConnectorCategory extends SFMCConnectorEntity implements Connec
 
   @Override
   public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
-    return null;
+    return service.upload(this, context, itemName, inputStream);
+  }
+
+  public SFMCCategory getCategory() {
+    return category;
   }
 }

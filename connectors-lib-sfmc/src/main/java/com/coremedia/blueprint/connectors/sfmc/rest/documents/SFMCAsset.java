@@ -18,6 +18,7 @@ public class SFMCAsset extends SFMCEntity {
   private SFMCThumbnailUrl thumbnail;
   private SFMCEntity status;
   private SFMCFileProperties fileProperties;
+  private SFMCViews views;
 
   public String getCustomerKey() {
     return customerKey;
@@ -113,5 +114,13 @@ public class SFMCAsset extends SFMCEntity {
 
   public void setFileProperties(SFMCFileProperties fileProperties) {
     this.fileProperties = fileProperties;
+  }
+
+  public SFMCViews getViews() {
+    return views;
+  }
+
+  public void setViews(SFMCViews views) {
+    this.views = views;
   }
 }

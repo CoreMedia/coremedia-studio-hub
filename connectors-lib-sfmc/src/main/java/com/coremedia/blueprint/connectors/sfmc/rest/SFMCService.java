@@ -5,12 +5,15 @@ import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCAsset;
 import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCAssetCollection;
 import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCCategory;
 import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCCategoryCollection;
+import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCFileUpload;
 import com.coremedia.blueprint.connectors.sfmc.rest.search.QueryBuilder;
+import com.google.gson.Gson;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,7 +42,7 @@ public class SFMCService {
   }
 
   public Optional<SFMCCategoryCollection> getCategories(@NonNull ConnectorContext context) {
-    if (categories == null) {
+    if (categories == null) { //TODO add caching
       categories = connector.getResource(CATEGORIES, SFMCCategoryCollection.class, context);
     }
     return categories;
@@ -58,7 +61,8 @@ public class SFMCService {
     return connector.getResource(ASSETS + "/" + id, SFMCAsset.class, context);
   }
 
-  public Optional<String> getThumbnailUrl(ConnectorContext context, @NonNull SFMCAsset asset) {
+  public Optional<String> getThumbnailUrl(@NonNull ConnectorContext context,
+                                          @NonNull SFMCAsset asset) {
     if (asset.getThumbnail() != null && asset.getThumbnail().getThumbnailUrl() != null) {
       String assetUrl = REST_URL + "/asset" + asset.getThumbnail().getThumbnailUrl();
       return Optional.of(assetUrl);
@@ -73,13 +77,12 @@ public class SFMCService {
       url = connector.resolveUrl(context, url);
 
       InputStream inputStream = connector.streamUrl(url);
-      if(inputStream != null) {
+      if (inputStream != null) {
         byte[] base64Bytes = IOUtils.toByteArray(inputStream);
         String base64 = new String(base64Bytes);
         base64 = base64.replaceAll("\"", "");
         byte[] bytes = new BASE64Decoder().decodeBuffer(base64);
 
-//        FileUtils.writeByteArrayToFile(new File("/tmp/image.png"), bytes);
         return new ByteArrayInputStream(bytes);
       }
 
@@ -106,5 +109,26 @@ public class SFMCService {
       LOGGER.error("Failed to load binary asset: " + e.getMessage(), e);
       return null;
     }
+  }
+
+  public Optional<SFMCAsset> upload(@NonNull SFMCCategory category,
+                                    @NonNull ConnectorContext context,
+                                    @NonNull String itemName,
+                                    @NonNull InputStream inputStream) {
+    try {
+      byte[] bytes = IOUtils.toByteArray(inputStream);
+      String base64String = new BASE64Encoder().encode(bytes);
+
+      int assetTypeId = AssetMapping.getAssetId(itemName);
+      String assetName = AssetMapping.getAssetName(itemName);
+
+      SFMCFileUpload upload = new SFMCFileUpload(category, itemName, assetTypeId, assetName, base64String);
+      String json = new Gson().toJson(upload);
+      return connector.postResource(ASSETS, json, SFMCAsset.class, context);
+    } catch (IOException e) {
+      LOGGER.error("Failed to upload asset '" + itemName + "': " + e.getMessage(), e);
+    }
+
+    return Optional.empty();
   }
 }

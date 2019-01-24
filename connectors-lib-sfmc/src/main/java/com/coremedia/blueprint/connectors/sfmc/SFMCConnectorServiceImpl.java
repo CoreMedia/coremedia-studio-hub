@@ -108,7 +108,11 @@ public class SFMCConnectorServiceImpl implements ConnectorService {
 
   @NonNull
   @Override
-  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context, ConnectorCategory category, String query, String searchType, Map<String, String> params) {
+  public ConnectorSearchResult<ConnectorEntity> search(@NonNull ConnectorContext context,
+                                                       @NonNull ConnectorCategory category,
+                                                       @NonNull String query,
+                                                       @NonNull String searchType,
+                                                       @NonNull Map<String, String> params) {
     ConnectorSearchResult<ConnectorEntity> result = new ConnectorSearchResult<>(Collections.emptyList());
     return result;
   }
@@ -124,8 +128,11 @@ public class SFMCConnectorServiceImpl implements ConnectorService {
     this.sfmcService = sfmcService;
   }
 
-  private SFMCConnectorCategory createCategory(@NonNull ConnectorContext context, @Nullable SFMCConnectorCategory parent, @NonNull SFMCCategory category,
-                                               boolean resolveSubCategories, boolean resolveItems) {
+  private SFMCConnectorCategory createCategory(@NonNull ConnectorContext context,
+                                               @Nullable SFMCConnectorCategory parent,
+                                               @NonNull SFMCCategory category,
+                                               boolean resolveSubCategories,
+                                               boolean resolveItems) {
     ConnectorId newCategoryId = ConnectorId.createCategoryId(context.getConnectionId(), category.getId());
     if (category.isRoot()) {
       newCategoryId = ConnectorId.createRootId(context.getConnectionId());
@@ -155,12 +162,24 @@ public class SFMCConnectorServiceImpl implements ConnectorService {
     return connectorCategory;
   }
 
-  InputStream stream(ConnectorContext context, String externalId) {
+  InputStream stream(@NonNull ConnectorContext context, @NonNull String externalId) {
     return sfmcService.getBinaryPreview(context, Integer.parseInt(externalId));
   }
 
-  public InputStream download(ConnectorContext context, String externalId) {
+  public InputStream download(@NonNull ConnectorContext context, @NonNull String externalId) {
     return sfmcService.getBinary(context, Integer.parseInt(externalId));
+  }
+
+  public ConnectorItem upload(@NonNull SFMCConnectorCategory category,
+                              @NonNull ConnectorContext context,
+                              @NonNull String itemName,
+                              @NonNull InputStream inputStream) {
+    Optional<SFMCAsset> upload = sfmcService.upload(category.getCategory(), context, itemName, inputStream);
+    if(upload.isPresent()) {
+      return getItem(context, ConnectorId.createItemId(category.getConnectorId(), upload.get().getId()));
+    }
+
+    return null;
   }
 
   public String getThumbnailUrl(ConnectorContext context, SFMCAsset asset) {
