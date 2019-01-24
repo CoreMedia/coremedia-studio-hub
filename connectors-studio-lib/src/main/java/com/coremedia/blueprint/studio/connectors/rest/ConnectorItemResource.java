@@ -74,6 +74,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   public Response data(@QueryParam("mode") String mode,
                        @Context HttpServletResponse response) {
     QueryMode queryMode = QueryMode.valueOf(mode.toUpperCase());
+    //TODO differ here between preview and actual download, change caching accordingly
     switch (queryMode) {
       case OPEN: {
         return writeResponse(response, false, false);
@@ -147,7 +148,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
         response.setHeader("content-disposition", "attachment; filename = " + filename);
       }
 
-      InputStream is = getStreamInpuStream(item);
+      InputStream is = getStreamInputStream(item, streamResponse);
       if (streamResponse) {
         if (is != null) {
           StreamingOutput stream = output -> {
@@ -192,14 +193,19 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
   }
 
   //------------------------------------- Helper -----------------------------------------------------------------------
-  private InputStream getStreamInpuStream(ConnectorItem item) throws FileNotFoundException {
+  private InputStream getStreamInputStream(ConnectorItem item, boolean usePreviewVariant) throws FileNotFoundException {
     InputStream is = null;
-    TempFile tempFile = tempFileCacheService.findTempFile(item);
+    TempFile tempFile = tempFileCacheService.findTempFile(item, usePreviewVariant);
     if (tempFile != null) {
       is = tempFile.stream();
     }
     else {
-      is = item.stream();
+      if(usePreviewVariant) {
+        is = item.stream();
+      }
+      else {
+        is = item.download();
+      }
     }
     return is;
   }
@@ -221,7 +227,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
         return;
       }
 
-      TempFile tempFile = tempFileCacheService.createTempFile(contentRepository, item);
+      TempFile tempFile = tempFileCacheService.createTempFile(contentRepository, item, true);
       if (tempFile != null && tempFile.getFile() != null) {
         File itemTempFile = tempFile.getFile();
 

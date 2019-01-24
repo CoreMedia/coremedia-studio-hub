@@ -12,10 +12,19 @@
     import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
     import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
     import com.coremedia.cms.editor.sdk.editorContext;
+    import com.coremedia.ui.util.ThumbnailImage;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.config.connectorThumbDataView";
 
     private var config:ConnectorThumbDataView;
+
+    private static function computeConnectorThumbnailImage(v:String, entity:ConnectorObject):ThumbnailImage {
+      var uri:String = editorContext.getThumbnailUri(entity, null, ConnectorHelper.getType(entity));
+      if(uri != null) {
+        return new ThumbnailImage(uri);
+      }
+      return null;
+    }
 
     public native function ConnectorThumbDataView(config:ConnectorThumbDataView = null);
     ]]></fx:Script>
@@ -28,11 +37,11 @@
                   mapping="name"
                   convert_="{function(v:String, entity:ConnectorObject):String {
                           return ConnectorHelper.getTypeCls(entity)}}"/>
-    <data_AutoField
-            name="imageUri"
-            mapping="name"
-            convert_="{function(v:String, entity:ConnectorObject):String {
-                          return editorContext.getThumbnailUri(entity, null, ConnectorHelper.getType(entity));}}"/>
+    <ui:DataField  name="thumbnailImage"
+                   mapping="name"
+                   convert_="{computeConnectorThumbnailImage}"
+                   ifUnreadable="{null}"
+                   allowNull="true"/>
     <data_AutoField
             name="shortName"
             mapping="name"/>
