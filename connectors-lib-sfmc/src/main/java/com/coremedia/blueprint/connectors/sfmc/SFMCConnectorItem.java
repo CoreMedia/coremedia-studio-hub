@@ -6,6 +6,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
 import com.coremedia.blueprint.connectors.sfmc.rest.AssetMapping;
 import com.coremedia.blueprint.connectors.sfmc.rest.documents.SFMCAsset;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -53,6 +54,18 @@ public class SFMCConnectorItem extends SFMCConnectorEntity implements ConnectorI
     }
 
     return 0;
+  }
+
+  @Nullable
+  @Override
+  public String getPreviewHtml() {
+    String type = getItemType();
+    if(type.equals("mailTemplate")) {
+      ConnectorPreviewTemplates previewTemplates = getContext().getPreviewTemplates();
+      return previewTemplates.getTemplate("html");
+    }
+
+    return ConnectorItem.super.getPreviewHtml();
   }
 
   @Nullable

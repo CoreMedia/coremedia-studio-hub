@@ -230,7 +230,7 @@ public class AssetMapping {
     typeMapping.put(203, 3);
     typeMapping.put(205, 1);
     typeMapping.put(206, 1);
-    typeMapping.put(207, 5);
+    typeMapping.put(207, "mailTemplate");
     typeMapping.put(208, 5);
     typeMapping.put(209, 5);
     typeMapping.put(210, 3);
