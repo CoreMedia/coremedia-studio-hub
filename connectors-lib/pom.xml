@@ -13,120 +13,136 @@
 
 
   <dependencies>
-    <!-- Workspace Dependencies -->
+
+    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!-- CoreMedia Dependencies -->
+
+    <!-- COREMEDIA dependencies -->
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-xml</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-common</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-cache</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-multisite</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-unified-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-spring</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-unified-api-boot</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.coremedia.blueprint.base</groupId>
       <artifactId>bpbase-settings-api</artifactId>
     </dependency>
 
-    <!-- Thirdparty Dependencies -->
+
+    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
-      <version>2.9.0</version>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
     </dependency>
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.atlassian.commonmark</groupId>
       <artifactId>commonmark</artifactId>
-      <version>0.11.0</version>
     </dependency>
+
     <dependency>
       <groupId>com.drewnoakes</groupId>
       <artifactId>metadata-extractor</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
-      <version>2.0.9</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
+
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-parsers</artifactId>
     </dependency>
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>

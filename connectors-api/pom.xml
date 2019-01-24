@@ -13,16 +13,19 @@
 
 
   <dependencies>
+
+    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
-  </dependencies>
 
+  </dependencies>
 
 </project>

@@ -51,8 +51,11 @@ public interface ConnectorEntity {
   }
 
   /**
-   * Returns the thumbnail URL used to show
-   * an image preview in the Studio's thumbnail view
+   * Returns the thumbnail URL used to show an image preview in the Studio's thumbnail view.
+   * Therefore, ensure that the URL doesn't required additional credentials and that
+   * the URL isn't blocked by the Studio's security policy.
+   *
+   * If your thumbnail URL required additional data
    */
   @Nullable
   default String getThumbnailUrl() {

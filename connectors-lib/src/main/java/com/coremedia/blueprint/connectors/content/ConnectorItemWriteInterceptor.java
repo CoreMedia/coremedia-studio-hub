@@ -1,19 +1,15 @@
 package com.coremedia.blueprint.connectors.content;
 
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.cap.common.Blob;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.CapPropertyDescriptorType;
 import com.coremedia.cap.content.Content;
-import com.coremedia.cap.content.ContentRepository;
-import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.struct.Struct;
 import com.coremedia.cap.struct.StructBuilder;
 import com.coremedia.cap.struct.StructService;
-import com.coremedia.mimetype.MimeTypeService;
 import com.coremedia.rest.cap.intercept.ContentWriteInterceptorBase;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
 import com.coremedia.xml.Markup;
@@ -21,17 +17,8 @@ import com.coremedia.xml.MarkupFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CONNECTOR_ID;
@@ -69,7 +56,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
         properties.put("title", entity.getDisplayName());
         properties.put("url", item.getOpenInTabUrl());
         properties.put("teaserText", createMarkup(item.getDescription()));
-        Blob blob = getContentCreateService().createBlob(item.stream(), item.getName(), item.getMimeType());
+        Blob blob = getContentCreateService().createBlob(item.download(), item.getName(), item.getMimeType());
         properties.put("data", blob);
       }
     }

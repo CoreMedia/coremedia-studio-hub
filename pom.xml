@@ -36,6 +36,36 @@
     <module>connectors-cae</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>2.9.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.atlassian.commonmark</groupId>
+        <artifactId>commonmark</artifactId>
+        <version>0.11.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>2.0.13</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>

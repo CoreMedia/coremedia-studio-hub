@@ -27,8 +27,8 @@ public class TempFileCacheService {
   private int cacheSize = 100;
 
   @Nullable
-  public TempFile createTempFile(@NonNull ContentRepository contentRepository, @NonNull ConnectorItem item) throws IOException {
-    TempFile tempFile = findTempFile(item);
+  public TempFile createTempFile(@NonNull ContentRepository contentRepository, @NonNull ConnectorItem item, boolean previewData) throws IOException {
+    TempFile tempFile = findTempFile(item, previewData);
     if (tempFile != null) {
       return tempFile;
     }
@@ -38,7 +38,7 @@ public class TempFileCacheService {
       return null;
     }
 
-    TempFile entry = writeToTempFile(contentRepository, item, in);
+    TempFile entry = writeToTempFile(contentRepository, item, in, previewData);
 
     cache.add(entry);
 
@@ -53,9 +53,10 @@ public class TempFileCacheService {
   @NonNull
   private TempFile writeToTempFile(@NonNull ContentRepository contentRepository,
                                    @NonNull ConnectorItem item,
-                                   @NonNull InputStream in) throws IOException {
+                                   @NonNull InputStream in,
+                                   boolean previewData) throws IOException {
     try {
-      String prefix = createFileId(item);
+      String prefix = createFileId(item, previewData);
       TempFileService tempFileService = contentRepository.getConnection().getTempFileService();
       File assetTempFile = tempFileService.createTempFileFor(prefix, "item");
       FileUtils.copyToFile(in, assetTempFile);
@@ -68,8 +69,8 @@ public class TempFileCacheService {
   }
 
   @Nullable
-  public TempFile findTempFile(@NonNull ConnectorItem item) {
-    String id = createFileId(item);
+  public TempFile findTempFile(@NonNull ConnectorItem item, boolean previewData) {
+    String id = createFileId(item, previewData);
 
     if (!cache.contains(new TempFile(id, null))) {
       return null;
@@ -108,9 +109,9 @@ public class TempFileCacheService {
   }
 
   @NonNull
-  private String createFileId(@NonNull ConnectorItem item) {
+  private String createFileId(@NonNull ConnectorItem item, boolean previewData) {
     ConnectorId id = item.getConnectorId();
-    return id.getConnectionId() + "-" + id.getExternalId();
+    return id.getConnectionId() + "-" + id.getExternalId() + "-" + previewData;
   }
 
   public void setCacheSize(int cacheSize) {
