@@ -29,7 +29,6 @@
     <module>connectors-lib-rss</module>
     <module>connectors-lib-s3</module>
     <module>connectors-lib-s7</module>
-    <module>connectors-lib-sfmc</module>
     <module>connectors-lib-typeform</module>
     <module>connectors-lib-youtube</module>
     <module>connectors-api</module>
