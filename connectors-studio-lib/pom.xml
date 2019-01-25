@@ -20,8 +20,6 @@
 
 
   <dependencies>
-
-    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connectors-api</artifactId>
@@ -106,26 +104,11 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>connectors-lib-s7</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib-sfmc</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>connectors-lib-brightcove</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
 
-
-    <!-- COREMEDIA dependencies -->
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-rest-plugins</artifactId>
@@ -166,8 +149,6 @@
       <artifactId>notification-api</artifactId>
     </dependency>
 
-
-    <!-- THIRD-PARTY dependencies -->
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
