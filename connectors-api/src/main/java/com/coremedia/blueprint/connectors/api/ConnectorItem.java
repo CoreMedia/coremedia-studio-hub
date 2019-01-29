@@ -10,10 +10,14 @@ import java.io.InputStream;
  */
 public interface ConnectorItem extends ConnectorEntity {
 
+  /**
+   * Ensure that the default type is mapped in the linked 'Content Mapping' document.
+   */
   String DEFAULT_TYPE = "default";
 
   /**
    * Returns the document size in bytes.
+   * The Studio UI will automatically format the value in 'B', 'kB', 'MB', 'GB', 'TB'.
    */
   long getSize();
 
@@ -39,6 +43,7 @@ public interface ConnectorItem extends ConnectorEntity {
 
   /**
    * Returns the URL that is used to download the asset.
+   * The invocation will use the InputStream that has been implemented for the #download() method.
    */
   @Nullable
   default String getDownloadUrl() {
@@ -46,6 +51,12 @@ public interface ConnectorItem extends ConnectorEntity {
     return "/api/connector/item/" + id.toUri() + "/data?mode=download";
   }
 
+  /**
+   * The thumbnail URL is used to support the thumbnail preview inside the Studio library.
+   * By default, we assume that only the connector item type 'picture' provides a preview and
+   * the #stream() InputStream is used for the thumbnail generation.
+   * @return the URL that is used to generate the preview.
+   */
   @Nullable
   @Override
   default String getThumbnailUrl() {
@@ -69,8 +80,8 @@ public interface ConnectorItem extends ConnectorEntity {
    * Creates an input stream to the resource, e.g. an image on a filesystem.
    * This stream is used to create binary preview file for the Studio.
    *
-   * If you wan't to use another variant of the asset during the content creation,
-   * implement the download(); method which should return an InputStream on the whole asset.
+   * If you want to use another variant of the asset during the content creation,
+   * implement the download(); method which should return an InputStream on the 'real' asset.
    *
    * @return an input stream or null if the resource is not stream-able.
    */
@@ -81,6 +92,7 @@ public interface ConnectorItem extends ConnectorEntity {
    * Creates an input stream on a binary data of a connector item.
    * If the preview data differs from the actual download / content creation,
    * the method should be implemented for the corresponding connector.
+   *
    * @return an input stream or null if the resource is not stream-able.
    */
   @Nullable
@@ -116,10 +128,11 @@ public interface ConnectorItem extends ConnectorEntity {
   }
 
   /**
-   * Returns the CoreMedia content type for this item.
    * The item type is mapped to a CoreMedia content type in the Content Mappings settings document.
    * This default method accesses this setting and may be overridden if the type should
    * be calculated dynamically.
+   *
+   * @return the CoreMedia content type name
    */
   @Nullable
   default String getTargetContentType() {
