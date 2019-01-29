@@ -11,6 +11,7 @@ import java.util.List;
  * This ensures that remote folders or file information are not read multiple times.
  */
 public class FileSystemService {
+  //TODO remove whole package
 
   @Cacheable(value = "connectorItems", key = "#context.connectionId + '_' + #categoryId.externalId")
   public FileSystemItem listItems(FileBasedConnectorService service, ConnectorContext context, ConnectorId categoryId) {

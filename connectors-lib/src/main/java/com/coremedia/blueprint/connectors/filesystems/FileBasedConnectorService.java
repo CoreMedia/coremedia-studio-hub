@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
  * for every REST request.
  */
 abstract public class FileBasedConnectorService<T> implements ConnectorService {
+  //TODO remove whole package
+
   //assume that all file based connectors have set the property 'folder' in the connection settings
   private static final String FOLDER_PROPERTY = "folder";
 
