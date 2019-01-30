@@ -1,7 +1,9 @@
 package com.coremedia.blueprint.connectors.api;
 
+import com.coremedia.cap.content.ContentType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,4 +19,13 @@ public interface ConnectorContentUploadTypes {
    */
   @NonNull
   Map<String,Object> getProperties();
+
+  /**
+   * Returns the blob property names for the given content type that should
+   * be used when the related content is uploaded to the external system.
+   * @param contentType the content type name
+   * @return the property names or an empty list if no mapping is defined for the given type
+   */
+  @NonNull
+  List<String> getBlobPropertyNames(@NonNull ContentType contentType);
 }

@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import javax.activation.MimeType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -178,7 +180,7 @@ public class CantoCategory extends CantoConnectorEntity implements ConnectorCate
   }
 
   @Override
-  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, @NonNull String itemName, @NonNull MimeType mimeType, @NonNull InputStream inputStream) {
     return connectorService.upload(context, this, itemName, inputStream);
   }
 }

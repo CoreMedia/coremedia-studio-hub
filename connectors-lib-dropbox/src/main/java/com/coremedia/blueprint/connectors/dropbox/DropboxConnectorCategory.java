@@ -6,9 +6,10 @@ import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.Metadata;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import javax.activation.MimeType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
 
   @Override
   public String getType() {
-    if(getConnectorId().isRootId()) {
+    if (getConnectorId().isRootId()) {
       return "dropbox";
     }
     return ConnectorCategory.super.getType();
@@ -39,11 +40,11 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
   @Override
   public String getManagementUrl() {
     String url = DROPBOX_URL;
-    if(service.getAppName() != null) {
+    if (service.getAppName() != null) {
       url = url + "Apps/" + service.getAppName();
     }
 
-    if(folderMetadata != null) {
+    if (folderMetadata != null) {
       return url + folderMetadata.getPathLower();
     }
 
@@ -97,7 +98,7 @@ public class DropboxConnectorCategory extends DropboxConnectorEntity implements 
   }
 
   @Override
-  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
-   return service.upload(context, this, itemName, inputStream);
+  public ConnectorItem upload(@NonNull ConnectorContext context, @NonNull String itemName, @NonNull MimeType mimeType, @NonNull InputStream inputStream) {
+    return service.upload(context, this, itemName, inputStream);
   }
 }

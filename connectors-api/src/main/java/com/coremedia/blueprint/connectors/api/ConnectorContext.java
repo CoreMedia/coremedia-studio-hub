@@ -148,4 +148,13 @@ public interface ConnectorContext {
    */
   @Nullable
   ConnectorContentUploadTypes getContentUploadTypes();
+
+  /**
+   * Returns list list of image variants that should be used for the connector.
+   * If an image is uploaded via content or bulk upload, the transformation service
+   * will be used to upload the cropped variant of it.
+   * @return the list of variants names, matching names of the 'Responsive Image Settings'
+   */
+  @NonNull
+  List<String> getImageVariants();
 }
