@@ -24,7 +24,7 @@ public class ConnectorContentUploadService {
   private Connectors connectors;
   private ConnectorImageTransformationService transformationService;
 
-  public ConnectorContentUploadService(@NonNull Connectors connectors, @NonNull ConnectorImageTransformationService transformationService) {
+  ConnectorContentUploadService(@NonNull Connectors connectors, @NonNull ConnectorImageTransformationService transformationService) {
     this.connectors = connectors;
     this.transformationService = transformationService;
   }

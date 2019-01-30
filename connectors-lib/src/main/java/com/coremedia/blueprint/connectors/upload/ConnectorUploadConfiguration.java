@@ -32,7 +32,7 @@ public class ConnectorUploadConfiguration {
   public ConnectorImageTransformationService connectorImageTransformationService(@NonNull TransformImageService transformImageService,
                                                                                  @NonNull BlobTransformer blobTransformer,
                                                                                  @NonNull ImageDimensionsExtractor imageDimensionsExtractor,
-                                                                                 @Qualifier("contentMediaTransformer") NamedTransformBeanBlobTransformer mediaTransformer) {
+                                                                                 @NonNull @Qualifier("contentMediaTransformer") NamedTransformBeanBlobTransformer mediaTransformer) {
     return new ConnectorImageTransformationService(transformImageService, blobTransformer, imageDimensionsExtractor, mediaTransformer);
   }
 

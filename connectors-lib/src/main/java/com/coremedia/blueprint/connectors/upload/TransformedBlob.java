@@ -4,7 +4,7 @@ import com.coremedia.cap.common.Blob;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- *
+ * Utility class just for post processing the uploaded image variants.
  */
 public class TransformedBlob {
   @NonNull
