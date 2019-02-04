@@ -6,6 +6,7 @@
   <fx:Script><![CDATA[
     import com.coremedia.cms.editor.sdk.util.PropertyEditorUtil;
     import com.coremedia.ui.data.ValueExpression;
+    import com.coremedia.ui.data.ValueExpression;
 
     [Bindable]
     public var contentTypeName:String;
@@ -16,17 +17,32 @@
     [Bindable]
     public var selectionExpression:ValueExpression;
 
+    private var bindTo:ValueExpression;
+
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.push.propertyNameCheckbox";
 
     private var config:PropertyNameCheckbox;
+
+
+    override protected function afterRender():void {
+      super.afterRender();
+      bindTo.setValue(true);
+    }
+
+    private function getBindTo(selectExpr:ValueExpression, pName:String):ValueExpression {
+      if(!bindTo) {
+        bindTo = selectExpr.extendBy(pName);
+      }
+      return bindTo;
+    }
 
     public native function PropertyNameCheckbox(config:PropertyNameCheckbox = null);
     ]]></fx:Script>
 
   <ui:plugins>
     <ui:BindPropertyPlugin bidirectional="true"
-                           bindTo="{config.selectionExpression.extendBy(config.propertyName)}"
-                           ifUndefined="{false}"/>
+                           bindTo="{getBindTo(config.selectionExpression, config.propertyName)}"
+                           ifUndefined="{true}"/>
   </ui:plugins>
 
 </ui:StatefulCheckbox>

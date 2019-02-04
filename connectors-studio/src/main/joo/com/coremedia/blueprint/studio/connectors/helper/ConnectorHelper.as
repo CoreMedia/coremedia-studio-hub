@@ -39,8 +39,30 @@ public class ConnectorHelper {
   public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
   private static var topLevelCategoriesExpressions:ValueExpression;
+  private static var pushableConnectionsExpression:ValueExpression;
 
-  public static function getTopLevelCategoriesExpression():ValueExpression {
+  public static function getPushableConnectionsExpression():ValueExpression {
+    if(!pushableConnectionsExpression) {
+      pushableConnectionsExpression = ValueExpressionFactory.createFromFunction(function ():Array {
+        var rootCategories:Array = getTopLevelCategoriesExpression().getValue();
+        if (rootCategories === undefined) {
+          return undefined;
+        }
+
+        var result:Array = [];
+        for each(var root:ConnectorCategoryImpl in rootCategories) {
+          if (root.getConnector() != null && root.getContext().isContentUploadSupported()) {
+            result.push(root);
+          }
+        }
+
+        return result;
+      });
+    }
+    return pushableConnectionsExpression;
+  }
+
+  private static function getTopLevelCategoriesExpression():ValueExpression {
     if(!topLevelCategoriesExpressions) {
       topLevelCategoriesExpressions = ValueExpressionFactory.createFromFunction(function ():Array {
         var connectorTypes:Array = ConnectorHelper.getConnectorTypesExpression().getValue();

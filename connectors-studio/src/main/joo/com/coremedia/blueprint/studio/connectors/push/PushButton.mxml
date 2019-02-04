@@ -5,6 +5,7 @@
         xmlns:ui="exml:com.coremedia.ui.config"
         xmlns="exml:ext.config"
         xmlns:local="com.coremedia.blueprint.studio.connectors.push.*"
+        xmlns:editor="com.coremedia.cms.editor.sdk.premular.fields.plugins.*"
         scale="small"
         disabled="true"
         itemId="connectorPushButton"
@@ -15,6 +16,8 @@
     [ResourceBundle('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin')]
   </fx:Metadata>
   <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
+
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.push.pushButton";
 
     private var config:PushButton;
@@ -25,7 +28,7 @@
   <local:menu>
     <Menu>
       <plugins>
-        <ui:BindComponentsPlugin valueExpression="{getPushableConnectionsExpression()}"
+        <ui:BindComponentsPlugin valueExpression="{ConnectorHelper.getPushableConnectionsExpression()}"
                                  configBeanParameterName="category"
                                  clearBeforeUpdate="true"
                                  reuseComponents="false">
@@ -36,5 +39,8 @@
       </plugins>
     </Menu>
   </local:menu>
+  <local:plugins>
+    <editor:BindDisablePlugin bindTo="{getDisabledExpression(config.selectedItemsValueExpression)}" />
+  </local:plugins>
 
 </local:PushButtonBase>

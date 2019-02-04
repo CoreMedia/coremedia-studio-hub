@@ -54,8 +54,8 @@ public class PushDialogBase extends StudioDialog {
     var category:ConnectorCategory = categorySelectionExpression.getValue();
     var items:Array = selectedItemsValueExpression.getValue();
     var propertyNames:Array = [];
-    var selection:Object = getSelectedPropertyNamesExpression().getValue().toJson();
-    for each(var propertyName in selection) {
+    var selection:Object = getSelectedPropertyNamesExpression().getValue().toObject();
+    for(var propertyName:String in selection) {
       var selected:Boolean = selection[propertyName];
       if(selected) {
         propertyNames.push(propertyName);

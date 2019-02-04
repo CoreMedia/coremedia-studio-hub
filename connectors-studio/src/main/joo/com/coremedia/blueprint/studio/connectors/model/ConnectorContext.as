@@ -58,12 +58,15 @@ public class ConnectorContext {
     return propertyNames;
   }
 
-  public function isUploadSupported(content:Content):Boolean {
+  public function isUploadSupported(entity:Object):Boolean {
     if(!values.contentUploadTypes) {
       return false;
     }
+    if(!(entity is Content)) {
+      return false;
+    }
 
-    var cType:CapType = content.getType();
+    var cType:CapType = (entity as Content).getType();
 
     var onWhitelist:Boolean = false;
     if(values.contentUploadTypes) {

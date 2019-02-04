@@ -102,9 +102,10 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   public ConnectorCategory dropContents(@FormParam("contentIds") @DefaultValue("") String contentIds,
                                         @FormParam("propertyNames") @DefaultValue("") String propertyNames,
                                         @FormParam("defaultAction") @DefaultValue("true") Boolean defaultAction) {
-    String[] ids = contentIds.split(",");
-    List<String> propertyNameList = Arrays.asList(propertyNames.split(","));
-    List<Content> contents = Arrays.asList(ids).stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
+    List<String> propertyNameList = Arrays.stream(propertyNames.split(",")).filter(item -> item.length() > 0).collect(toList());
+    List<String> idList = Arrays.stream(contentIds.split(",")).filter(item -> item.length() > 0).collect(toList());
+
+    List<Content> contents = idList.stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
     ConnectorCategory category = getEntity();
     ConnectorContext context = getContext(category.getConnectorId());
     connectorUploadService.upload(context, category, contents, propertyNameList, defaultAction);

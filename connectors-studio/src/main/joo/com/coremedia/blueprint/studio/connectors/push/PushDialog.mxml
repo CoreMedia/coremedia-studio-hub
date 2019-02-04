@@ -29,7 +29,7 @@
     <local:ConnectionTreePanel flex="1" rootCategory="{config.rootCategory}"
                                selectionExpression="{getSelectedCategoryExpression(config.rootCategory)}"/>
     <Container height="6"/>
-    <Container>
+    <CheckboxGroup fieldLabel="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_properties_title')}" labelAlign="top" labelSeparator="">
       <plugins>
         <ui:BindComponentsPlugin valueExpression="{getPropertyNamesExpression(config.rootCategory, config.selectedItemsValueExpression)}"
                                  configBeanParameterName="propertyName"
@@ -44,7 +44,7 @@
       <layout>
         <layout_VBox align="stretch" />
       </layout>
-    </Container>
+    </CheckboxGroup>
   </local:items>
   <local:layout>
     <layout_VBox align="stretch"/>

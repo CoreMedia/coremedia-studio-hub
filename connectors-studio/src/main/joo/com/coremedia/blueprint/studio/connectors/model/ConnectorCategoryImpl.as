@@ -87,10 +87,16 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     for each(var c:Content in contents) {
       contentIds.push(c.getNumericId());
     }
+
+    var propertyNamesString = "";
+    if(propertyNames) {
+      propertyNamesString = propertyNames.join(",");
+    }
+
     var data:Object = {
       'contentIds': contentIds.join(","),
       'defaultAction': defaultAction || true,
-      'propertyNames': propertyNames.join(",") || ""
+      'propertyNames': propertyNamesString
     };
 
     method.request(data,

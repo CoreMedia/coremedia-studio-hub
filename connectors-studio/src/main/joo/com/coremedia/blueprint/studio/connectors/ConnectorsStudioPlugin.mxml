@@ -43,6 +43,13 @@
       </editor:plugins>
     </editor:LibraryTree>
 
+    <editor:PreviewPanelToolbar>
+      <editor:plugins exml:mode="append">
+        <connector:AddUploadTargetMenuItemsPlugin/>
+      </editor:plugins>
+    </editor:PreviewPanelToolbar>
+
+
   </connector:rules>
 
   <connector:configuration>
