@@ -23,6 +23,10 @@
   <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkListPropertyField"/>
   <component class="com.coremedia.blueprint.studio.connectors.notifications.ConnectorInvalidationDetails"/>
   <component class="com.coremedia.blueprint.studio.connectors.notifications.ShowConnectorForNotificationAction"/>
+  <component class="com.coremedia.blueprint.studio.connectors.push.PushButton"/>
+  <component class="com.coremedia.blueprint.studio.connectors.push.PushTargetMenuItem"/>
+  <component class="com.coremedia.blueprint.studio.connectors.push.PushDialog"/>
+  <component class="com.coremedia.blueprint.studio.connectors.push.PropertyNameCheckbox"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchListContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchList"/>
   <component class="com.coremedia.blueprint.studio.connectors.search.ConnectorSearchThumbnails"/>

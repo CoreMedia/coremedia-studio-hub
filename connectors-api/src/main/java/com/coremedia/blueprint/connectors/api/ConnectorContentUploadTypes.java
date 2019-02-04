@@ -21,11 +21,20 @@ public interface ConnectorContentUploadTypes {
   Map<String,Object> getProperties();
 
   /**
-   * Returns the blob property names for the given content type that should
+   * Returns the property names for the given content type that should
    * be used when the related content is uploaded to the external system.
+   * Using the content type here will also include the mapping of supertypes.
    * @param contentType the content type name
    * @return the property names or an empty list if no mapping is defined for the given type
    */
   @NonNull
-  List<String> getBlobPropertyNames(@NonNull ContentType contentType);
+  List<String> getPropertyNames(@NonNull ContentType contentType);
+
+  /**
+   * Returns the mapping configuration for the given type name
+   * @param contentType the name of the content type
+   * @return the list of types that have been mapped
+   */
+  @NonNull
+  List<String> getPropertyNames(@NonNull String contentType);
 }

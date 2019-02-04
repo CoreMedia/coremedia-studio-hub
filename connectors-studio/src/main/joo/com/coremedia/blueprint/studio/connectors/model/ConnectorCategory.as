@@ -13,7 +13,14 @@ public interface ConnectorCategory extends ConnectorEntity {
 
   function isContentUploadEnabled():Boolean;
 
-  function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined):void;
+  /**
+   * Uploads the given array of contents
+   * @param contents the contents to upload
+   * @param propertyNames the property names that should be uploaded. If null is set, the default mapping will be used.
+   * @param defaultAction true, if the default action should be used
+   * @param callback the optional callback to call after upload is completed.
+   */
+  function uploadContents(contents:Array, propertyNames:Array = undefined, defaultAction:Boolean = undefined, callback:Function = undefined):void;
 
   function getColumns():Array;
 

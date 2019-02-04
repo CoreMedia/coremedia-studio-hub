@@ -81,7 +81,7 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     return ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'category_type_folder_name');
   }
 
-  public function dropContents(contents:Array, defaultAction:Boolean, callback:Function = undefined):void {
+  public function uploadContents(contents:Array, propertyNames:Array = undefined, defaultAction:Boolean = undefined, callback:Function = undefined):void {
     var method:RemoteServiceMethod = new RemoteServiceMethod(getContentDropUri(), 'POST');
     var contentIds:Array = [];
     for each(var c:Content in contents) {
@@ -89,7 +89,8 @@ public class ConnectorCategoryImpl extends ConnectorEntityImpl implements Connec
     }
     var data:Object = {
       'contentIds': contentIds.join(","),
-      'defaultAction': defaultAction
+      'defaultAction': defaultAction || true,
+      'propertyNames': propertyNames.join(",") || ""
     };
 
     method.request(data,

@@ -79,9 +79,15 @@ public class ConnectorImageTransformationService {
         continue;
       }
 
-      TransformedBeanBlob transformedBlob = mediaTransformer.transform(new TransformationBean(content, propertyName), transformation.get().getName());
-      Blob targetBlob = transformImageService.transformWithDimensions(content, originalBlob, transformedBlob, variant, null, breakpoint.getWidth(), breakpoint.getHeight());
-      result.add(new TransformedBlob(targetBlob, transformation.get().getName()));
+      String transformationName = transformation.get().getName();
+      TransformedBeanBlob transformedBlob = mediaTransformer.transform(new TransformationBean(content, propertyName), transformationName);
+      if(transformedBlob != null) {
+        Blob targetBlob = transformImageService.transformWithDimensions(content, originalBlob, transformedBlob, variant, null, breakpoint.getWidth(), breakpoint.getHeight());
+        result.add(new TransformedBlob(targetBlob, transformationName));
+      }
+      else {
+        LOG.warn("No image variant '" + transformationName + "' found for picture " + content.getPath());
+      }
     }
 
     return result;
@@ -119,7 +125,7 @@ public class ConnectorImageTransformationService {
       String mimeType = blob.getContentType().getBaseType();
       return imageDimensionsExtractor.getImageDimensions(mimeType, input);
     } catch (Exception e) {
-      LOG.warn("Could not read dimensions. Width and height will be set to '0' for picture " + blob, e);
+      LOG.warn("Could not read dimensions. Upload will ignore " + blob, e);
     }
     return new int[0];
   }

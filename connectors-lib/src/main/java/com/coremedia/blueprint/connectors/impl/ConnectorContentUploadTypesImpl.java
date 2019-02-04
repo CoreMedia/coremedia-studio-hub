@@ -6,6 +6,7 @@ import com.coremedia.cap.struct.Struct;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,18 +25,44 @@ public class ConnectorContentUploadTypesImpl implements ConnectorContentUploadTy
 
   @NonNull
   @Override
-  public List<String> getBlobPropertyNames(@NonNull ContentType contentType) {
+  public List<String> getPropertyNames(@NonNull ContentType contentType) {
     List<String> propertyNames = new ArrayList<>();
     ContentType type = contentType;
-    while(type != null) {
+    while (type != null) {
       String value = (String) properties.getOrDefault(type.getName(), null);
-      if(value != null) {
-        propertyNames.add(value);
-      }
-
+      addNames(propertyNames, value);
       type = type.getParent();
     }
 
     return propertyNames;
   }
+
+  @NonNull
+  @Override
+  public List<String> getPropertyNames(@NonNull String contentType) {
+    List<String> propertyNames = new ArrayList<>();
+    String value = (String) properties.getOrDefault(contentType, null);
+    addNames(propertyNames, value);
+    return propertyNames;
+  }
+
+  private void addNames(List<String> propertyNames, String value) {
+    if (value != null) {
+      if (value.contains(",")) {
+        String[] split = value.split(",");
+        List<String> names = Arrays.asList(split);
+        for (String name : names) {
+          if (!propertyNames.contains(name)) {
+            propertyNames.add(name);
+          }
+        }
+      }
+      else {
+        if(!propertyNames.contains(value)) {
+          propertyNames.add(value);
+        }
+      }
+    }
+  }
+
 }
