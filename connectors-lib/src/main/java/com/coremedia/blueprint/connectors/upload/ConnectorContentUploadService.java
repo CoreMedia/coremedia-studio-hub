@@ -42,27 +42,30 @@ public class ConnectorContentUploadService {
                      @NonNull List<Content> contents,
                      @NonNull List<String> propertyNames,
                      Boolean defaultAction) {
-    try {
-      List<ConnectorContentUploadInterceptor> interceptors = new ArrayList<>();
+    new Thread(() -> {
+      Thread.currentThread().setName("Connector Upload Service Thread for " + category.getConnectorId());
+      try {
+        List<ConnectorContentUploadInterceptor> interceptors = new ArrayList<>();
 
-      if(connectorContentUploadInterceptors != null && !connectorContentUploadInterceptors.isEmpty()) {
-        for (ConnectorContentUploadInterceptor interceptor : connectorContentUploadInterceptors) {
-          if(interceptor.getConnectionId().equals(context.getConnectionId())) {
-            interceptors.add(interceptor);
+        if (connectorContentUploadInterceptors != null && !connectorContentUploadInterceptors.isEmpty()) {
+          for (ConnectorContentUploadInterceptor interceptor : connectorContentUploadInterceptors) {
+            if (interceptor.getConnectionId().equals(context.getConnectionId())) {
+              interceptors.add(interceptor);
+            }
           }
+          //TODO not sure if the direction is right here
+          Collections.sort(interceptors, Comparator.comparingInt(ConnectorContentUploadInterceptor::priority));
         }
-        //TODO not sure if the direction is right here
-        Collections.sort(interceptors, Comparator.comparingInt(ConnectorContentUploadInterceptor::priority));
+
+        ConnectorContentUploadCallable callable = new ConnectorContentUploadCallable(context, category, contents, propertyNames, interceptors, transformationService, defaultAction);
+        Future<Void> submit = service.submit(callable);
+        submit.get();
+        category.refresh(context);
+        connectors.notifyCategoryChange(context, category);
+      } catch (Exception e) {
+        LOG.error("Error submitting connector content callable for " + category + ": " + e.getMessage(), e);
       }
+    }).start();
 
-
-      ConnectorContentUploadCallable callable = new ConnectorContentUploadCallable(context, category, contents, propertyNames, interceptors, transformationService, defaultAction);
-      Future<Void> submit = service.submit(callable);
-      submit.get();
-      category.refresh(context);
-      this.connectors.notifyCategoryChange(context, category);
-    } catch (Exception e) {
-      LOG.error("Error submitting connector content callable for " + category + ": " + e.getMessage(), e);
-    }
   }
 }
