@@ -8,7 +8,7 @@
       plain="true">
   <fx:Script><![CDATA[
     import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
-    import com.coremedia.cms.editor.sdk.collectionview.CollectionRepositoryContextMenu;
+    import com.coremedia.cms.editor.sdk.collectionview.AbstractContextMenu;
     import com.coremedia.ui.data.ValueExpression;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorRepositoryContextMenu";
@@ -29,7 +29,7 @@
   </plugins>
 
   <items>
-    <MenuItem itemId="{CollectionRepositoryContextMenu.OPEN_MENU_ITEM_ID}">
+    <MenuItem itemId="{AbstractContextMenu.OPEN_MENU_ITEM_ID}">
       <baseAction>
         <editor:OpenInTreeAction selectedFolderValueExpression="{config.selectedFolderValueExpression}"/>
       </baseAction>
