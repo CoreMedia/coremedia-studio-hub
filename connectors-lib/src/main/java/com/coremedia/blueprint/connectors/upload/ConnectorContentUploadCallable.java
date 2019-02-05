@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
 class ConnectorContentUploadCallable implements Callable<Void> {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentUploadCallable.class);
   private static final String MIME_TYPE_IMAGE = "image";
+  private static final int MAX_EXPORT_DEPTH = 1;
 
   private final ConnectorContext context;
   private final ConnectorCategory category;
@@ -34,6 +35,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
   private final List<ConnectorContentUploadInterceptor> uploadInterceptors;
   private ConnectorImageTransformationService transformationService;
   private final Boolean defaultAction;
+  private int exportDepth = 0;
 
   /**
    * Callable for content drop.
@@ -77,8 +79,18 @@ class ConnectorContentUploadCallable implements Callable<Void> {
           return null;
         }
 
+        //well, all types are the same from UI point of view, but it doesn't hurt to handle different types here
         for (Content content : contents) {
-          executeDefaultUpload(content);
+          List<String> defaultPropertyNames = context.getContentUploadTypes().getPropertyNames(content.getType());
+          if (defaultPropertyNames.isEmpty()) {
+            LOG.info("No connector upload property mapping found for content type '" + content.getType().getName() + "'");
+          }
+
+          if(!propertyNames.isEmpty()) {
+            defaultPropertyNames = propertyNames;
+          }
+
+          executeDefaultUpload(content, defaultPropertyNames);
         }
       }
     } catch (Exception e) {
@@ -94,17 +106,9 @@ class ConnectorContentUploadCallable implements Callable<Void> {
    *
    * @param content the content to upload.
    */
-  private void executeDefaultUpload(Content content) {
-    List<String> defaultPropertyNames = context.getContentUploadTypes().getPropertyNames(content.getType());
-    if (defaultPropertyNames.isEmpty()) {
-      LOG.warn("No connector upload property mapping found for content type '" + content.getType().getName() + "'");
-    }
-
-    if(!propertyNames.isEmpty()) {
-      defaultPropertyNames = propertyNames;
-    }
-
-    for (String propertyName : defaultPropertyNames) {
+  private void executeDefaultUpload(Content content, List<String> propertyNames) {
+    exportDepth++;
+    for (String propertyName : propertyNames) {
       try {
         CapPropertyDescriptor descriptor = content.getType().getDescriptor(propertyName);
         CapPropertyDescriptorType propertyType = descriptor.getType();
@@ -126,6 +130,13 @@ class ConnectorContentUploadCallable implements Callable<Void> {
           if (!StringUtils.isEmpty(plainText)) {
             InputStream in = new ByteArrayInputStream(plainText.getBytes(Charset.defaultCharset()));
             category.upload(context, name, new MimeType("plain", "text"), in);
+          }
+        }
+        else if(propertyType.equals((CapPropertyDescriptorType.LINK)) && exportDepth <= MAX_EXPORT_DEPTH) {
+          List<Content> links = content.getLinks(propertyName);
+          for (Content link : links) {
+            List<String> linkedPropertyNames = context.getContentUploadTypes().getPropertyNames(link.getType());
+            executeDefaultUpload(link, linkedPropertyNames);
           }
         }
       } catch (Exception e) {
