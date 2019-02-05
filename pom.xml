@@ -19,7 +19,6 @@
     <module>connectors-studio-lib</module>
     <module>connectors-studio</module>
     <module>connectors-lib</module>
-    <module>connectors-lib-brightcove</module>
     <module>connectors-lib-canto</module>
     <module>connectors-lib-cloudinary</module>
     <module>connectors-lib-coremedia</module>
@@ -28,7 +27,6 @@
     <module>connectors-lib-filesystem</module>
     <module>connectors-lib-rss</module>
     <module>connectors-lib-s3</module>
-    <module>connectors-lib-s7</module>
     <module>connectors-lib-typeform</module>
     <module>connectors-lib-youtube</module>
     <module>connectors-api</module>
