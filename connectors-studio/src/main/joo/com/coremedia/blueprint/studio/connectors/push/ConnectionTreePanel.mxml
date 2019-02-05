@@ -3,6 +3,7 @@
                                xmlns:local="com.coremedia.blueprint.studio.connectors.push.*"
                                xmlns:exml="http://www.jangaroo.net/exml/0.8"
                                xmlns:ui="exml:com.coremedia.ui.config"
+                               xmlns:plugins="com.coremedia.ui.plugins.*"
                                xmlns:u="exml:untyped"
                                xmlns="exml:ext.config"
                                scrollable="{true}"
@@ -40,7 +41,8 @@
                                 treeModel="{getTreeModel(config.rootCategory)}"
                                 defaultValue="{config.rootCategory}"
                                 openPathValueExpression="{ValueExpressionFactory.createFromValue(null)}"/>
-    <!--<plgns:TreeLazyLoadingPlugin treeModel="{getTreeModel(config.rootCategory)}"/>-->
+    <!--//TODO required? -->
+    <!--<plugins:TreeLazyLoadingPlugin treeModel="{getTreeModel(config.rootCategory)}"/>-->
   </local:plugins>
   <local:viewConfig>
     <TreeView

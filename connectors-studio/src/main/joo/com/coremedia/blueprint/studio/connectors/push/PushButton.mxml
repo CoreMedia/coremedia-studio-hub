@@ -8,8 +8,8 @@
         xmlns:editor="com.coremedia.cms.editor.sdk.premular.fields.plugins.*"
         disabled="true"
         itemId="connectorPushButton"
-        ariaLabel="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'PreviewPanelToolbar_openInBrowser_btn_tooltip')}"
-        tooltip="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'PreviewPanelToolbar_openInBrowser_btn_tooltip')}"
+        ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_button_tooltip')}"
+        tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_button_tooltip')}"
         iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'dam_1')}">>
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin')]
