@@ -36,6 +36,7 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public static final String CONTENT_SCOPE_SITE = "site";
   public static final String CONTENT_SCOPE_DOMAIN = "domain";
+  public static final String IMAGE_VARIANTS = "imageVariants";
 
   static final String ITEM_TYPES = "itemTypes";
   static final String PREVIEW_TEMPLATES = "previewTemplates";
@@ -250,5 +251,15 @@ public class ConnectorContextImpl implements ConnectorContext {
 
   public void setDefaultColumns(List<String> columns) {
     this.defaultColumns = columns;
+  }
+
+  @NonNull
+  @Override
+  public List<String> getImageVariants() {
+    String value = (String) properties.getOrDefault(IMAGE_VARIANTS, "");
+    if(!value.contains(",")) {
+      return Collections.emptyList();
+    }
+    return Arrays.asList(value.split(","));
   }
 }

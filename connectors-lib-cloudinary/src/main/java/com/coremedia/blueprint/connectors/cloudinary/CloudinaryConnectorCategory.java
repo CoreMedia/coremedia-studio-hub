@@ -9,6 +9,8 @@ import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryFolder;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import javax.activation.MimeType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -138,7 +140,7 @@ public class CloudinaryConnectorCategory extends CloudinaryConnectorEntity imple
   }
 
   @Override
-  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, @NonNull String itemName, @NonNull MimeType mimeType, @NonNull InputStream inputStream) {
     return service.upload(context, this, itemName, inputStream);
   }
 }

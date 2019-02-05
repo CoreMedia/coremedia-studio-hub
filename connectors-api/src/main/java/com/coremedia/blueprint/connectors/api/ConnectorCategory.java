@@ -3,6 +3,7 @@ package com.coremedia.blueprint.connectors.api;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import javax.activation.MimeType;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -75,10 +76,11 @@ public interface ConnectorCategory extends ConnectorEntity {
    * the selected category or folder
    * @param itemName the name of the new connector item
    * @param inputStream the upload input stream
+   * @param mimeType the mime type of the data
    * @return the newly created item created from the stream or null if not upload is provided
    */
   @Nullable
-  default ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
+  default ConnectorItem upload(@NonNull ConnectorContext context, @NonNull String itemName, @NonNull MimeType mimeType, @NonNull InputStream inputStream) {
     return null;
   }
 }

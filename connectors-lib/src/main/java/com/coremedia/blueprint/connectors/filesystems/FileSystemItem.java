@@ -6,6 +6,7 @@ import java.util.List;
  * The item to cache for a remote file system.
  */
 public class FileSystemItem<T> {
+  //TODO remove whole package
 
   private T folderData;
   private List<T> folderItemsData;

@@ -23,6 +23,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -98,12 +100,15 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   @POST
   @Path("contents")
   public ConnectorCategory dropContents(@FormParam("contentIds") @DefaultValue("") String contentIds,
-                                        @FormParam("defaultAction") Boolean defaultAction) {
-    String[] ids = contentIds.split(",");
-    List<Content> contents = Arrays.asList(ids).stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
+                                        @FormParam("propertyNames") @DefaultValue("") String propertyNames,
+                                        @FormParam("defaultAction") @DefaultValue("true") Boolean defaultAction) {
+    List<String> propertyNameList = Arrays.stream(propertyNames.split(",")).filter(item -> item.length() > 0).collect(toList());
+    List<String> idList = Arrays.stream(contentIds.split(",")).filter(item -> item.length() > 0).collect(toList());
+
+    List<Content> contents = idList.stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
     ConnectorCategory category = getEntity();
     ConnectorContext context = getContext(category.getConnectorId());
-    connectorUploadService.upload(context, category, contents, defaultAction);
+    connectorUploadService.upload(context, category, contents, propertyNameList, defaultAction);
     return category;
   }
 
@@ -115,15 +120,16 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
                                         @FormDataParam("contentName") String contentName,
                                         @FormDataParam("file") InputStream inputStream,
                                         @FormDataParam("file") FormDataContentDisposition fileDetail,
-                                        @FormDataParam("file") FormDataBodyPart fileBodyPart) {
+                                        @FormDataParam("file") FormDataBodyPart fileBodyPart) throws MimeTypeParseException {
     ConnectorCategory category = getEntity();
     String fileName = fileDetail.getFileName();
     String extension = FilenameUtils.getExtension(fileName);
     if (!StringUtils.isEmpty(extension) && !contentName.endsWith(extension)) {
       contentName = contentName + "." + extension;
     }
+    MimeType mimeType = new MimeType(fileBodyPart.getMediaType().getType(), fileBodyPart.getMediaType().getSubtype());
     ConnectorContext context = getContext(category.getConnectorId());
-    return category.upload(context, contentName, inputStream);
+    return category.upload(context, contentName, mimeType, inputStream);
   }
 
 

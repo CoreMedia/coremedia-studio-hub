@@ -2,6 +2,7 @@ package com.coremedia.blueprint.studio.connectors.helper {
 import com.coremedia.blueprint.studio.connectors.model.Connection;
 import com.coremedia.blueprint.studio.connectors.model.Connector;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorCategoryImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorContext;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntityImpl;
@@ -37,6 +38,82 @@ public class ConnectorHelper {
   public static const TYPE_COREMEDIA_CONNECTOR:String = "coremedia";
   public static const READ_MARKER:Array = [];
   private static var connectorExpressions:Bean = beanFactory.createLocalBean();
+  private static var topLevelCategoriesExpressions:ValueExpression;
+  private static var pushableConnectionsExpression:ValueExpression;
+
+  public static function getPushableConnectionsExpression():ValueExpression {
+    if(!pushableConnectionsExpression) {
+      pushableConnectionsExpression = ValueExpressionFactory.createFromFunction(function ():Array {
+        var rootCategories:Array = getTopLevelCategoriesExpression().getValue();
+        if (rootCategories === undefined) {
+          return undefined;
+        }
+
+        var result:Array = [];
+        for each(var root:ConnectorCategoryImpl in rootCategories) {
+          if (root.getConnector() != null && root.getContext().isContentUploadSupported()) {
+            result.push(root);
+          }
+        }
+
+        return result;
+      });
+    }
+    return pushableConnectionsExpression;
+  }
+
+  private static function getTopLevelCategoriesExpression():ValueExpression {
+    if(!topLevelCategoriesExpressions) {
+      topLevelCategoriesExpressions = ValueExpressionFactory.createFromFunction(function ():Array {
+        var connectorTypes:Array = ConnectorHelper.getConnectorTypesExpression().getValue();
+        if (connectorTypes === undefined) {
+          return undefined;
+        }
+
+        var connectors:Array = [];
+        for each(var cType:Object in connectorTypes) {
+          var connectorType:String = cType.name;
+          var connectorExpression:ValueExpression = ConnectorHelper.getConnectorExpression(connectorType);
+          var connector:Connector = connectorExpression.getValue();
+          if (connector === undefined) {
+            return undefined;
+          }
+
+          if (!connector.isLoaded()) {
+            connector.load();
+            return undefined;
+          }
+
+          connectors.push(connector);
+        }
+
+        var result:Array = [];
+        for each(var c:Connector in connectors) {
+          var rootCategories:Array = c.getRootCategories();
+          //pre-load root nodes since the intermediate notes are hidden, see README.md
+          for each(var root:ConnectorCategoryImpl in rootCategories) {
+            if (!root.isLoaded()) {
+              root.load();
+              return undefined;
+            }
+
+            if (root.getConnector() != null) {
+              if(!root.getConnector().isLoaded()) {
+                root.getConnector().load();
+                return undefined;
+              }
+
+              result.push(root);
+            }
+          }
+        }
+
+        return result;
+      });
+    }
+
+    return topLevelCategoriesExpressions;
+  }
 
   public static function getConnectorObject(connectorId:String):ConnectorObject {
     //double encoding!
@@ -156,8 +233,7 @@ public class ConnectorHelper {
     var context:ConnectorContext = null;
     if (entity is ConnectorEntity) {
       context = entity.getContext();
-    }
-    else if (entity is Connector) {
+    } else if (entity is Connector) {
       var connectionData:Object = (entity as ConnectorImpl).get(ConnectorPropertyNames.CONNECTIONS)[0];
       var connection:Connection = new Connection(connectionData);
       context = connection.getContext();
@@ -240,8 +316,7 @@ public class ConnectorHelper {
         flex: 1
       });
       cols.push(markableColumn);
-    }
-    else {
+    } else {
       var nameCol:Column = Ext.create(Column, {
         width: 300,
         hidden: context.isColumnHidden('name'),
@@ -289,8 +364,7 @@ public class ConnectorHelper {
         });
         if (c.index >= 0) {
           cols.splice(c.index, 0, customColumn);
-        }
-        else {
+        } else {
           cols.push(customColumn);
         }
       }

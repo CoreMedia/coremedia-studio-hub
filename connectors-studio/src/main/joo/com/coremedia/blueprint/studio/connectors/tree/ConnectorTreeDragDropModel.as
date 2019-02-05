@@ -20,14 +20,14 @@ public class ConnectorTreeDragDropModel implements DragDropModel {
   public function performDefaultAction(droppedNodeIds:Array, targetNodeId:String, callback:Function = undefined):void {
     var connectorCategory:ConnectorCategory= beanFactory.getRemoteBean(targetNodeId) as ConnectorCategory;
     if(connectorCategory) {
-      connectorCategory.dropContents(getContents(droppedNodeIds), true, callback);
+      connectorCategory.uploadContents(getContents(droppedNodeIds), null, true, callback);
     }
   }
 
   public function performAlternativeAction(droppedNodeIds:Array, targetNodeId:String, callback:Function = undefined):void {
     var connectorCategory:ConnectorCategory= beanFactory.getRemoteBean(targetNodeId) as ConnectorCategory;
     if(connectorCategory) {
-      connectorCategory.dropContents(getContents(droppedNodeIds), false, callback);
+      connectorCategory.uploadContents(getContents(droppedNodeIds), null, false, callback);
     }
   }
 
@@ -74,7 +74,7 @@ public class ConnectorTreeDragDropModel implements DragDropModel {
     var connectionId:String = category.getConnectionId();
     var context:ConnectorContext = category.getConnector().getConnection(connectionId).getContext();
     for each(var c:Content in contents) {
-      if(!context.isValidDrop(c)) {
+      if(!context.isUploadSupported(c)) {
         return false;
       }
     }

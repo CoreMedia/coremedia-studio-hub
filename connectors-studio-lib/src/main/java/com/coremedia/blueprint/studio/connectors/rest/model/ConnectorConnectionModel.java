@@ -6,10 +6,10 @@ import com.coremedia.blueprint.connectors.api.ConnectorContentUploadTypes;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.impl.ConnectorContextImpl;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -37,11 +37,16 @@ public class ConnectorConnectionModel {
     context.put(ConnectorContextImpl.DEFAULT_COLUMNS, privateContext.getDefaultColumns());
 
     ConnectorContentUploadTypes contentUploadTypes = privateContext.getContentUploadTypes();
-    Collection<String> uploadContentTypeNames = new ArrayList<>();
+    Map<String, List<String>> uploadTypeMapping = new HashMap<>();
+
     if(contentUploadTypes != null) {
-      uploadContentTypeNames = contentUploadTypes.getProperties().keySet();
+      Set<String> contentTypes = contentUploadTypes.getProperties().keySet();
+      for (String contentType : contentTypes) {
+        uploadTypeMapping.put(contentType, contentUploadTypes.getPropertyNames(contentType));
+      }
     }
-    context.put(ConnectorContextImpl.CONTENT_UPLOAD_TYPES, uploadContentTypeNames);
+
+    context.put(ConnectorContextImpl.CONTENT_UPLOAD_TYPES, uploadTypeMapping);
   }
 
   public String getConnectorType() {

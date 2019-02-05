@@ -37,17 +37,57 @@ public class ConnectorContext {
     return columns.indexOf(columnName) === -1;
   }
 
-  public function isValidDrop(content:Content):Boolean {
+  public function getUploadPropertyNames(content:Content):Array {
+    if(!values.contentUploadTypes) {
+      return [];
+    }
+
     var cType:CapType = content.getType();
+    var propertyNames:Array = [];
+    for (var m:String in values.contentUploadTypes) {
+      if(cType.isSubtypeOf(m)) {
+        var cTypes:Array = values.contentUploadTypes[m];
+        for each(var cTypeName:String in cTypes) {
+          if(propertyNames.indexOf(cTypeName) === -1) {
+            propertyNames.push(cTypeName);
+          }
+        }
+      }
+    }
+
+    return propertyNames;
+  }
+
+  public function isUploadSupported(entity:Object):Boolean {
+    if(!values.contentUploadTypes) {
+      return false;
+    }
+    if(!(entity is Content)) {
+      return false;
+    }
+
+    var cType:CapType = (entity as Content).getType();
 
     var onWhitelist:Boolean = false;
-    for each(var whitelistType:String in values.contentUploadTypes) {
-      if(cType.isSubtypeOf(whitelistType)) {
-        onWhitelist = true;
+    if(values.contentUploadTypes) {
+      for (var m:String in values.contentUploadTypes) {
+        if(cType.isSubtypeOf(m)) {
+          onWhitelist = true;
+        }
       }
     }
 
     return onWhitelist;
+  }
+
+  public function isContentUploadSupported():Boolean {
+    if(values.contentUploadTypes) {
+      for (var m:String in values.contentUploadTypes) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 }

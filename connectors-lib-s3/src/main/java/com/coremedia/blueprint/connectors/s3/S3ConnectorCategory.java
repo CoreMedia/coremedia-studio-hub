@@ -8,6 +8,8 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import javax.activation.MimeType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,7 @@ public class S3ConnectorCategory extends S3ConnectorEntity implements ConnectorC
   }
 
   @Override
-  public ConnectorItem upload(@NonNull ConnectorContext context, String itemName, InputStream inputStream) {
+  public ConnectorItem upload(@NonNull ConnectorContext context, @NonNull String itemName, @NonNull MimeType mimeType, @NonNull InputStream inputStream) {
     return s3Service.upload(context, this, itemName, inputStream);
   }
 }
