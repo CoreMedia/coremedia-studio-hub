@@ -148,6 +148,7 @@ Every connection can/must configure the following common properties:
 | rootNodeVisible | false | set to false if the connector tree should appear on the top level without an aggregator node |
 | contentBlacklist | false | the blacklist of contents to be dropped if content drop is enabled for categories |
 | contentWhitelist | false | the whitelist of contents to be dropped if content drop is enabled for categories |
+| imageVariants | false | a comma separated list of variants that should be used for image pushes |
 
 The following sections explain the configuration of connections in detail.
 

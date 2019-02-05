@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ConnectorContextImpl implements ConnectorContext {
 
@@ -257,9 +258,6 @@ public class ConnectorContextImpl implements ConnectorContext {
   @Override
   public List<String> getImageVariants() {
     String value = (String) properties.getOrDefault(IMAGE_VARIANTS, "");
-    if(!value.contains(",")) {
-      return Collections.emptyList();
-    }
-    return Arrays.asList(value.split(","));
+    return Arrays.stream(value.split(",")).filter(item -> item.length() > 0).collect(Collectors.toList());
   }
 }

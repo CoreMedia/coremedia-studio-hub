@@ -45,7 +45,7 @@
 
     <editor:PreviewPanelToolbar>
       <editor:plugins exml:mode="append">
-        <connector:AddUploadTargetMenuItemsPlugin/>
+        <connector:AddPushButtonToPreviewToolbarPlugin/>
       </editor:plugins>
     </editor:PreviewPanelToolbar>
 

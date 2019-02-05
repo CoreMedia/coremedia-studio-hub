@@ -6,12 +6,11 @@
         xmlns="exml:ext.config"
         xmlns:local="com.coremedia.blueprint.studio.connectors.push.*"
         xmlns:editor="com.coremedia.cms.editor.sdk.premular.fields.plugins.*"
-        scale="small"
         disabled="true"
         itemId="connectorPushButton"
         ariaLabel="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'PreviewPanelToolbar_openInBrowser_btn_tooltip')}"
         tooltip="{resourceManager.getString('com.coremedia.cms.editor.Editor', 'PreviewPanelToolbar_openInBrowser_btn_tooltip')}"
-        iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}">>
+        iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'dam_1')}">>
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin')]
   </fx:Metadata>

@@ -73,7 +73,7 @@
       <editor:plugins>
         <ui:AddItemsPlugin>
           <ui:items>
-            <push:PushButton selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"/>
+            <push:PushButton scale="small" selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"/>
             <TbSeparator/>
           </ui:items>
           <ui:before>
@@ -87,7 +87,7 @@
       <editor:plugins>
         <ui:AddItemsPlugin>
           <ui:items>
-            <push:PushButton selectedItemsValueExpression="{selectionHolder.getSelectedSearchItemsValueExpression()}"/>
+            <push:PushButton scale="small" selectedItemsValueExpression="{selectionHolder.getSelectedSearchItemsValueExpression()}"/>
             <TbSeparator/>
           </ui:items>
           <ui:before>

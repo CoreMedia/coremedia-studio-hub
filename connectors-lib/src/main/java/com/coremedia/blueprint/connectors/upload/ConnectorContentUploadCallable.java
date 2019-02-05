@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
 class ConnectorContentUploadCallable implements Callable<Void> {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentUploadCallable.class);
   private static final String MIME_TYPE_IMAGE = "image";
+  private static final String ORIGINAL = "original";
   private static final int MAX_EXPORT_DEPTH = 1;
 
   private final ConnectorContext context;
@@ -160,6 +161,11 @@ class ConnectorContentUploadCallable implements Callable<Void> {
       for (TransformedBlob transformedBlob : transformedBlobs) {
         name = content.getName() + "_[" + transformedBlob.getVariant() + "]." + mimeType.getSubType();
         category.upload(context, name, mimeType, transformedBlob.getBlob().getInputStream());
+      }
+
+      //maybe upload the original blob too
+      if(imageVariants.contains(ORIGINAL)) {
+        category.upload(context, name, mimeType, blob.getInputStream());
       }
     }
     else {
