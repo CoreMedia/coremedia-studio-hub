@@ -10,7 +10,6 @@
                                width="230"
                                useArrows="true"
                                cls="cm-library-tree"
-                               title="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'folder_label')}"
                                rootVisible="false">
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;

@@ -4,7 +4,7 @@
                       xmlns:exml="http://www.jangaroo.net/exml/0.8"
                       xmlns:ui="exml:com.coremedia.ui.config"
                       xmlns="exml:ext.config"
-                      title="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_dialog_title')}"
+                      title="{StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_dialog_title'), config.rootCategory.getConnector().getDisplayName())}"
                       width="400"
                       height="460"
                       modal="true"
@@ -16,7 +16,10 @@
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.skins.ButtonSkin;
+    import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.WindowSkin;
+
+    import ext.StringUtil;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.push.pushDialog";
 
@@ -26,10 +29,13 @@
     ]]></fx:Script>
 
   <local:items>
-    <local:ConnectionTreePanel flex="1" rootCategory="{config.rootCategory}"
+    <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_folder_label')}" />
+    <local:ConnectionTreePanel flex="1"
+                               rootCategory="{config.rootCategory}"
                                selectionExpression="{getSelectedCategoryExpression(config.rootCategory)}"/>
     <Container height="6"/>
-    <CheckboxGroup fieldLabel="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_properties_title')}" labelAlign="top" labelSeparator="">
+    <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_properties_title')}" />
+    <Container>
       <plugins>
         <ui:BindComponentsPlugin valueExpression="{getPropertyNamesExpression(config.rootCategory, config.selectedItemsValueExpression)}"
                                  configBeanParameterName="propertyName"
@@ -44,7 +50,7 @@
       <layout>
         <layout_VBox align="stretch" />
       </layout>
-    </CheckboxGroup>
+    </Container>
   </local:items>
   <local:layout>
     <layout_VBox align="stretch"/>

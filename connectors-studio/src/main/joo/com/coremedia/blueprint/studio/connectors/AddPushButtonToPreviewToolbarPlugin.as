@@ -8,7 +8,6 @@ import com.coremedia.ui.skins.ButtonSkin;
 
 import ext.Component;
 import ext.Plugin;
-import ext.toolbar.Separator;
 
 public class AddPushButtonToPreviewToolbarPlugin implements Plugin {
   private var previewToolbar:PreviewPanelToolbar;
@@ -29,9 +28,7 @@ public class AddPushButtonToPreviewToolbarPlugin implements Plugin {
       'ui': ButtonSkin.WORKAREA.getSkin()
     }));
 
-    previewToolbar.insert(6, new Separator());
     previewToolbar.insert(6, pushButton);
-    previewToolbar.insert(6, new Separator());
   }
 }
 }
