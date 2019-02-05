@@ -8,6 +8,7 @@
                                xmlns="exml:ext.config"
                                scrollable="{true}"
                                width="230"
+                               useArrows="true"
                                cls="cm-library-tree"
                                title="{resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'folder_label')}"
                                rootVisible="false">
