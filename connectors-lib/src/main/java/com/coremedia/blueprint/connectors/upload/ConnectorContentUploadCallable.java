@@ -85,19 +85,32 @@ class ConnectorContentUploadCallable implements Callable<Void> {
           defaultPropertyNames = userSelectedPropertyNames;
         }
 
-        for (ConnectorContentUploadInterceptor uploadInterceptor : uploadInterceptors) {
-          if (uploadInterceptor.isApplicable(content)) {
-            uploadInterceptor.intercept(context, category, content, userSelectedPropertyNames);
-          }
-          else {
-            executeUpload(content, defaultPropertyNames);
-          }
+        boolean uploadIntercepted = executeInterceptors(content, defaultPropertyNames);
+        if(!uploadIntercepted) {
+          executeUpload(content, defaultPropertyNames);
         }
       }
     } catch (Exception e) {
       LOG.error("Error creating item data for category " + category + ": " + e.getMessage(), e);
     }
     return null;
+  }
+
+  /**
+   * Executes all applicable upload interceptors for the given content
+   * @param content the content to upload data from
+   * @param defaultPropertyNames the default property names to read from the content
+   * @return true any interceptor was executed.
+   */
+  private boolean executeInterceptors(Content content, List<String> defaultPropertyNames) {
+    boolean interceptorExecuted = false;
+    for (ConnectorContentUploadInterceptor uploadInterceptor : uploadInterceptors) {
+      if (uploadInterceptor.isApplicable(content)) {
+        uploadInterceptor.intercept(context, category, content, defaultPropertyNames);
+        interceptorExecuted = true;
+      }
+    }
+    return interceptorExecuted;
   }
 
   /**
