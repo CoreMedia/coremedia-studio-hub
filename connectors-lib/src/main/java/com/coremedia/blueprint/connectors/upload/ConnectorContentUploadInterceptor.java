@@ -23,16 +23,19 @@ public interface ConnectorContentUploadInterceptor {
    */
   int priority();
 
+  boolean isApplicable(Content content);
+
   /**
    * Intercepts the default upload of the given content.
    * This contains the actual implementation of the upload.
-   * @param context the context of the connection
-   * @param category the category the content should be uploaded to
-   * @param contents the contents that should be uploaded
-   * @param propertyNames the user selected property names
+   *
+   * @param context       the context of the connection
+   * @param category      the category the content should be uploaded to
+   * @param content       the content to use for uploading properties
+   * @param propertyNames the user property names to upload
    */
   void intercept(@NonNull ConnectorContext context,
                  @NonNull ConnectorCategory category,
-                 @NonNull List<Content> contents,
+                 @NonNull Content content,
                  @NonNull List<String> propertyNames);
 }

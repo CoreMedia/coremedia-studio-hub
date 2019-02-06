@@ -32,7 +32,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
   private final ConnectorContext context;
   private final ConnectorCategory category;
   private final List<Content> contents;
-  private List<String> propertyNames;
+  private List<String> userSelectedPropertyNames;
   private final List<ConnectorContentUploadInterceptor> uploadInterceptors;
   private ConnectorImageTransformationService transformationService;
   private final Boolean defaultAction;
@@ -41,24 +41,24 @@ class ConnectorContentUploadCallable implements Callable<Void> {
   /**
    * Callable for content drop.
    *
-   * @param context               context of the connection
-   * @param category              the category to create the new item in
-   * @param contents              the contents that have been dropped on the category.
-   * @param propertyNames         the user selection of property names
-   * @param transformationService service to transform images before uploading
-   * @param defaultAction         true, if the default action was used (no CTRL was pressed)
+   * @param context                   context of the connection
+   * @param category                  the category to create the new item in
+   * @param contents                  the contents that have been dropped on the category.
+   * @param userSelectedPropertyNames the user selection of property names
+   * @param transformationService     service to transform images before uploading
+   * @param defaultAction             true, if the default action was used (no CTRL was pressed)
    */
   ConnectorContentUploadCallable(@NonNull ConnectorContext context,
                                  @NonNull ConnectorCategory category,
                                  @NonNull List<Content> contents,
-                                 @NonNull List<String> propertyNames,
+                                 @NonNull List<String> userSelectedPropertyNames,
                                  @NonNull List<ConnectorContentUploadInterceptor> uploadInterceptors,
                                  @NonNull ConnectorImageTransformationService transformationService,
                                  Boolean defaultAction) {
     this.context = context;
     this.category = category;
     this.contents = contents;
-    this.propertyNames = propertyNames;
+    this.userSelectedPropertyNames = userSelectedPropertyNames;
     this.uploadInterceptors = uploadInterceptors;
     this.transformationService = transformationService;
     this.defaultAction = defaultAction;
@@ -69,29 +69,29 @@ class ConnectorContentUploadCallable implements Callable<Void> {
     try {
       Thread.currentThread().setName("Connector Content Service Callable for " + category);
 
-      if (!uploadInterceptors.isEmpty()) {
-        for (ConnectorContentUploadInterceptor uploadInterceptor : uploadInterceptors) {
-          uploadInterceptor.intercept(context, category, contents, propertyNames);
-        }
+      //should never happen, catched by the UI
+      if (context.getContentUploadTypes() == null) {
+        return null;
       }
-      else {
-        //should never happen, catched by the UI
-        if (context.getContentUploadTypes() == null) {
-          return null;
+
+      //well, all types are the same from UI point of view, but it doesn't hurt to handle different types here
+      for (Content content : contents) {
+        List<String> defaultPropertyNames = context.getContentUploadTypes().getPropertyNames(content.getType());
+        if (defaultPropertyNames.isEmpty()) {
+          LOG.info("No connector upload property mapping found for content type '" + content.getType().getName() + "'");
         }
 
-        //well, all types are the same from UI point of view, but it doesn't hurt to handle different types here
-        for (Content content : contents) {
-          List<String> defaultPropertyNames = context.getContentUploadTypes().getPropertyNames(content.getType());
-          if (defaultPropertyNames.isEmpty()) {
-            LOG.info("No connector upload property mapping found for content type '" + content.getType().getName() + "'");
-          }
+        if (!userSelectedPropertyNames.isEmpty()) {
+          defaultPropertyNames = userSelectedPropertyNames;
+        }
 
-          if(!propertyNames.isEmpty()) {
-            defaultPropertyNames = propertyNames;
+        for (ConnectorContentUploadInterceptor uploadInterceptor : uploadInterceptors) {
+          if (uploadInterceptor.isApplicable(content)) {
+            uploadInterceptor.intercept(context, category, content, userSelectedPropertyNames);
           }
-
-          executeDefaultUpload(content, defaultPropertyNames);
+          else {
+            executeUpload(content, defaultPropertyNames);
+          }
         }
       }
     } catch (Exception e) {
@@ -107,7 +107,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
    *
    * @param content the content to upload.
    */
-  private void executeDefaultUpload(Content content, List<String> propertyNames) {
+  private void executeUpload(Content content, List<String> propertyNames) {
     exportDepth++;
     for (String propertyName : propertyNames) {
       try {
@@ -133,11 +133,11 @@ class ConnectorContentUploadCallable implements Callable<Void> {
             category.upload(context, name, new MimeType("plain", "text"), in);
           }
         }
-        else if(propertyType.equals((CapPropertyDescriptorType.LINK)) && exportDepth <= MAX_EXPORT_DEPTH) {
+        else if (propertyType.equals((CapPropertyDescriptorType.LINK)) && exportDepth <= MAX_EXPORT_DEPTH) {
           List<Content> links = content.getLinks(propertyName);
           for (Content link : links) {
             List<String> linkedPropertyNames = context.getContentUploadTypes().getPropertyNames(link.getType());
-            executeDefaultUpload(link, linkedPropertyNames);
+            executeUpload(link, linkedPropertyNames);
           }
         }
       } catch (Exception e) {
@@ -146,6 +146,16 @@ class ConnectorContentUploadCallable implements Callable<Void> {
     }
   }
 
+  /**
+   * Triggers the actual upload for the connector implementation.
+   * If the connection has configured a variant upload, the variants will be uploaded.
+   * If a variant is named 'ORIGINAL', the original blob will be uploaded additionally.
+   * Otherwise the the original blob is uploaded by default
+   *
+   * @param content      the content to upload the blob from
+   * @param propertyName the propertyName of the blob
+   * @throws Exception
+   */
   private void uploadBlobContent(Content content, String propertyName) throws Exception {
     Blob blob = content.getBlob(propertyName);
     if (blob == null || blob.getContentType() == null) {
@@ -164,7 +174,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
       }
 
       //maybe upload the original blob too
-      if(imageVariants.contains(ORIGINAL)) {
+      if (imageVariants.contains(ORIGINAL)) {
         category.upload(context, name, mimeType, blob.getInputStream());
       }
     }

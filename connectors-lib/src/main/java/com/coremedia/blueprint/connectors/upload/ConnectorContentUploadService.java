@@ -40,7 +40,7 @@ public class ConnectorContentUploadService {
   public void upload(@NonNull ConnectorContext context,
                      @NonNull ConnectorCategory category,
                      @NonNull List<Content> contents,
-                     @NonNull List<String> propertyNames,
+                     @NonNull List<String> userSelectedPropertyNames,
                      Boolean defaultAction) {
     new Thread(() -> {
       Thread.currentThread().setName("Connector Upload Service Thread for " + category.getConnectorId());
@@ -57,7 +57,7 @@ public class ConnectorContentUploadService {
           Collections.sort(interceptors, Comparator.comparingInt(ConnectorContentUploadInterceptor::priority));
         }
 
-        ConnectorContentUploadCallable callable = new ConnectorContentUploadCallable(context, category, contents, propertyNames, interceptors, transformationService, defaultAction);
+        ConnectorContentUploadCallable callable = new ConnectorContentUploadCallable(context, category, contents, userSelectedPropertyNames, interceptors, transformationService, defaultAction);
         Future<Void> submit = service.submit(callable);
         submit.get();
         category.refresh(context);
