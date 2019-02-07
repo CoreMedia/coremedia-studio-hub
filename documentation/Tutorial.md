@@ -8,32 +8,25 @@ The full example of this tutorial can be downloaded [here](https://github.com/Co
 
 ## Prerequisites
 
-- make sure you have the latest CoreMedia Blueprint
-- make sure that you have the Studio Hub extension installed: in binary or source format
-
-The additional entry that will add the Studio Hub extension to the Blueprint should look like:
-
-```
-com.coremedia.blueprint.connectors:connectors:<LATEST VERSION>
-```
-
-Checkout the release page for the latest version of the Studio Hub:
-https://github.com/CoreMedia/coremedia-studio-hub/releases
-
-
+Make sure you have the latest CoreMedia Blueprint.
 
 # Step 1 - Extension Setup
 
-First of all we have to create a new extension with a _studio_ and _studio_ lib module.
-The extension created in this tutorial is called _studio-hub-example_ and can
-be downloaded [here](downloads/studio-hub-example-start.zip "Studio Hub Example Start").
+Add our submodules to the extensions folder (cd modules/extensions): 
 
- * Download the empty example modules and put it into the _extensions_ folder of your CoreMedia Blueprint.
- * Unpack the zip archive.
- * Link the new extension as _module_ into the parent _pom.xml_.
- * Make sure that the example extension has the correct group _groupId_ and _version_ in both _pom.xml_ files.
- * Add the example extension to your _workspace-configuration/managed-extensions.txt_ file.
- * Execute the extension tool to update your configuration poms for the Studio client and server libraries.
+    git submodule add https://github.com/CoreMedia/coremedia-studio-hub.git
+
+Add modules to modules/extensions/pom.xml
+
+```<module>coremedia-feedback-hub</module>```
+
+Execute the extension tool:
+
+- workspace-config/extensions execute: mvn dependency:copy -Dartifact=com.coremedia.tools.extensions:extensions:LATEST:jar:all -DlocalRepositoryDirectory=extensions-tool -Dtransitive=false -DoutputDirectory=tool -Dmdep.stripVersion=true -Dmdep.stripClassifier=true
+- workspace-config/extensions, execute: java -jar tool/extensions.jar --task synchronize --extension-config-file  extension-config.properties --task-input-file managed-extensions.txt
+
+
+ 
 
 ### Checkpoint
 
