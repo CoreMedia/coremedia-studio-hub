@@ -18,7 +18,7 @@ Add our submodules to the extensions folder (cd modules/extensions):
 
 Add modules to modules/extensions/pom.xml
 
-```<module>coremedia-feedback-hub</module>```
+```<module>coremedia-studio-hub</module>```
 
 Execute the extension tool:
 
