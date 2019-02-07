@@ -69,3 +69,21 @@ The given tables shows the list of existing Studio Hub connectors and their feat
 | Content Drop         |     x       |  x  |    x    |  -   |    -    |     -     |        x      |     x      |     x      |     -    |
 
 
+## Installation
+
+Add our submodules to the extensions folder (cd modules/extensions): 
+
+    git submodule add https://github.com/CoreMedia/coremedia-studio-hub.git
+
+Add modules to modules/extensions/pom.xml
+
+```<module>coremedia-feedback-hub</module>```
+
+Execute the extension tool:
+
+- workspace-config/extensions execute: mvn dependency:copy -Dartifact=com.coremedia.tools.extensions:extensions:LATEST:jar:all -DlocalRepositoryDirectory=extensions-tool -Dtransitive=false -DoutputDirectory=tool -Dmdep.stripVersion=true -Dmdep.stripClassifier=true
+- workspace-config/extensions, execute: java -jar tool/extensions.jar --task synchronize --extension-config-file  extension-config.properties --task-input-file managed-extensions.txt
+
+For the IDEA import:
+- Ignore folder ".remote-package"
+- Disable "Settings > Compiler > Clear output directory on rebuild"
