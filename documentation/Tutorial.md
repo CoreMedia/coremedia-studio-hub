@@ -10,7 +10,7 @@ The full example of this tutorial can be downloaded [here](https://github.com/Co
 
 Make sure you have the latest CoreMedia Blueprint.
 
-# Step 1 - Extension Setup
+# Step 1 - Installation
 
 Add our submodules to the extensions folder (cd modules/extensions): 
 
@@ -25,7 +25,9 @@ Execute the extension tool:
 - workspace-config/extensions execute: mvn dependency:copy -Dartifact=com.coremedia.tools.extensions:extensions:LATEST:jar:all -DlocalRepositoryDirectory=extensions-tool -Dtransitive=false -DoutputDirectory=tool -Dmdep.stripVersion=true -Dmdep.stripClassifier=true
 - workspace-config/extensions, execute: java -jar tool/extensions.jar --task synchronize --extension-config-file  extension-config.properties --task-input-file managed-extensions.txt
 
-
+For the IDEA import:
+- Ignore folder ".remote-package"
+- Disable "Settings > Compiler > Clear output directory on rebuild"
  
 
 ### Checkpoint
