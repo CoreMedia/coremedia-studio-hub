@@ -113,7 +113,7 @@ public class ConnectorInvalidator extends SimpleInvalidationSource implements Co
         //so we are waiting for the next call
         try {
           long start = System.currentTimeMillis();
-          LOGGER.info("Invalidating connector connection '" + connection.getContext().getConnectionId() + "'");
+          LOGGER.debug("Invalidating connector connection '" + connection.getContext().getConnectionId() + "'");
           InvalidationResult invalidationResult = connectorService.invalidate(connection.getContext());
 
           //build links to the RemoteBeans to invalidationResult
@@ -128,7 +128,7 @@ public class ConnectorInvalidator extends SimpleInvalidationSource implements Co
             connectorNotificationService.sendInvalidationNotification(invalidationResult);
 
             long end = System.currentTimeMillis();
-            LOGGER.info(this.getName() + " finished, took " + (end - start) + " ms., next invalidation in " + interval + " seconds.");
+            LOGGER.debug(this.getName() + " finished, took " + (end - start) + " ms., next invalidation in " + interval + " seconds.");
           }
         } catch (Exception e) {
           LOGGER.error("Error invalidating " + getName() + ": " + e.getMessage(), e);
