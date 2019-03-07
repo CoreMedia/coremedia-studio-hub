@@ -121,6 +121,8 @@ class ConnectorContentUploadCallable implements Callable<Void> {
    * @param content the content to upload.
    */
   private void executeUpload(Content content, List<String> propertyNames) {
+    //TODO move a reusable location
+    //TODO make depth configurable
     exportDepth++;
     for (String propertyName : propertyNames) {
       try {
@@ -170,6 +172,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
    * @throws Exception
    */
   private void uploadBlobContent(Content content, String propertyName) throws Exception {
+    //TODO move a reusable location
     Blob blob = content.getBlob(propertyName);
     if (blob == null || blob.getContentType() == null) {
       return;
