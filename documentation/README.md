@@ -59,15 +59,15 @@ version __1804.1-X__ where 'X' indicates the release version of the Content Hub.
 The given tables shows the list of existing Content Hub connectors and their feature set.
 
 
-| Feature              | File System | S3  | Dropbox |  RSS | YouTube | CoreMedia | Canto Cumulus | Cloudinary | Navigation | Typeform |
-| -------------------- |:-----------:|:--- |:-------:|:----:|:-------:|:---------:|:-------------:|:----------:|:----------:|:--------:|
-| Content Creation     |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     -      |     x    |
-| Preview Support      |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     x      |     -    |
-| Metadata Extraction  |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     x      |     -    |
-| File Upload          |     x       |  x  |    x    |  -   |    -    |     -     |        x      |     x      |     -      |     -    |
-| File Download        |     x       |  x  |    x    |  -   |    -    |     x     |        x      |     x      |     -      |     -    |
-| Invalidation Check   |     -       |  -  |    x    |  x   |    -    |     -     |        -      |     -      |     -      |     -    |
-| Notifications        |     -       |  -  |    x    |  x   |    -    |     -     |        -      |     -      |     -      |     -    |
-| Native Drop          |     x       |  x  |    x    |  -   |    -    |     x     |        x      |     x      |     -      |     -    |
-| Content Drop         |     x       |  x  |    x    |  -   |    -    |     -     |        x      |     x      |     x      |     -    |
+| Feature              | File System | S3  | Dropbox |  RSS | YouTube | CoreMedia | Canto Cumulus | Cloudinary | Navigation | Typeform | Instagram | Scene 7 |
+| -------------------- |:-----------:|:--- |:-------:|:----:|:-------:|:---------:|:-------------:|:----------:|:----------:|:--------:|:--------:|:--------:|
+| Content Creation     |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     -      |     x    |     x    |     x    |
+| Preview Support      |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     x      |     -    |     x    |     x    | 
+| Metadata Extraction  |     x       |  x  |    x    |  x   |    x    |     x     |        x      |     x      |     x      |     -    |     -    |     -    |
+| File Upload          |     x       |  x  |    x    |  -   |    -    |     -     |        x      |     x      |     -      |     -    |     -    |     -    |
+| File Download        |     x       |  x  |    x    |  -   |    -    |     x     |        x      |     x      |     -      |     -    |     x    |     x    |
+| Invalidation Check   |     -       |  -  |    x    |  x   |    -    |     -     |        -      |     -      |     -      |     -    |     -    |     -    |
+| Notifications        |     -       |  -  |    x    |  x   |    -    |     -     |        -      |     -      |     -      |     -    |     -    |     -    |
+| Native Drop          |     x       |  x  |    x    |  -   |    -    |     x     |        x      |     x      |     -      |     -    |     -    |     -    |
+| Content Drop         |     x       |  x  |    x    |  -   |    -    |     -     |        x      |     x      |     x      |     -    |     -    |     -    |
 
