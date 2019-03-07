@@ -143,7 +143,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
           String name = content.getName() + "_[" + propertyName + "].txt";
           Markup markup = content.getMarkup(propertyName);
           String plainText = MarkupUtil.asPlainText(markup);
-          if (!StringUtils.isEmpty(plainText)) {
+          if (!StringUtils.isEmpty(plainText.trim())) {
             InputStream in = new ByteArrayInputStream(plainText.getBytes(Charset.defaultCharset()));
             category.upload(context, name, new MimeType("plain", "text"), in);
           }
