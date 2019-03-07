@@ -33,6 +33,7 @@ configured in the _Content Upload Types_ setting.
 The Content Hub comes with a default behaviour that is executed if not _ConnectorContentUploadInterceptor_ is configured
 for the current push. The following table shows the behaviour for each or the different property types_
 
+
 | Type | Supported | Behaviour |  
 | ---- |: --------- :| --------- |
 | INTEGER   | - |  |  
@@ -44,6 +45,7 @@ for the current push. The following table shows the behaviour for each or the di
 | BOOLEAN   | - |  |
 | INT       | - |  |
 | STRUCT    | - |  |
+
 
 ## Pushing Image (Variants)
 
