@@ -36,15 +36,15 @@ for the current push. The following table shows the behaviour for each or the di
 
 | Type | Supported | Behaviour |  
 | ---- |: --------- :| --------- |
-| INTEGER   | - |  |  
-| DATE      | - |  |
-| STRING    | x | The value of the property is written as a text file to the target. |
-| BLOB      | x | The blob is converted to a file, depending on the mime-type and written to the target. |
-| LINK      | x | Links are followed up until the depth of 1. When the linked content type is matching an existing upload mapping, the matching properties are uploaded. |
-| MARKUP    | x | The value of the property converted to text and written to the target. | 
-| BOOLEAN   | - |  |
-| INT       | - |  |
-| STRUCT    | - |  |
+| INTEGER | - | |  
+| DATE | - | |
+| STRING | x | The value of the property is written as a text file to the target. |
+| BLOB | x | The blob is converted to a file, depending on the mime-type and written to the target. |
+| LINK | x | Links are followed up until the depth of 1. When the linked content type is matching an existing upload mapping, the matching properties are uploaded. |
+| MARKUP | x | The value of the property converted to text and written to the target. | 
+| BOOLEAN | - | |
+| INT | - | |
+| STRUCT | - | |
 
 
 ## Pushing Image (Variants)
