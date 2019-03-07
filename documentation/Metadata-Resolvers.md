@@ -1,6 +1,6 @@
 ## Metadata Resolvers
 
-The Studio Hub comes with some pre-defined metadata resolvers that are located in the _connectors-lib_ module.
+The Content Hub comes with some pre-defined metadata resolvers that are located in the _connectors-lib_ module.
 Metadata resolvers are used to enrich the metadata panel that is shown next to the connector item preview.
 
 For file based connectors, the following metadata resolver are available:

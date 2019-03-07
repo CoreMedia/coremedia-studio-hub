@@ -37,7 +37,7 @@ public class ExampleConnectorService implements ConnectorService {
   @Override
   public boolean init(@Nonnull ConnectorContext context) throws ConnectorException {
     this.context = context;
-    LOG.info("Studio Hub example initialized.");
+    LOG.info("Content Hub example initialized.");
     return true;
   }
 

@@ -2,7 +2,7 @@
   "studioPlugins": [
     {
       "mainClass": "com.coremedia.blueprint.studio.studiohub.StudioHubExampleStudioPlugin",
-      "name": "Studio Hub Example"
+      "name": "Content Hub Example"
     }
   ]
 }

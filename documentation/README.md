@@ -1,9 +1,10 @@
-# CoreMedia Studio Hub
+# CoreMedia Content Hub
 
 ## Index
 
-* [Studio Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
+* [Content Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
 * [Content Creation](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Creation.md)
+* [Content Push](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Push.md)
 * [Metadata Resolvers](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Metadata-Resolvers.md)
 * [Search](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Search.md)
 * [Studio Customization](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Studio-Customization.md)
@@ -11,10 +12,10 @@
 
 ## Abstract
 
-The CoreMedia Studio Hub allows to integrate various external
+The CoreMedia Content Hub allows to integrate various external
 and asset management systems into the Studio library and to preview items of these systems.
 It allows you to integrate just about any external system or platform into your CoreMedia system.
-The Studio Hub is implemented as a Blueprint extension.
+The Content Hub is implemented as a Blueprint extension.
 
 
 ## Terms and Description
@@ -29,9 +30,9 @@ The Studio Hub is implemented as a Blueprint extension.
 
 ## Versioning
 
-The release versions of the Studio Hub is matching the version of CoreMedia workspace releases.
-E.g. when the CoreMedia workspace has the version __1804.1__, the matching Studio Hub release will have
-version __1804.1-X__ where 'X' indicates the release version of the Studio Hub.
+The release versions of the Content Hub is matching the version of CoreMedia workspace releases.
+E.g. when the CoreMedia workspace has the version __1804.1__, the matching Content Hub release will have
+version __1804.1-X__ where 'X' indicates the release version of the Content Hub.
 
 ## Features
 
@@ -53,7 +54,7 @@ version __1804.1-X__ where 'X' indicates the release version of the Studio Hub.
 
 ## Supported Systems
 
-The given tables shows the list of existing Studio Hub connectors and their feature set.
+The given tables shows the list of existing Content Hub connectors and their feature set.
 
 
 | Feature              | File System | S3  | Dropbox |  RSS | YouTube | CoreMedia | Canto Cumulus | Cloudinary | Navigation | Typeform |

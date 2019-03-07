@@ -1,10 +1,10 @@
 # How to create a new Connector
 
-In this tutorial, we will implement a connector for the Studio Hub.
+In this tutorial, we will implement a connector for the Content Hub.
 The example connector will be implemented as a separate extension and does not connect to a specific system.
-Instead, we simulate the Studio Hub categories and items programmatically.
+Instead, we simulate the Content Hub categories and items programmatically.
 
-The full example of this tutorial can be downloaded [here](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/downloads/studio-hub-example.zip "Studio Hub Example").
+The full example of this tutorial can be downloaded [here](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/downloads/studio-hub-example.zip "Content Hub Example").
 
 ## Prerequisites
 
@@ -36,7 +36,7 @@ At this point, the following things should have happened:
 
  * The file _modules/extension-config/studio-extension-dependencies/pom.xml_ file contains the artifact _studio-hub-example_.
  * The file _modules/extension-config/studio-lib-extension-dependencies/pom.xml_ file contains the artifact _studio-hub-example_.
- * The rebuild Studio webapp is started with the additional plugin _Studio Hub Example_ (there won't be anything to see in the Studio library yet!).
+ * The rebuild Studio webapp is started with the additional plugin _Content Hub Example_ (there won't be anything to see in the Studio library yet!).
  * IDEA has the modules detected properly and you see the following structure:
 
  
@@ -46,7 +46,7 @@ At this point, the following things should have happened:
 
 The empty example module already contains the classes that are required when implementing a new connector.
 In this step, we implement the minimal set of methods so that we get visual feedback of the connector in the Studio.
-This section shows you how to implement the Studio Hub classes to integrate you own external system.
+This section shows you how to implement the Content Hub classes to integrate you own external system.
 
 ### ConnectorService Implementation
 
@@ -490,7 +490,7 @@ As you can see in the screenshot above, the items have the type _Download_ which
 no specific connector item type is detected.
 Let's 'convert' our example items to images.
 Since we have the linked the default _Connector Item Types_ and _Preview Templates_
-we can use the name to let the Studio Hub determine the type of an item.
+we can use the name to let the Content Hub determine the type of an item.
 For example, initialize the first connector item in the service class with the name "test.png" to pretend that
 is an image:
 
@@ -597,7 +597,7 @@ by overriding the _getPreviewHTML_ method:
 ```
 
 The preview is rendered with the generated HTML now. Also, the type and icon in the list view has changed.
-That is because we set the item type to _article_ which is already mapped in the resource bundles of the Studio Hub plugin.
+That is because we set the item type to _article_ which is already mapped in the resource bundles of the Content Hub plugin.
 For more details about the item name and icon mapping, read the chapter "Studio Customization".
 
 ### Checkpoint
@@ -610,7 +610,7 @@ The custom preview is rendered. The metadata information is hardcoded for every 
 
 ## Step 7 - Content Creation
 
-The Studio Hub comes with a default content creator and a default content mapping.
+The Content Hub comes with a default content creator and a default content mapping.
 When we setup the connector type definition in the _Connector Types_ settings document, we also linked
 the _Content Mapping_ document to it. In there, the connector types are mapping
 to the CoreMedia content types available with the Blueprint.
@@ -639,7 +639,7 @@ a new _CMArticle_ document, since there is already an existing entry for it in t
 
 However, when the new article is generated, only the title will be set by the default content creator.
 To customize the content creation, we have to implement a separate interceptor that is invoked when
-content is created from Studio Hub items.
+content is created from Content Hub items.
 
 So, let's create the interceptor class first:
 
@@ -675,7 +675,7 @@ the _component-studio-hub-example.xml_ for it:
   </bean>
 ```
 
-The Studio Hub content interceptors are working the same way as existing content interceptors.
+The Content Hub content interceptors are working the same way as existing content interceptors.
 That means that maybe other interceptors are executed for the newly created content too.
 In that case, the priority attribute allows you to customize the order of execution.
 

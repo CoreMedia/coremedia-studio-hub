@@ -1,16 +1,16 @@
 # Content Creation
 
-This section describes how content is created by the Studio Hub and how to customize it.
+This section describes how content is created by the Content Hub and how to customize it.
 
 ### Asynchronous Content Creation
 
 The content that is created for a selection of a connector item depends on the type that is configured
 in the _Content Mapping_ document of the corresponding connector type configuration. While the content for an item
 is created and opened immediately (if created via dialog), the postprocessing of the content is executed by
-the Java backend of the Studio Hub. For the execution time of the postprocessing, the content is locked
+the Java backend of the Content Hub. For the execution time of the postprocessing, the content is locked
 by the server. This ensures that the document of the external system can downloaded, converted and put into a content
 property without concurrent access of a Studio user. Once the postprocessing is finished, the access to the newly 
-created content is released. Note that every content generated from the Studio Hub contains the 'ConnectorId'
+created content is released. Note that every content generated from the Content Hub contains the 'ConnectorId'
 to identify the connector and item it has been generated from.
 
 ### Bulk Content Creation
@@ -39,7 +39,7 @@ The user may continue anyway or show the item in the library.
 ### Content Write Interceptors
 
 The postprocessing of newly created content is implemented using the existing content write interceptor framework.
-The Studio Hub searches for all matching write interceptors and executes a _ContentWriteRequest_ for them.
+The Content Hub searches for all matching write interceptors and executes a _ContentWriteRequest_ for them.
 Therefore all existing _ContentWriteInterceptor_ will be applied for these contents too.
 
 The default implementation for filling additional content properties for a connector item 

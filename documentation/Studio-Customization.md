@@ -45,7 +45,7 @@ metadata_<KEY> = <VALUE>
 
 ### Custom Columns
 
-The Studio Hub allows to add custom columns to the Studio library and to configure the default ones.
+The Content Hub allows to add custom columns to the Studio library and to configure the default ones.
 
 #### Configuring Default Columns
 
@@ -107,7 +107,7 @@ and the icon will be shown with it's tooltip and the given optional icon text.
 
 ### Custom Forms
 
-The Studio Hub comes with a custom link list that can be added to any document form of a content type, that owns a struct property.
+The Content Hub comes with a custom link list that can be added to any document form of a content type, that owns a struct property.
 
 ![Custom Link Lists](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/images/content_ll.png)
 
@@ -128,8 +128,8 @@ To add a connector link list to a form, you have to use a regular _AddItemsPlugi
 ```
 
 every form definition that includes the _MediaDocumentForm_ will also contain the link list _External Media Items_.
-The label of this link list is localized like any other property editor, but by default, the Studio Hub supports the label for the _Struct_ property _localSettings.connectorIds_, where the actual items are stored.
+The label of this link list is localized like any other property editor, but by default, the Content Hub supports the label for the _Struct_ property _localSettings.connectorIds_, where the actual items are stored.
 
 Note that you can not only drop _ConnectorItem_ entities on the link list, but also _ConntectorCategory_ entities. This allows you to render all children of a category without touching any CoreMedia content.
 
-The _CAE_ modules of the Studio Hub comes with a Freemarker fascade that allows to access the linked items from _ContentBeans_.
+The _CAE_ modules of the Content Hub comes with a Freemarker fascade that allows to access the linked items from _ContentBeans_.

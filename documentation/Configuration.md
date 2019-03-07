@@ -1,4 +1,7 @@
-# Studio Hub Configuration
+#### _Studio Hub_ has been renamed to _Content Hub_!
+
+
+# Content Hub Configuration
 
 The configuration of the connector extension consists of different settings documents that can be
 put in a global, site-specific or user's home folder.
@@ -63,10 +66,7 @@ of the _ConnectorItem_ interface too (see _Connector Item Types_).
 
 ## Content Upload Types
 
-The _Content Upload Types_ document describes which CoreMedia document types are allowed for uploading
-and what are the blob property names of them. By default, the content upload is enabled when a category is writeable
-or _isContentUploadEnabled_ returns true. In that case this settings document is used to apply the DnD logic for the Studio.
-By default, the _upload_ method of the connector category is used to upload content blobs to the specific target system.
+See [Content Push](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Push.md)
 
 ## Preview Templates
 
@@ -396,7 +396,7 @@ Each feed entry's article can be opened by using the corresponding toolbar butto
 
 Similar to the RSS connector, the YouTube connector shows the list of videos
 of a YouTube account, including the defined playlists which are shown as sub-categories of the connector.
-The preview integration of the Studio Hub allows to preview the video in the Studio library.
+The preview integration of the Content Hub allows to preview the video in the Studio library.
 Ensure that http://www.youtube.com is that as valid iframe source in the _application.properties_ for
 property _studio.security.csp.frameSrc_.
 
@@ -438,7 +438,7 @@ The videos to show can also be resolved by using the YouTube username instead of
 
 ## Supported Preview Types
 
-The embedded preview of the Studio Hub comes with some pre-defined preview converters.
+The embedded preview of the Content Hub comes with some pre-defined preview converters.
 These converters are used the generate HTML out of binary files or formats/converts text files.
 
 The following preview conversion are supported:
