@@ -1,6 +1,3 @@
-#### _Studio Hub_ has been renamed to _Content Hub_!
-
-
 # Content Hub Configuration
 
 The configuration of the connector extension consists of different settings documents that can be

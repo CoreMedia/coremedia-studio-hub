@@ -1,8 +1,10 @@
+#### _Studio Hub_ has been renamed to _Content Hub_!
+
 # CoreMedia Content Hub
 
 ## Index
 
-* [Content Hub Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
+* [Configuration](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Configuration.md)
 * [Content Creation](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Creation.md)
 * [Content Push](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Content-Push.md)
 * [Metadata Resolvers](https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Metadata-Resolvers.md)
