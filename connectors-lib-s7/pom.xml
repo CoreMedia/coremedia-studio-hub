@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>com.coremedia.blueprint</groupId>
+    <artifactId>connectors</artifactId>
+    <version>1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>connectors-lib-s7</artifactId>
+  <properties>
+    <cxf.version>3.1.2</cxf.version>
+  </properties>
+  <dependencies>
+    <!-- Workspace Dependencies -->
+
+
+    <!-- PROJECT dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connectors-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connectors-lib</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- CoreMedia Dependencies -->
+
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-rest-plugins</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-unified-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>cap-unified-api-boot</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+
+    <!-- Thirdparty Dependencies -->
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <!-- cxf -->
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-bindings-soap</artifactId>
+      <version>${cxf.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>asm</artifactId>
+          <groupId>org.ow2.asm</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-frontend-jaxws</artifactId>
+      <version>${cxf.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>asm</artifactId>
+          <groupId>org.ow2.asm</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-databinding-jaxb</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-core</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>analyze-duplicate</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+          <execution>
+            <id>default-cli</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+              <failOnWarning>false</failOnWarning>
+              <ignoreNonCompile>true</ignoreNonCompile>
+              <outputXML>true</outputXML>
+              <ignoredUnusedDeclaredDependencies>
+                <!--ignore analyzing swc-->
+                <ignoredUnusedDeclaredDependency>::swc</ignoredUnusedDeclaredDependency>
+              </ignoredUnusedDeclaredDependencies>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- cxf-codegen-plugin -->
+      <plugin>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-codegen-plugin</artifactId>
+        <version>${cxf.version}</version>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
+              <wsdlOptions>
+                <wsdlOption>
+                  <!--https://s7sps1apissl.scene7.com/scene7/webservice/IpsApi-2013-02-15.wsdl-->
+                  <wsdl>src/main/resources/wsdl/IpsApi-2013-02-15.wsdl
+                  </wsdl>
+                  <serviceName>IpsApiService</serviceName>
+                  <!-- enables processing of implicit SOAP headers, default is false -->
+                  <extendedSoapHeaders>true</extendedSoapHeaders>
+                  <extraargs>
+                    <extraarg>-verbose</extraarg>
+                  </extraargs>
+                </wsdlOption>
+              </wsdlOptions>
+            </configuration>
+            <goals>
+              <goal>wsdl2java</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Add generated sources - avoids having to copy generated sources to build location -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/target/generated/cxf</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

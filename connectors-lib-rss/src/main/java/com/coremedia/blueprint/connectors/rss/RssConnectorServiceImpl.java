@@ -128,7 +128,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
           result.addMessage("rss", rootCategory, Arrays.asList(rootCategory.getName(), count));
           result.addEntity(rootCategory);
         }
-        LOGGER.info("'" + this.context.getConnectionId() + "' invalidation found " + count + " new elements.");
+        LOGGER.debug("'" + this.context.getConnectionId() + "' invalidation found " + count + " new elements.");
       }
     }
 
