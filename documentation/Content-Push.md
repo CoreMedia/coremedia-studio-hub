@@ -35,7 +35,7 @@ for the current push. The following table shows the behaviour for each or the di
 
 
 | Type | Supported | Behaviour |  
-| ---- |:---------:| --------- |
+|:----:|:---------:| --------- |
 | INTEGER | - | |  
 | DATE | - | |
 | STRING | x | The value of the property is written as a text file to the target. |
