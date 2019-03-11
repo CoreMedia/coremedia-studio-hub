@@ -175,6 +175,11 @@ This can be a samba share or any other mounted filesystem.
 | ------------- | ------------- |
 | folder | the server side folder to embed in the Studio library |
 
+### Instagram
+
+See
+https://github.com/CoreMedia/coremedia-studio-hub/blob/master/documentation/Instagram.md
+
 
 ### Typeform Configuration
 
