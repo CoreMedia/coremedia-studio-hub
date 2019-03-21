@@ -9,7 +9,7 @@ import com.coremedia.ui.data.ValueExpressionFactory;
 public class ConnectorRepositoryListContainerBase extends SwitchingContainer {
   private var selectedItemsValueExpression:ValueExpression;
 
-  public function ConnectorRepositoryListContainerBase(config:ConnectorRepositoryListConainer = null) {
+  public function ConnectorRepositoryListContainerBase(config:ConnectorRepositoryListContainer = null) {
     super(config);
   }
 

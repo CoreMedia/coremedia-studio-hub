@@ -105,7 +105,7 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
   }
 
   public function getFolderContainerItemId():String {
-    return ConnectorRepositoryListConainer.VIEW_CONTAINER_ITEM_ID;
+    return ConnectorRepositoryListContainer.VIEW_CONTAINER_ITEM_ID;
   }
 
   public function getRepositoryToolbarItemId():String {

@@ -28,7 +28,7 @@
       <editor:plugins>
         <ui:AddItemsPlugin>
           <ui:items>
-            <library2:ConnectorRepositoryListConainer/>
+            <library2:ConnectorRepositoryListContainer/>
           </ui:items>
         </ui:AddItemsPlugin>
       </editor:plugins>

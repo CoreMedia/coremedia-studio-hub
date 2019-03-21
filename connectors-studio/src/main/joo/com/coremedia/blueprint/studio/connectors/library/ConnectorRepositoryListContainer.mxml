@@ -12,10 +12,10 @@
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorRepositoryListContainer";
 
-    private var config:ConnectorRepositoryListConainer;
+    private var config:ConnectorRepositoryListContainer;
     public static const VIEW_CONTAINER_ITEM_ID:String = "connectorRepositoryContainer";
 
-    public native function ConnectorRepositoryListConainer(config:ConnectorRepositoryListConainer = null);
+    public native function ConnectorRepositoryListContainer(config:ConnectorRepositoryListContainer = null);
     ]]></fx:Script>
 
   <library2:items>
