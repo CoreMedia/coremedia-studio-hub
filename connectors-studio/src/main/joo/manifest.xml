@@ -15,7 +15,7 @@
   <component class="com.coremedia.blueprint.studio.connectors.dnd.ConnectorContentTreeDragDropPlugin"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.preview.ConnectorPreviewPanel"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.preview.ConnectorMetadataPanel"/>
-  <component class="com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryListConainer"/>
+  <component class="com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryListContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbarContainer"/>
   <component class="com.coremedia.blueprint.studio.connectors.library.toolbar.ConnectorRepositoryToolbar"/>
   <component class="com.coremedia.blueprint.studio.connectors.linklist.ConnectorLinkContextMenu"/>
