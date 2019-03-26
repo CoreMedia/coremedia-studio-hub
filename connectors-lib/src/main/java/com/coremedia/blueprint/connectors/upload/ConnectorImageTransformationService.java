@@ -151,6 +151,7 @@ public class ConnectorImageTransformationService {
 
     @SuppressWarnings("unused")
     public Map<String, String> getTransformMap() {
+      //TODO hard coded property
       Map<String, String> transformations;
       Struct localSettings = content.getStruct("localSettings");
       if (localSettings != null) {

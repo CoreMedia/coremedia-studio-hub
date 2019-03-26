@@ -52,6 +52,7 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  */
 public class ConnectorContentService implements InitializingBean {
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentService.class);
+  //TODO hard coded property
   public static final String LOCAL_SETTINGS = "localSettings";
 
   private ExecutorService service = Executors.newCachedThreadPool();
