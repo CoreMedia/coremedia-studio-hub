@@ -35,7 +35,7 @@ public class ConnectorSearchListBase extends AbstractConnectorList {
       return;
     }
 
-    ConnectorHelper.refreshColumns(this, connectorObject, Ext.emptyFn);
+    ConnectorColumnsHelper.refreshColumns(this, connectorObject, Ext.emptyFn);
   }
 }
 }

@@ -50,11 +50,11 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
 
   private function storeDataChanged():void {
     var connectorObject:ConnectorObject = getSelectedNodeExpression().getValue() as ConnectorObject;
-    if(!connectorObject) {
+    if (!connectorObject) {
       return;
     }
 
-    ConnectorHelper.refreshColumns(this, connectorObject, function (markAsRead:Boolean):void {
+    ConnectorColumnsHelper.refreshColumns(this, connectorObject, function (markAsRead:Boolean):void {
       markAsReadEnabled = markAsRead;
 
       getView()['emptyText'] = resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_selection');
