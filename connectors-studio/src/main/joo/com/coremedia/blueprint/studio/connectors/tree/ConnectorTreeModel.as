@@ -5,6 +5,7 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategoryImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
+import com.coremedia.blueprint.studio.connectors.model.ConnectorObjectImpl;
 import com.coremedia.cms.editor.sdk.collectionview.tree.CompoundChildTreeModel;
 import com.coremedia.ui.data.RemoteBean;
 import com.coremedia.ui.data.ValueExpression;
@@ -318,7 +319,11 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   }
 
   public function getTextCls(nodeId:String):String {
-    return ".x-slider.x-disabled";
+    var connectorObject:ConnectorObject = getNodeModel(nodeId) as ConnectorObject;
+    if(connectorObject) {
+      return connectorObject.getTextCls();
+    }
+    return null;
   }
 }
 }

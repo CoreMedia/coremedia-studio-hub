@@ -45,7 +45,7 @@ public class ConnectorObjectImpl extends RemoteBeanImpl implements ConnectorObje
   }
 
   public function getTextCls():String {
-    return null;//"connector-style-disabled connector-style-bold connector-style-line-through";//TODO not mapped yet
+    return null;//TODO no backend mapping yet
   }
 }
 }
