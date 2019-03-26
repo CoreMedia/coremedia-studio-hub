@@ -42,6 +42,7 @@ public class ContentCreateServiceImpl implements ContentCreateService {
       URL url = new URL(imageUrl);
       URLConnection con = url.openConnection();
       InputStream in = con.getInputStream();
+      //TODO hard coded mime type!!
       Blob blob = createBlob(in, imageName, "image/jpeg");
       picture.set("data", blob);
       in.close();
