@@ -34,7 +34,7 @@ public class OfficeConverter implements ConnectorPreviewConverter {
           "custom:MMClips", "custom:LinksUpToDate", "custom:ShareDoc", "custom:HyperlinksChanged");
 
   @Override
-  public boolean include(ConnectorItem item) {
+  public boolean test(ConnectorItem item) {
     return item.getName().endsWith(".pptx")
               || item.getName().endsWith(".docx")
               || item.getName().endsWith(".xlsx")

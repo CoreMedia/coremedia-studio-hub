@@ -2,11 +2,11 @@ package com.coremedia.blueprint.connectors.previewconverters;
 
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.common.util.Predicate;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
 import java.io.File;
+import java.util.function.Predicate;
 
 /**
  * Interface that can be implemented when item data should be converted

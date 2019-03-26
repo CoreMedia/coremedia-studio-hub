@@ -214,7 +214,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
    * Additional preview processing such as preview formatting and additional metadata retrieval
    */
   private void formatPreview(ConnectorPreviewRepresentation representation, ConnectorItem item) throws IOException {
-    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
+    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.test(item)).collect(Collectors.toList());
     List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.test(item)).collect(Collectors.toList());
 
     if (!applicableConverters.isEmpty() || !applicableMetaDataResolvers.isEmpty()) {
