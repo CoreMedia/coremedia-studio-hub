@@ -1,8 +1,8 @@
 package com.coremedia.blueprint.connectors.cloudinary;
 
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.api.ConnectorId;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.Serializable;

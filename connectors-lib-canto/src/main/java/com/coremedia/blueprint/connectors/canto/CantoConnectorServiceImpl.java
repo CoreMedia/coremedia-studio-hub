@@ -1,13 +1,13 @@
 package com.coremedia.blueprint.connectors.canto;
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.api.ConnectorException;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.blueprint.connectors.canto.model.CantoAsset;
 import com.coremedia.blueprint.connectors.canto.model.CantoCategory;
 import com.coremedia.blueprint.connectors.canto.rest.CantoConnector;

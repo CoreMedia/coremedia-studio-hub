@@ -1,8 +1,8 @@
 package com.coremedia.blueprint.connectors.typeform;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.content.ContentCreateService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.connectors.content.ContentCreateService;
 import com.coremedia.cap.content.ContentRepository;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;

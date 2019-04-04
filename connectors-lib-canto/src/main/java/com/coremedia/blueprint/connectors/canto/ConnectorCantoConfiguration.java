@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.canto;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.canto.rest.services.AssetService;
 import com.coremedia.blueprint.connectors.canto.rest.services.MetadataService;
 import edu.umd.cs.findbugs.annotations.NonNull;

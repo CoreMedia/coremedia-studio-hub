@@ -1,9 +1,13 @@
 package com.coremedia.blueprint.connectors.typeform;
 
-import com.coremedia.blueprint.connectors.api.*;
 import com.coremedia.blueprint.connectors.typeform.data.Answer;
 import com.coremedia.blueprint.connectors.typeform.data.Form;
 import com.coremedia.blueprint.connectors.typeform.data.Response;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorMetaData;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 

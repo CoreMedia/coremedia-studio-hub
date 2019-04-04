@@ -1,14 +1,13 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.content.ConnectorContentConfiguration;
-import com.coremedia.blueprint.connectors.content.ContentCreateService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.connectors.content.ConnectorContentConfiguration;
+import com.coremedia.connectors.content.ContentCreateService;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.undoc.common.spring.CapRepositoriesConfiguration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

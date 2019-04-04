@@ -1,6 +1,6 @@
 package com.coremedia.blueprint.connectors.cae.link;
 
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorItem;
 import com.coremedia.objectserver.web.links.Link;
 
 import java.util.Map;

@@ -1,9 +1,9 @@
 package com.coremedia.blueprint.connectors.canto.model;
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.canto.CantoConnectorServiceImpl;
 import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
 

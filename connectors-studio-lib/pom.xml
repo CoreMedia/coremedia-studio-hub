@@ -23,15 +23,13 @@
 
     <!-- PROJECT dependencies -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -41,12 +39,12 @@
       <scope>runtime</scope>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>connectors-lib-canto</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>${project.groupId}</groupId>-->
+      <!--<artifactId>connectors-lib-canto</artifactId>-->
+      <!--<version>${project.version}</version>-->
+      <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -99,6 +97,20 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>connectors-lib-s7</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connectors-lib-instagram</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib-rss</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
@@ -144,26 +156,31 @@
       <artifactId>notification-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-spring</artifactId>
+    </dependency>
 
     <!-- THIRD-PARTY dependencies -->
+
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-multipart</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-server</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
     </dependency>
 
     <dependency>
@@ -196,21 +213,6 @@
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
     </dependency>
 
   </dependencies>

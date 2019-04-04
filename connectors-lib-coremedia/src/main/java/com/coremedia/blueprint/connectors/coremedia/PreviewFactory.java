@@ -1,9 +1,9 @@
 package com.coremedia.blueprint.connectors.coremedia;
 
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorPreviewTemplates;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorPreviewTemplates;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.struct.Struct;
 import com.coremedia.xml.Markup;

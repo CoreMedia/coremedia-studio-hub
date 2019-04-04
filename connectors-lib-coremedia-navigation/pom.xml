@@ -16,18 +16,15 @@
 
     <!-- PROJECT dependencies -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-
 
     <!-- COREMEDIA dependencies -->
     <dependency>

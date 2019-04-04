@@ -1,16 +1,16 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.api.invalidation.InvalidationResult;
-import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
-import com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames;
 import com.coremedia.cap.content.ContentType;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.api.ConnectorException;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.connectors.api.invalidation.InvalidationResult;
+import com.coremedia.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.connectors.impl.ConnectorPropertyNames;
 import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -29,14 +29,12 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.DISPLAY_NAME;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.URL;
+import static com.coremedia.connectors.impl.ConnectorPropertyNames.DISPLAY_NAME;
+import static com.coremedia.connectors.impl.ConnectorPropertyNames.URL;
 
 public class RssConnectorServiceImpl implements ConnectorService {
   private static final Logger LOGGER = LoggerFactory.getLogger(RssConnectorServiceImpl.class);
@@ -59,7 +57,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
         return item;
       }
     }
-    return null;
+    throw new UnsupportedOperationException("No RSS item found for id '" + connectorId + "'");
   }
 
   @Nullable
@@ -107,32 +105,9 @@ public class RssConnectorServiceImpl implements ConnectorService {
   }
 
   @Override
+  @Nullable
   public InvalidationResult invalidate(@NonNull ConnectorContext context) {
-    InvalidationResult result = new InvalidationResult(context);
-
-    if (this.rootCategory != null) {
-      List<String> oldTitles = this.rootCategory.getItems().stream().map(ConnectorItem::getName).collect(Collectors.toList());
-      SyndFeed feed = getFeed(context);
-      if(feed != null) {
-        List<SyndEntry> entries = feed.getEntries();
-        int count = 0;
-        for (SyndEntry entry : entries) {
-          ConnectorItem item = createRssAsset(entry);
-          if (!oldTitles.contains(item.getName())) {
-            count++;
-          }
-        }
-
-        if (count > 0) {
-          getRootCategory(true);
-          result.addMessage("rss", rootCategory, Arrays.asList(rootCategory.getName(), count));
-          result.addEntity(rootCategory);
-        }
-        LOGGER.info("'" + this.context.getConnectionId() + "' invalidation found " + count + " new elements.");
-      }
-    }
-
-    return result;
+    return RssInvalidator.invalidate(context, this);
   }
 
   public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
@@ -142,7 +117,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
 
   //-------------------- Helper ----------------------------------------------------------------------------------------
 
-  private ConnectorItem createRssAsset(SyndEntry entry) {
+  ConnectorItem createRssAsset(SyndEntry entry) {
     ConnectorId id = ConnectorId.createItemId(rootCategory.getConnectorId(), entry.getUri());
     return new RssConnectorItem(rootCategory, context, rootCategory.getFeed(), entry, id);
   }
@@ -158,7 +133,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return result;
   }
 
-  private RssConnectorCategory getRootCategory(boolean refresh) {
+  RssConnectorCategory getRootCategory(boolean refresh) {
     if (rootCategory == null || refresh) {
       String displayName = context.getProperty(DISPLAY_NAME);
 
@@ -179,7 +154,7 @@ public class RssConnectorServiceImpl implements ConnectorService {
     return rootCategory;
   }
 
-  private SyndFeed getFeed(ConnectorContext context) {
+  SyndFeed getFeed(ConnectorContext context) {
     String url = this.context.getProperty(URL);
     try {
       SyndFeedInput input = new SyndFeedInput();

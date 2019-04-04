@@ -1,11 +1,11 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorColumn;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.library.DefaultConnectorColumn;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorColumn;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.library.DefaultConnectorColumn;
 import com.rometools.rome.feed.synd.SyndFeed;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;

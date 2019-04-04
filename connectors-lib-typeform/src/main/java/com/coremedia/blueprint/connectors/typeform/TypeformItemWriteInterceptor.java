@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.typeform;
 
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.content.ConnectorItemWriteInterceptor;
 import com.coremedia.blueprint.connectors.typeform.data.Form;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
 import com.coremedia.xml.Markup;

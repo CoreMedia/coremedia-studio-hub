@@ -16,19 +16,23 @@
 
     <!-- PROJECT dependencies -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
 
 
     <!-- COREMEDIA dependencies -->
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-cache</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-unified-api</artifactId>
@@ -54,22 +58,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>

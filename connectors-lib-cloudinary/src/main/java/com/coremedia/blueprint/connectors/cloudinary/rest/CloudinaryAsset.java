@@ -1,14 +1,14 @@
 package com.coremedia.blueprint.connectors.cloudinary.rest;
 
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorItemTypes;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorItemTypes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import static com.coremedia.blueprint.connectors.api.ConnectorItem.DEFAULT_TYPE;
+import static com.coremedia.connectors.api.ConnectorItem.DEFAULT_TYPE;
 
 /**
  * 0 = {java.util.HashMap$Node@22265} "bytes" -> "2298695"
@@ -23,7 +23,7 @@ import static com.coremedia.blueprint.connectors.api.ConnectorItem.DEFAULT_TYPE;
  * 9 = {java.util.HashMap$Node@22274} "public_id" -> "CoreMedia/14965400A1A93C87"
  * 10 = {java.util.HashMap$Node@22275} "height" -> "1823"
  */
-public class CloudinaryAsset {
+public class CloudinaryAsset extends CloudinaryEntity {
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
   private String id;
   private long size;

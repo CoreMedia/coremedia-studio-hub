@@ -1,8 +1,0 @@
-{
-  "studioPlugins": [
-    {
-      "mainClass": "com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin",
-      "name": "Connectors"
-    }
-  ]
-}

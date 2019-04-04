@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.canto.model;
 
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.canto.CantoConnectorServiceImpl;
 import com.coremedia.blueprint.connectors.canto.rest.services.MetadataService;
 import org.springframework.util.MultiValueMap;

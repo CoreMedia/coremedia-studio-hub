@@ -1,10 +1,8 @@
 package com.coremedia.blueprint.connectors.cloudinary;
 
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryAsset;
 import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryFolder;
-import com.coremedia.cap.common.CapPropertyDescriptor;
-import com.coremedia.cap.content.ContentType;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,11 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,36 +28,37 @@ public class CloudinaryService {
 
   //---------------- Service Methods -----------------------------------------------------------------------------------
 
-  @Cacheable(value = "cloudinaryFolderCache", key = "#context.connectionId + '_root'", cacheManager = "cacheManagerCloudinary")
   public List<CloudinaryFolder> getRootFolders(ConnectorContext context) {
+    LOGGER.info("Cloudinary: requesting root folders");
     return cloudinaryConnector.getRootFolders();
   }
 
-  @Cacheable(value = "cloudinaryAssetCache", key = "#context.connectionId + '_' + #path", cacheManager = "cacheManagerCloudinary")
   public CloudinaryAsset getAsset(ConnectorContext context, String path) {
+    LOGGER.info("Cloudinary: requesting asset " + path);
     return cloudinaryConnector.getAsset(path);
   }
 
-  @Cacheable(value = "cloudinaryAssetCache", key = "#context.connectionId + '_' + #path", cacheManager = "cacheManagerCloudinary")
   public List<CloudinaryAsset> getAssets(ConnectorContext context, String path) {
+    LOGGER.info("Cloudinary: requesting assets " + path);
     return cloudinaryConnector.getAssets(path, true);
   }
 
-  @Cacheable(value = "cloudinaryAssetCache", key = "#context.connectionId + '_all'", cacheManager = "cacheManagerCloudinary")
   public List<CloudinaryAsset> getAssets(ConnectorContext context) {
     return cloudinaryConnector.getAssets("", false);
   }
 
-  @Cacheable(value = "cloudinaryFolderCache", key = "#context.connectionId + '_' + #folder", cacheManager = "cacheManagerCloudinary")
   public List<CloudinaryFolder> getSubfolders(ConnectorContext context, String folder) {
+    LOGGER.info("Cloudinary: requesting subfolders of " + folder);
     return cloudinaryConnector.getSubFolders(folder);
   }
 
   public List<CloudinaryAsset> search(ConnectorContext context, String folder, String query, String searchType) {
+    LOGGER.info("Cloudinary: requesting search for folder " + folder);
     return cloudinaryConnector.search(folder, query, searchType);
   }
 
   public CloudinaryAsset upload(String folder, String itemName, InputStream inputStream) {
+    LOGGER.info("Cloudinary: uploading to " + folder);
     return cloudinaryConnector.upload(folder, itemName, inputStream);
   }
 

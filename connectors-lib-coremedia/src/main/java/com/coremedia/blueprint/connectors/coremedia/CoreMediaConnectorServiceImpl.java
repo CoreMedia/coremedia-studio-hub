@@ -1,14 +1,5 @@
 package com.coremedia.blueprint.connectors.coremedia;
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.api.invalidation.InvalidationResult;
-import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.cap.Cap;
 import com.coremedia.cap.common.Blob;
 import com.coremedia.cap.common.CapConnection;
@@ -19,6 +10,14 @@ import com.coremedia.cap.content.ContentType;
 import com.coremedia.cap.content.Version;
 import com.coremedia.cap.content.search.SearchResult;
 import com.coremedia.cap.content.search.SearchService;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.api.ConnectorException;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.connectors.api.search.ConnectorSearchResult;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringUtils;
@@ -153,12 +152,6 @@ public class CoreMediaConnectorServiceImpl implements ConnectorService {
 
     return new ConnectorSearchResult<>(results);
   }
-
-  @Override
-  public InvalidationResult invalidate(@NonNull ConnectorContext context) {
-    return null;
-  }
-
 
   public boolean isDeleteable(Content content) {
     return repository.isContentManagementServer() && repository.getAccessControl().mayDelete(content);

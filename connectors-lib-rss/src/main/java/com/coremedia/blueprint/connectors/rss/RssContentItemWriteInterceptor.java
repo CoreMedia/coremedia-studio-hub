@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.rss;
 
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.content.ConnectorItemWriteInterceptor;
 import com.coremedia.cap.content.Content;
 import com.coremedia.rest.cap.intercept.ContentWriteRequest;
 

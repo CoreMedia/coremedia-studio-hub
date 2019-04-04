@@ -13,22 +13,23 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorEntity;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
-import com.coremedia.blueprint.connectors.filesystems.FileBasedConnectorService;
-import com.coremedia.blueprint.connectors.filesystems.FileSystemItem;
-import com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorEntity;
+import com.coremedia.connectors.api.ConnectorException;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.search.ConnectorSearchResult;
+import com.coremedia.connectors.caching.CacheableConnectorService;
+import com.coremedia.connectors.caching.CachedConnectorEntity;
+import com.coremedia.connectors.impl.ConnectorPropertyNames;
+import com.coremedia.cache.Cache;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,19 +40,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.ACCESS_KEY;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.BUCKET_NAME;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.DISPLAY_NAME;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.FOLDER;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.PROFILE;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.REGION;
-import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.SECRET;
+import static com.coremedia.connectors.impl.ConnectorPropertyNames.DISPLAY_NAME;
+import static com.coremedia.connectors.impl.ConnectorPropertyNames.FOLDER;
 
-public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSummary> {
+public class S3ConnectorServiceImpl extends CacheableConnectorService<S3ObjectSummary> {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3ConnectorServiceImpl.class);
+
+  private static final String PROFILE = "profile";
+  private static final String REGION = "region";
+  private static final String BUCKET_NAME = "bucketName";
+  private static final String ACCESS_KEY = "accessKeyId";
+  private static final String SECRET = "secretAccessKey";
 
   private AmazonS3 s3Client;
   private S3ConnectorCategory rootCategory;
+
+  public S3ConnectorServiceImpl(Cache cache) {
+    super(cache);
+  }
 
   @Override
   public boolean init(@NonNull ConnectorContext context) {
@@ -126,8 +132,8 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   @Nullable
   @Override
   public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId itemId) throws ConnectorException {
-    ConnectorId parentFolderId = getFolderId(itemId);
-    S3ObjectSummary file = getCachedFileOrFolderEntity(context, itemId);
+    ConnectorId parentFolderId = getCategoryId(itemId);
+    S3ObjectSummary file = getCachedItemOrCategoryEntity(context, itemId);
     return new S3ConnectorItem(this, getCategory(context, parentFolderId), context, file, itemId);
   }
 
@@ -139,7 +145,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
       return getRootCategory(context);
     }
 
-    S3ObjectSummary object = getCachedFileOrFolderEntity(context, categoryId);
+    S3ObjectSummary object = getCachedItemOrCategoryEntity(context, categoryId);
     S3ConnectorCategory subCategory = new S3ConnectorCategory(this, parentCategory, context, object, categoryId);
     subCategory.setItems(getItems(context, subCategory));
     subCategory.setSubCategories(getSubCategories(context, subCategory));
@@ -157,7 +163,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   public ConnectorItem upload(@NonNull ConnectorContext context, ConnectorCategory category, String itemName, InputStream inputStream) {
     try {
       String bucketName = context.getProperty(BUCKET_NAME);
-      String uniqueObjectName = createUniqueFilename(context, category.getConnectorId(), itemName);
+      String uniqueObjectName = createUniqueName(context, category.getConnectorId(), itemName);
       //no leading slashes for s3
       if(uniqueObjectName.startsWith("/")) {
         uniqueObjectName = uniqueObjectName.substring(1, uniqueObjectName.length());
@@ -206,10 +212,10 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
       results.addAll(getItems(context, category));
     }
     else {
-      FileSystemItem<S3ObjectSummary> cacheItem = listCachedEntities(context, category.getConnectorId());
+      CachedConnectorEntity<S3ObjectSummary> cacheItem = listCachedEntities(context, category.getConnectorId());
       List<S3ObjectSummary> categoryList = cacheItem.getFolderItemsData();
       for (S3ObjectSummary objectSummary : categoryList) {
-        if (!isFile(objectSummary)) {
+        if (!isItemEntity(objectSummary)) {
           ConnectorId id = ConnectorId.createCategoryId(context.getConnectionId(), getPath(objectSummary));
           ConnectorCategory cat = getCategory(context, id);
           if ((searchType == null || searchType.equals(ConnectorCategory.DEFAULT_TYPE)) && cat.getDisplayName().toLowerCase().contains(query.toLowerCase())) {
@@ -280,7 +286,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return result;
   }
 
-  public S3ObjectSummary getFile(ConnectorId id) {
+  public S3ObjectSummary getEntity(ConnectorId id) {
     String searchPath = id.getExternalId();
 
     String bucketName = context.getProperty(BUCKET_NAME);
@@ -295,7 +301,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
     return null;
   }
 
-  public boolean isFile(S3ObjectSummary object) {
+  public boolean isItemEntity(S3ObjectSummary object) {
     return !object.getKey().endsWith("/");
   }
 
@@ -312,7 +318,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   private List<ConnectorCategory> getSubCategories(ConnectorContext context, @NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorCategory> subCategories = new ArrayList<>();
 
-    List<S3ObjectSummary> subfolders = getSubfolderEntities(context, category.getConnectorId());
+    List<S3ObjectSummary> subfolders = getSubcategoryEntities(context, category.getConnectorId());
     for (S3ObjectSummary entry : subfolders) {
       ConnectorId connectorId = ConnectorId.createCategoryId(context.getConnectionId(), getPath(entry));
       S3ConnectorCategory subCategory = new S3ConnectorCategory(this, category, context, entry, connectorId);
@@ -326,7 +332,7 @@ public class S3ConnectorServiceImpl extends FileBasedConnectorService<S3ObjectSu
   private List<ConnectorItem> getItems(ConnectorContext context, @NonNull ConnectorCategory category) throws ConnectorException {
     List<ConnectorItem> items = new ArrayList<>();
 
-    List<S3ObjectSummary> fileEntities = getFileEntities(context, category.getConnectorId());
+    List<S3ObjectSummary> fileEntities = getItemEntities(context, category.getConnectorId());
     for (S3ObjectSummary entry : fileEntities) {
       ConnectorId itemId = ConnectorId.createItemId(context.getConnectionId(), getPath(entry));
       S3ConnectorItem item = new S3ConnectorItem(this, category, context, entry, itemId);

@@ -1,7 +1,7 @@
 package com.coremedia.blueprint.connectors.navigation;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.navigation.util.ConnectorPageGridService;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.multisite.SitesService;

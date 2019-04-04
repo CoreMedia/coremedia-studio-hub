@@ -1,11 +1,11 @@
 package com.coremedia.blueprint.connectors.filesystem;
 
 
-import com.coremedia.blueprint.connectors.api.ConnectorCategory;
-import com.coremedia.blueprint.connectors.api.ConnectorContext;
-import com.coremedia.blueprint.connectors.api.ConnectorId;
-import com.coremedia.blueprint.connectors.api.ConnectorItem;
-import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
+import com.coremedia.connectors.api.ConnectorCategory;
+import com.coremedia.connectors.api.ConnectorContext;
+import com.coremedia.connectors.api.ConnectorId;
+import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.api.ConnectorMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class FileSystemConnectorItem extends FileSystemConnectorEntity implements ConnectorItem {
   private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemConnectorItem.class);
@@ -36,7 +38,11 @@ public class FileSystemConnectorItem extends FileSystemConnectorEntity implement
   @Nullable
   @Override
   public ConnectorMetaData getMetaData() {
-    return null;
+    return () -> {
+      Map<String, Object> result = new TreeMap<>();
+      result.put("path", getFile().getPath());
+      return result;
+    };
   }
 
   @Override

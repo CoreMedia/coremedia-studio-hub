@@ -1,8 +1,8 @@
 package com.coremedia.blueprint.connectors.dropbox;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.filesystems.FileSystemService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.cache.Cache;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -15,10 +15,8 @@ public class ConnectorDropboxConfiguration {
 
   @Bean
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-  public ConnectorService connectorDropboxService(@NonNull @Qualifier("dropboxFileCache") FileSystemService fileSystemService) {
-    DropboxConnectorServiceImpl dropboxConnectorService = new DropboxConnectorServiceImpl();
-    dropboxConnectorService.setFileCache(fileSystemService);
-    return dropboxConnectorService;
+  public ConnectorService connectorDropboxService(@NonNull Cache cache) {
+    return new DropboxConnectorServiceImpl(cache);
   }
 
   @Bean(name = "connector:dropbox")
@@ -27,10 +25,5 @@ public class ConnectorDropboxConfiguration {
     ConnectorConnection connectorConnection = new ConnectorConnection();
     connectorConnection.setConnectorService(connectorService);
     return connectorConnection;
-  }
-
-  @Bean
-  public FileSystemService dropboxFileCache() {
-    return new FileSystemService();
   }
 }

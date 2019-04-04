@@ -5,7 +5,7 @@ import com.cloudinary.Search;
 import com.cloudinary.api.exceptions.NotFound;
 import com.cloudinary.api.exceptions.RateLimited;
 import com.cloudinary.utils.ObjectUtils;
-import com.coremedia.blueprint.connectors.api.ConnectorException;
+import com.coremedia.connectors.api.ConnectorException;
 import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryAsset;
 import com.coremedia.blueprint.connectors.cloudinary.rest.CloudinaryFolder;
 import org.apache.commons.io.FilenameUtils;

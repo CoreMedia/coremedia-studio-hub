@@ -1,8 +1,8 @@
 package com.coremedia.blueprint.connectors.s3;
 
-import com.coremedia.blueprint.connectors.api.ConnectorConnection;
-import com.coremedia.blueprint.connectors.api.ConnectorService;
-import com.coremedia.blueprint.connectors.filesystems.FileSystemService;
+import com.coremedia.connectors.api.ConnectorConnection;
+import com.coremedia.connectors.api.ConnectorService;
+import com.coremedia.cache.Cache;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -23,14 +23,7 @@ public class ConnectorS3Configuration {
 
   @Bean
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-  public ConnectorService connectorS3Service(@NonNull @Qualifier("s3ConnectorCache") FileSystemService fileSystemService) {
-    S3ConnectorServiceImpl s3ConnectorService = new S3ConnectorServiceImpl();
-    s3ConnectorService.setFileCache(fileSystemService);
-    return s3ConnectorService;
-  }
-
-  @Bean
-  public FileSystemService s3ConnectorCache() {
-    return new FileSystemService();
+  public ConnectorService connectorS3Service(@NonNull Cache cache) {
+    return new S3ConnectorServiceImpl(cache);
   }
 }

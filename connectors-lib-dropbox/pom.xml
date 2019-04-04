@@ -19,17 +19,20 @@
 
     <!-- PROJECT dependencies -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.connectors</groupId>
       <artifactId>connectors-lib</artifactId>
-      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>coremedia-cache</artifactId>
+    </dependency>
 
     <!-- DROPBOX dependencies -->
     <dependency>

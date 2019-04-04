@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  *
  */
-public class CloudinaryFolder {
+public class CloudinaryFolder extends CloudinaryEntity {
   private String name;
   private String path;
 
