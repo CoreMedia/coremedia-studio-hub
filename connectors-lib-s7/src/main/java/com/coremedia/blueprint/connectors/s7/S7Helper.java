@@ -8,18 +8,19 @@ import com.scene7.ipsapi.xsd._2013_02_15.Asset;
  */
 class S7Helper {
 
-    static String getName(S7Container summary) {
-        if (summary == null) {
-            return null;
-        }
-        Asset asset = summary.getAsset();
-        if (asset != null) {
-            String filename = asset.getName();
-            return filename;
-        } else if (summary.getFolder() != null) {
-            return summary.getFolder().getPath();
-        }
-        return null;
+  static String getName(S7Container summary) {
+    if (summary == null) {
+      return null;
     }
+    Asset asset = summary.getAsset();
+    if (asset != null) {
+      String filename = asset.getName();
+      return filename;
+    }
+    else if (summary.getFolder() != null) {
+      return summary.getFolder().getPath();
+    }
+    return null;
+  }
 
 }

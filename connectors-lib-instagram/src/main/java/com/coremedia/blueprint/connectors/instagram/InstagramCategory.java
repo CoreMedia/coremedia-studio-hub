@@ -1,11 +1,11 @@
 package com.coremedia.blueprint.connectors.instagram;
 
-import com.coremedia.connectors.library.DefaultConnectorColumn;
 import com.coremedia.connectors.api.ConnectorCategory;
 import com.coremedia.connectors.api.ConnectorColumn;
 import com.coremedia.connectors.api.ConnectorContext;
 import com.coremedia.connectors.api.ConnectorId;
 import com.coremedia.connectors.api.ConnectorItem;
+import com.coremedia.connectors.library.DefaultConnectorColumn;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -27,11 +27,11 @@ public class InstagramCategory implements ConnectorCategory {
   private List<ConnectorItem> childItems;
 
   public InstagramCategory(ConnectorId id,
-                            ConnectorContext context,
-                            String name,
-                            InstagramCategory parent,
-                            List<ConnectorCategory> childCategories,
-                            List<ConnectorItem> childItems) {
+                           ConnectorContext context,
+                           String name,
+                           InstagramCategory parent,
+                           List<ConnectorCategory> childCategories,
+                           List<ConnectorItem> childItems) {
     this.id = id;
     this.context = context;
     this.name = name;

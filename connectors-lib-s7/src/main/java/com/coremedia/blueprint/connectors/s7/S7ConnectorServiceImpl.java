@@ -1,5 +1,7 @@
 package com.coremedia.blueprint.connectors.s7;
 
+import com.coremedia.blueprint.connectors.s7.client.IpsApiClient;
+import com.coremedia.cache.Cache;
 import com.coremedia.connectors.api.ConnectorCategory;
 import com.coremedia.connectors.api.ConnectorContext;
 import com.coremedia.connectors.api.ConnectorEntity;
@@ -8,8 +10,6 @@ import com.coremedia.connectors.api.ConnectorId;
 import com.coremedia.connectors.api.ConnectorItem;
 import com.coremedia.connectors.api.search.ConnectorSearchResult;
 import com.coremedia.connectors.caching.CacheableConnectorService;
-import com.coremedia.blueprint.connectors.s7.client.IpsApiClient;
-import com.coremedia.cache.Cache;
 import com.scene7.ipsapi.xsd._2013_02_15.Asset;
 import com.scene7.ipsapi.xsd._2013_02_15.Folder;
 import com.scene7.ipsapi.xsd._2013_02_15.FolderArray;

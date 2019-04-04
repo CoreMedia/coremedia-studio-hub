@@ -1,11 +1,11 @@
 package com.coremedia.blueprint.connectors.instagram;
 
+import com.coremedia.cap.content.ContentRepository;
+import com.coremedia.cap.undoc.common.spring.CapRepositoriesConfiguration;
 import com.coremedia.connectors.api.ConnectorConnection;
 import com.coremedia.connectors.api.ConnectorService;
 import com.coremedia.connectors.content.ConnectorContentConfiguration;
 import com.coremedia.connectors.content.ContentCreateService;
-import com.coremedia.cap.content.ContentRepository;
-import com.coremedia.cap.undoc.common.spring.CapRepositoriesConfiguration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -60,7 +60,6 @@ public class ConnectorInstagramConfiguration {
   }
 
 
-
   @Bean(name = "connector:instagram")
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public ConnectorConnection instagramConnectorConnection(@NonNull @Qualifier("connectorInstagramService") ConnectorService connectorService) {
@@ -73,13 +72,13 @@ public class ConnectorInstagramConfiguration {
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public ConnectorService connectorInstagramService(@NonNull @Qualifier("instagramConnectorCache") ConnectorService connectorService) {
     InstagramConnectorService instagramConnectorService = new InstagramConnectorService();
-   /* instagramConnectorService.setFileCache(fileSystemService);*/
+    /* instagramConnectorService.setFileCache(fileSystemService);*/
     return instagramConnectorService;
   }
 
   @Bean
   public InstagramWriteInterceptor instagramWriteInterceptor(@NonNull ContentRepository contentRepository,
-                                                                               @NonNull ContentCreateService contentCreateService) {
+                                                             @NonNull ContentCreateService contentCreateService) {
     InstagramWriteInterceptor instagramWriteInterceptor = new InstagramWriteInterceptor();
     instagramWriteInterceptor.setPriority(0);
     instagramWriteInterceptor.setType(contentRepository.getContentType("CMHTML"));

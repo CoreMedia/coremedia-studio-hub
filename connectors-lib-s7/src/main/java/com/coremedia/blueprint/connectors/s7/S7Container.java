@@ -4,25 +4,26 @@ import com.scene7.ipsapi.xsd._2013_02_15.Asset;
 import com.scene7.ipsapi.xsd._2013_02_15.Folder;
 
 /**
+ *
  */
 public class S7Container {
 
-    private Folder folder;
-    private Asset asset;
+  private Folder folder;
+  private Asset asset;
 
-    public Folder getFolder() {
-        return folder;
-    }
+  public Folder getFolder() {
+    return folder;
+  }
 
-    public void setFolder(Folder folder) {
-        this.folder = folder;
-    }
+  public void setFolder(Folder folder) {
+    this.folder = folder;
+  }
 
-    public Asset getAsset() {
-        return asset;
-    }
+  public Asset getAsset() {
+    return asset;
+  }
 
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
+  public void setAsset(Asset asset) {
+    this.asset = asset;
+  }
 }

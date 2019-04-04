@@ -14,34 +14,34 @@ import java.util.List;
 
 public class SoapHeaderInterceptor extends AbstractSoapInterceptor {
 
-    private String userid = "ulrike.heidler@coremedia.com";
+  private String userid = "ulrike.heidler@coremedia.com";
 
-    private String password = "C0remedia#";
+  private String password = "C0remedia#";
 
-    public SoapHeaderInterceptor() {
-        super(Phase.POST_LOGICAL);
+  public SoapHeaderInterceptor() {
+    super(Phase.POST_LOGICAL);
+  }
+
+  @Override
+  public void handleMessage(SoapMessage message) throws Fault {
+    List<Header> headers = message.getHeaders();
+    AuthHeader authHeader = createAuthHeader();
+    try {
+      Header header = new Header(new QName("http://www.scene7.com/IpsApi/xsd", "authHeader"),
+              authHeader,
+              new JAXBDataBinding(AuthHeader.class));
+      headers.add(header);
+      message.put(Header.HEADER_LIST, headers);
+    } catch (JAXBException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void handleMessage(SoapMessage message) throws Fault {
-        List<Header> headers = message.getHeaders();
-        AuthHeader authHeader = createAuthHeader();
-        try {
-            Header header = new Header(new QName("http://www.scene7.com/IpsApi/xsd", "authHeader"),
-                    authHeader,
-                    new JAXBDataBinding(AuthHeader.class));
-            headers.add(header);
-            message.put(Header.HEADER_LIST, headers);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private AuthHeader createAuthHeader() {
-        AuthHeader header = new AuthHeader();
-        header.setUser(this.userid);
-        header.setPassword(this.password);
-        return header;
-    }
+  private AuthHeader createAuthHeader() {
+    AuthHeader header = new AuthHeader();
+    header.setUser(this.userid);
+    header.setPassword(this.password);
+    return header;
+  }
 
 }

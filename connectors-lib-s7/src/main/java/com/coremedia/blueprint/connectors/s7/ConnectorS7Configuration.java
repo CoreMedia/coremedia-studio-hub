@@ -1,12 +1,12 @@
 package com.coremedia.blueprint.connectors.s7;
 
+import com.coremedia.cache.Cache;
+import com.coremedia.cap.content.ContentRepository;
+import com.coremedia.cap.undoc.common.spring.CapRepositoriesConfiguration;
 import com.coremedia.connectors.api.ConnectorConnection;
 import com.coremedia.connectors.api.ConnectorService;
 import com.coremedia.connectors.content.ConnectorContentConfiguration;
 import com.coremedia.connectors.content.ContentCreateService;
-import com.coremedia.cache.Cache;
-import com.coremedia.cap.content.ContentRepository;
-import com.coremedia.cap.undoc.common.spring.CapRepositoriesConfiguration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -65,7 +65,7 @@ public class ConnectorS7Configuration {
 
   @Bean
   public S7ContentItemWriteInterceptor s7WriteInterceptor(@NonNull ContentRepository contentRepository,
-                                                             @NonNull ContentCreateService contentCreateService) {
+                                                          @NonNull ContentCreateService contentCreateService) {
     S7ContentItemWriteInterceptor s7WriteInterceptor = new S7ContentItemWriteInterceptor();
     s7WriteInterceptor.setPriority(0);
     s7WriteInterceptor.setType(contentRepository.getContentType("CMPicture"));
