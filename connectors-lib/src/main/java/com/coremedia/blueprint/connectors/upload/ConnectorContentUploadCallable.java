@@ -85,7 +85,7 @@ class ConnectorContentUploadCallable implements Callable<Void> {
           defaultPropertyNames = userSelectedPropertyNames;
         }
 
-        boolean uploadIntercepted = executeInterceptors(content, defaultPropertyNames);
+        boolean uploadIntercepted = executeInterceptors(context, content, defaultPropertyNames);
         if(!uploadIntercepted) {
           executeUpload(content, defaultPropertyNames);
         }
@@ -102,10 +102,10 @@ class ConnectorContentUploadCallable implements Callable<Void> {
    * @param defaultPropertyNames the default property names to read from the content
    * @return true any interceptor was executed.
    */
-  private boolean executeInterceptors(Content content, List<String> defaultPropertyNames) {
+  private boolean executeInterceptors(ConnectorContext context, Content content, List<String> defaultPropertyNames) {
     boolean interceptorExecuted = false;
     for (ConnectorContentUploadInterceptor uploadInterceptor : uploadInterceptors) {
-      if (uploadInterceptor.isApplicable(content)) {
+      if (uploadInterceptor.isApplicable(context, content)) {
         uploadInterceptor.intercept(context, category, content, defaultPropertyNames);
         interceptorExecuted = true;
       }
