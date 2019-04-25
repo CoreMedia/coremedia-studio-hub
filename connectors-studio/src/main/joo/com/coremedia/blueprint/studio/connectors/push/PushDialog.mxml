@@ -4,7 +4,7 @@
                       xmlns:exml="http://www.jangaroo.net/exml/0.8"
                       xmlns:ui="exml:com.coremedia.ui.config"
                       xmlns="exml:ext.config"
-                      title="{StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_dialog_title'), config.rootCategory.getConnector().getDisplayName())}"
+                      title="{StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'upload_dialog_title'), config.rootCategory.getDisplayName())}"
                       width="400"
                       height="460"
                       modal="true"
