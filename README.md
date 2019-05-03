@@ -32,7 +32,7 @@ Add modules to modules/extensions/pom.xml
 Add extension to the list of managed extensions at the end of workspace-config/extensions/managed-extensions.txt:
 
 ```
-echo "connectors" >> workspace-config/extensions/managed-extensions.txt
+echo "connectors" >> workspace-configuration/extensions/managed-extensions.txt
 ```
 
 Download the extension tool:
@@ -44,7 +44,7 @@ mvn dependency:copy -Dartifact=com.coremedia.tools.extensions:extensions:LATEST:
 Execute the extension tool:
 
 ```
-java -jar extensions-tool/extensions.jar --task synchronize --extension-config-file  workspace-config/extensions/extension-config.properties --task-input-file workspace-config/extensions/managed-extensions.txt
+java -jar tool/extensions.jar --task synchronize --extension-config-file  workspace-configuration/extensions/extension-config.properties --task-input-file workspace-configuration/extensions/managed-extensions.txt
 ```
 
 For the IDEA import:
