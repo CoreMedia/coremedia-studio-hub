@@ -30,13 +30,20 @@ public class PushDialogBase extends StudioDialog {
   }
 
   protected function getTargetContentType(selectionExpression:ValueExpression):String {
-    var values:Array = selectionExpression.getValue();
-    return values[0].getType().getName();
+    var value:* = selectionExpression.getValue();
+    var c:Content = value[0];
+    if(value is Content){
+      c = value;
+    }
+    return c.getType().getName();
   }
 
   protected function getPropertyNamesExpression(rootCategory:ConnectorCategory, selectionExpression:ValueExpression):ValueExpression {
-    var values:Array = selectionExpression.getValue();
-    var c:Content = values[0];
+    var value:* = selectionExpression.getValue();
+    var c:Content = value[0];
+    if(value is Content){
+      c = value;
+    }
 
     var ctx:ConnectorContext = rootCategory.getContext();
     var propertyNames:Array = ctx.getUploadPropertyNames(c);
@@ -52,7 +59,11 @@ public class PushDialogBase extends StudioDialog {
 
   protected function okPressed():void {
     var category:ConnectorCategory = categorySelectionExpression.getValue();
-    var items:Array = selectedItemsValueExpression.getValue();
+    var items:* = selectedItemsValueExpression.getValue();
+    if(items is Content) {
+      items = [items];
+    }
+
     var propertyNames:Array = [];
     var selection:Object = getSelectedPropertyNamesExpression().getValue().toObject();
     for(var propertyName:String in selection) {

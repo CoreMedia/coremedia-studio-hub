@@ -20,8 +20,7 @@ public class AddPushButtonToPreviewToolbarPlugin implements Plugin {
   private function initMenu():void {
     previewToolbar.removeListener('afterlayout', initMenu);
 
-    var c:Content = this.previewToolbar['getCurrentPreviewContentValueExpression']().getValue();
-    var ve:ValueExpression = ValueExpressionFactory.createFromValue([c]);
+    var ve:ValueExpression = this.previewToolbar['getCurrentPreviewContentValueExpression']();
     var pushButton:PushButton = new PushButton(PushButton({
       'selectedItemsValueExpression': ve,
       'scale': 'medium',
