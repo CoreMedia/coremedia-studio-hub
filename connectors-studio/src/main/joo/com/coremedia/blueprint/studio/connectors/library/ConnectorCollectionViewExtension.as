@@ -65,7 +65,7 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
     }
 
     var listView:ConnectorRepositoryList = Ext.getCmp(ConnectorRepositoryList.ID) as ConnectorRepositoryList;
-    UploadManager.bulkUpload(settings, null, files, false, function (result:Array):void {
+    UploadManager.bulkUpload(settings, null, files, function (result:Array):void {
       listView.setDisabled(true);
       ValueExpressionFactory.createFromFunction(function ():Array {
         var items:Array = [];
