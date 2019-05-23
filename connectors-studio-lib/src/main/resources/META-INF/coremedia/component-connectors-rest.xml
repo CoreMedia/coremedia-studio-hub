@@ -97,4 +97,5 @@
 
   <customize:replace order="9999" id="customHttpFilterwall" bean="httpFirewall" custom-ref="connectorHttpFirewall"/>
 
+  <bean id="connectorAttachmentHeaderFilter" class="com.coremedia.blueprint.studio.connectors.rest.AttachmentHeaderFilter" />
 </beans>
