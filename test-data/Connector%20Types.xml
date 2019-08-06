@@ -51,9 +51,6 @@
           <StringProperty Name="name">CoreMedia</StringProperty>
           <StringProperty Name="connectorType">coremedia</StringProperty>
           <StringProperty Name="defaultColumns">type,name,lastModified</StringProperty>
-          <LinkProperty Name="itemTypes" LinkType="coremedia:///cap/contenttype/CMSettings"
-                        xlink:href="coremedia:///cap/resources/Connector%20Item%20Types%20CoreMedia.xml"
-                        cmexport:path="/Settings/Options/Settings/Connectors/Connector%20Item%20Types%20CoreMedia"/>
           <LinkProperty Name="previewTemplates" LinkType="coremedia:///cap/contenttype/CMSettings"
                         xlink:href="coremedia:///cap/resources/Preview%20Templates.xml"
                         cmexport:path="/Settings/Options/Settings/Connectors/Preview%20Templates"/>
@@ -62,9 +59,6 @@
           <StringProperty Name="name">Navigation</StringProperty>
           <StringProperty Name="connectorType">navigation</StringProperty>
           <StringProperty Name="defaultColumns">type,name,lastModified</StringProperty>
-          <LinkProperty Name="itemTypes" LinkType="coremedia:///cap/contenttype/CMSettings"
-                        xlink:href="coremedia:///cap/resources/Connector%20Item%20Types%20CoreMedia.xml"
-                        cmexport:path="/Settings/Options/Settings/Connectors/Connector%20Item%20Types%20CoreMedia"/>
         </Struct>
         <Struct>
           <StringProperty Name="name">YouTube</StringProperty>
