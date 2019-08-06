@@ -60,7 +60,6 @@ public class ConnectorInstagramConfiguration {
   }
 
 
-
   @Bean(name = "connector:instagram")
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public ConnectorConnection instagramConnectorConnection(@NonNull @Qualifier("connectorInstagramService") ConnectorService connectorService) {
@@ -73,13 +72,13 @@ public class ConnectorInstagramConfiguration {
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public ConnectorService connectorInstagramService(@NonNull @Qualifier("instagramConnectorCache") ConnectorService connectorService) {
     InstagramConnectorService instagramConnectorService = new InstagramConnectorService();
-   /* instagramConnectorService.setFileCache(fileSystemService);*/
+    /* instagramConnectorService.setFileCache(fileSystemService);*/
     return instagramConnectorService;
   }
 
   @Bean
   public InstagramWriteInterceptor instagramWriteInterceptor(@NonNull ContentRepository contentRepository,
-                                                                               @NonNull ContentCreateService contentCreateService) {
+                                                             @NonNull ContentCreateService contentCreateService) {
     InstagramWriteInterceptor instagramWriteInterceptor = new InstagramWriteInterceptor();
     instagramWriteInterceptor.setPriority(0);
     instagramWriteInterceptor.setType(contentRepository.getContentType("CMHTML"));
