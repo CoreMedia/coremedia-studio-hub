@@ -29,7 +29,7 @@ public interface ConnectorItem extends ConnectorEntity {
   @Nullable
   default String getOpenInTabUrl() {
     ConnectorId id = getConnectorId();
-    return "/api/connector/item/" + id.toUri() + "/data?mode=open";
+    return "api/connector/item/" + id.toUri() + "/data?mode=open";
   }
 
   /**
@@ -38,7 +38,7 @@ public interface ConnectorItem extends ConnectorEntity {
   @Nullable
   default String getStreamUrl() {
     ConnectorId id = getConnectorId();
-    return "/api/connector/item/" + id.toUri() + "/data?mode=stream";
+    return "api/connector/item/" + id.toUri() + "/data?mode=stream";
   }
 
   /**
@@ -48,7 +48,7 @@ public interface ConnectorItem extends ConnectorEntity {
   @Nullable
   default String getDownloadUrl() {
     ConnectorId id = getConnectorId();
-    return "/api/connector/item/" + id.toUri() + "/data?mode=download";
+    return "api/connector/item/" + id.toUri() + "/data?mode=download";
   }
 
   /**
