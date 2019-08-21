@@ -5,7 +5,6 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorCategory;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorCategoryImpl;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
-import com.coremedia.blueprint.studio.connectors.model.ConnectorObjectImpl;
 import com.coremedia.cms.editor.sdk.collectionview.tree.CompoundChildTreeModel;
 import com.coremedia.ui.data.RemoteBean;
 import com.coremedia.ui.data.ValueExpression;
@@ -60,7 +59,8 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
 
     if (isConnectorId(nodeId)) {
       return computeStoreText();
-    } else {
+    }
+    else {
       var node:RemoteBean = getNodeModel(nodeId) as RemoteBean;
       if (node is ConnectorCategory) {
         return ConnectorCategory(node).getDisplayName();
@@ -192,7 +192,8 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
   }
 
   public function getIdPathFromModel(model:Object):Array {
-    if (!(model is ConnectorObject)) {
+    var hubObject:ConnectorObject = model as ConnectorObject;
+    if (!hubObject) {
       return null;
     }
     if (!getConnector()) {
@@ -204,36 +205,38 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
     }
 
     var path:Array = [];
-    var node:RemoteBean = model as RemoteBean;
-    var treeNode:RemoteBean;
-    if (node is ConnectorItem) {
-      treeNode = ConnectorItem(node).getParent();
-      if (!treeNode) {
-        trace('[ERROR]', 'Parent not set for connector item ' + node.getUriPath());
-      }
-    } else {
-      treeNode = node;
-    }
+    var folderForGivenModel:ConnectorCategory = getParentFolderForHubObject(hubObject);
 
-    var category:ConnectorCategory = treeNode as ConnectorCategory;
-    if (category) {
+    if (folderForGivenModel) {
       //we have to reverse the path to root as we want from the root.
-      var pathToRoot:Array = connectorCategoryTreeRelation.pathToRoot(treeNode);
+      var pathToRoot:Array = connectorCategoryTreeRelation.pathToRoot(folderForGivenModel);
       if (pathToRoot === undefined) {
         return undefined;
-      } else if (!pathToRoot) {
+      }
+      else if (!pathToRoot) {
         return null;
       }
       path = pathToRoot.reverse();
-      //path contains the root category at top. so we need the store above it. and not catalog or something
-      treeNode = getConnector();
+      //path must contain the root adapter as root folder at the top
     }
-    path.unshift(treeNode);
-    //add the store as top node if not happened already
-    if (treeNode !== getConnector()) {
-      path.unshift(getConnector());
-    }
+
+    path.unshift(getConnector());
+
     return path.map(getNodeId);
+  }
+
+  private static function getParentFolderForHubObject(hubObject:ConnectorObject):ConnectorCategory {
+    var treeNode:ConnectorObject;
+    if (hubObject is ConnectorItem) {
+      treeNode = ConnectorItem(hubObject).getParent();
+      if (!treeNode) {
+        trace('[ERROR]', 'Parent not set for hub item ' + hubObject.getUriPath());
+      }
+    }
+    else {
+      treeNode = hubObject;
+    }
+    return treeNode as ConnectorCategory;
   }
 
   private function getConnector():Connector {
@@ -290,7 +293,7 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
 
     //must not have been loaded yet since the type is an immediate property
     var thisConnector:Connector = getConnectorExpression().getValue();
-    if(!thisConnector) {
+    if (!thisConnector) {
       return null;
     }
 
@@ -320,7 +323,7 @@ public class ConnectorTreeModel implements CompoundChildTreeModel {
 
   public function getTextCls(nodeId:String):String {
     var connectorObject:ConnectorObject = getNodeModel(nodeId) as ConnectorObject;
-    if(connectorObject) {
+    if (connectorObject) {
       return connectorObject.getTextCls();
     }
     return null;

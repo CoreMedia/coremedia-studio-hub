@@ -31,7 +31,8 @@
   <items>
     <MenuItem itemId="{AbstractContextMenu.OPEN_MENU_ITEM_ID}">
       <baseAction>
-        <editor:OpenInTreeAction selectedFolderValueExpression="{config.selectedFolderValueExpression}"/>
+        <editor:OpenInTreeAction selectedFolderValueExpression="{config.selectedFolderValueExpression}"
+                                 selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </baseAction>
     </MenuItem>
     <MenuSeparator/>
