@@ -30,7 +30,9 @@ public class PictureMetaDataResolver implements ConnectorMetaDataResolver {
           "languageidentifier",
           "profile date/time",
           "country/primarylocationcode",
-          "supplementalcategory(s)");
+          "supplementalcategory(s)",
+          "short document identifier",
+          "keywords");
 
   @Override
   public boolean test(ConnectorItem item) {

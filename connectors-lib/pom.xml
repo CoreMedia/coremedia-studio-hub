@@ -23,9 +23,8 @@
 
     <!-- COREMEDIA dependencies -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.blueprint</groupId>
       <artifactId>image-transformation</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -134,11 +133,42 @@
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-parsers</artifactId>
+      <exclusions>
+        <!-- exclude javax.activation and jakarta.activation-api, we use jakarta.activation as defined separately -->
+        <exclusion>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>jakarta.activation</groupId>
+          <artifactId>jakarta.activation-api</artifactId>
+        </exclusion>
+        <!-- exclude javax.annotation-api, we use jakarta.annotation-api as defined separately -->
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
+
+    <!-- begin java-11-dependencies -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <!-- this is also a replacement for tika-parser's excluded transitive activation dependencies -->
+      <groupId>com.sun.activation</groupId>
+      <artifactId>jakarta.activation</artifactId>
+    </dependency>
+    <dependency>
+      <!-- this a replacement for tika-parser's excluded transitive javax.annotation-api dependency -->
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- end java-11-dependencies -->
+
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
 

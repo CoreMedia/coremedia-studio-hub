@@ -14,27 +14,22 @@ import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorPr
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
-import com.coremedia.rest.linking.LocationHeaderResourceFilter;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
-import com.sun.jersey.spi.container.ResourceFilters;
+import com.coremedia.rest.linking.ResponseLocationHeaderLinker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,18 +38,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource.ID;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 /**
  * A resource to receive categories.
  */
-@Produces(MediaType.APPLICATION_JSON)
-@Path("connector/category/{id:[^/]+}")
+@RestController
+@RequestMapping(value = "connector/category/{" + ID + "}", produces = APPLICATION_JSON_VALUE)
 public class ConnectorCategoryResource extends ConnectorEntityResource<ConnectorCategory> {
 
   private TempFileCacheService tempFileCacheService;
   private ContentRepository contentRepository;
   private ConnectorContentUploadService connectorUploadService;
+
+  public ConnectorCategoryResource(ConnectorContentUploadService connectorUploadService, ContentRepository contentRepository, TempFileCacheService tempFileCacheService) {
+    this.tempFileCacheService = tempFileCacheService;
+    this.contentRepository = contentRepository;
+    this.connectorUploadService = connectorUploadService;
+  }
 
   @Override
   protected ConnectorCategory doGetEntity() {
@@ -70,10 +74,10 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
     return null;
   }
 
-  @GET
-  @Path("preview")
-  @Produces(MediaType.APPLICATION_JSON)
-  public ConnectorPreviewRepresentation preview() {
+  @GetMapping("preview")
+  public ConnectorPreviewRepresentation preview(@PathVariable(ID) String id) {
+    setId(id);
+
     ConnectorPreviewRepresentation representation = new ConnectorPreviewRepresentation();
     ConnectorCategory category = getEntity();
     if (category == null) {
@@ -87,49 +91,51 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
   }
 
 
-  @GET
-  @Path("refresh")
-  @Produces(MediaType.APPLICATION_JSON)
-  public boolean refresh() {
+  @GetMapping("refresh")
+  public boolean refresh(@PathVariable(ID) String id) {
+    setId(id);
+
     ConnectorCategory category = getEntity();
     ConnectorContext context = getContext(category.getConnectorId());
     tempFileCacheService.clear(context);
     return category.refresh(context);
   }
 
-  @POST
-  @Path("contents")
-  public ConnectorCategory dropContents(@FormParam("contentIds") @DefaultValue("") String contentIds,
+  @PostMapping("contents")
+  public ConnectorCategory dropContents(@PathVariable(ID) String id,
+                                        @FormParam("contentIds") @DefaultValue("") String contentIds,
                                         @FormParam("propertyNames") @DefaultValue("") String propertyNames,
                                         @FormParam("defaultAction") @DefaultValue("true") Boolean defaultAction) {
+    setId(id);
+
     List<String> userSelectedPropertyNames = Arrays.stream(propertyNames.split(",")).filter(item -> item.length() > 0).collect(toList());
     List<String> idList = Arrays.stream(contentIds.split(",")).filter(item -> item.length() > 0).collect(toList());
 
-    List<Content> contents = idList.stream().map(id -> contentRepository.getContent(IdHelper.formatContentId(id))).collect(toList());
+    List<Content> contents = idList.stream().map(contentId -> contentRepository.getContent(IdHelper.formatContentId(contentId))).collect(toList());
     ConnectorCategory category = getEntity();
     ConnectorContext context = getContext(category.getConnectorId());
     connectorUploadService.upload(context, category, contents, userSelectedPropertyNames, defaultAction);
     return category;
   }
 
-  @POST
-  @Path("upload")
-  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @ResourceFilters(value = {LocationHeaderResourceFilter.class})
-  public ConnectorItem handleBlobUpload(@HeaderParam("site") String siteId,
-                                        @FormDataParam("contentName") String contentName,
-                                        @FormDataParam("file") InputStream inputStream,
-                                        @FormDataParam("file") FormDataContentDisposition fileDetail,
-                                        @FormDataParam("file") FormDataBodyPart fileBodyPart) throws MimeTypeParseException {
+  @PostMapping(path = "upload", consumes = MULTIPART_FORM_DATA_VALUE)
+  @ResponseLocationHeaderLinker
+  public ConnectorItem handleBlobUpload(@PathVariable(ID) String id,
+                                        @HeaderParam("site") String siteId,
+                                        @RequestParam("file") MultipartFile file) throws Exception {
+    setId(id);
+
     ConnectorCategory category = getEntity();
-    String fileName = fileDetail.getFileName();
+    String contentName = file.getOriginalFilename();
+    String fileName = file.getOriginalFilename();
     String extension = FilenameUtils.getExtension(fileName);
-    if (!StringUtils.isEmpty(extension) && !contentName.endsWith(extension)) {
+    if (!StringUtils.isEmpty(contentName) && !contentName.endsWith(extension)) {
       contentName = contentName + "." + extension;
     }
-    MimeType mimeType = new MimeType(fileBodyPart.getMediaType().getType(), fileBodyPart.getMediaType().getSubtype());
+
+    MimeType mimeType = new MimeType(file.getContentType());
     ConnectorContext context = getContext(category.getConnectorId());
-    return category.upload(context, contentName, mimeType, inputStream);
+    return category.upload(context, contentName, mimeType, file.getInputStream());
   }
 
 
@@ -175,8 +181,7 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
       childRepresentation.setChild(child);
       if (child instanceof ConnectorCategory) {
         childRepresentation.setDisplayName(child.getDisplayName());
-      }
-      else {
+      } else {
         childRepresentation.setDisplayName(child.getName());
       }
 
@@ -191,18 +196,16 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
     super.setEntity(category);
   }
 
-  @Required
   public void setTempFileCacheService(TempFileCacheService tempFileCacheService) {
     this.tempFileCacheService = tempFileCacheService;
   }
 
-  @Required
   public void setContentRepository(ContentRepository contentRepository) {
     this.contentRepository = contentRepository;
   }
 
-  @Required
   public void setConnectorContentUploadService(ConnectorContentUploadService connectorUploadService) {
     this.connectorUploadService = connectorUploadService;
   }
+
 }

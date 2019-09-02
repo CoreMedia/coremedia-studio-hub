@@ -21,4 +21,5 @@ import org.springframework.context.annotation.Import;
                 ConnectorUploadConfiguration.class
         })
 public class ConnectorBundleConfiguration {
+
 }

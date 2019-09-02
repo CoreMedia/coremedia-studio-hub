@@ -72,7 +72,7 @@ public class ConnectorInstagramConfiguration {
   @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public ConnectorService connectorInstagramService(@NonNull @Qualifier("instagramConnectorCache") ConnectorService connectorService) {
     InstagramConnectorService instagramConnectorService = new InstagramConnectorService();
-    /* instagramConnectorService.setFileCache(fileSystemService);*/
+   /* instagramConnectorService.setFileCache(fileSystemService);*/
     return instagramConnectorService;
   }
 

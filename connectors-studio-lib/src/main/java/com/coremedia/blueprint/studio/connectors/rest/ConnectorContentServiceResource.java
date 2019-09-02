@@ -15,18 +15,20 @@ import com.coremedia.cap.multisite.SitesService;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-@Produces(MediaType.APPLICATION_JSON)
-@Path("connector/contentservice")
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+@RestController
+@RequestMapping(value = "connector/contentservice", produces = APPLICATION_JSON_VALUE)
 public class ConnectorContentServiceResource {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorContentServiceResource.class);
 
   private static final String ID_PARAM = "id";
@@ -40,12 +42,19 @@ public class ConnectorContentServiceResource {
   private ContentRepository contentRepository;
   private ConnectorContentService connectorContentService;
 
-  @POST
-  @Path("content/{siteId:[^/]+}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Content findContent(@PathParam(SITE_ID_PARAM) String siteId,
-                             @FormParam(FOLDER_PARAM) String folder,
-                             @FormParam(ID_PARAM) String entityId) {
+
+  public ConnectorContentServiceResource(Connectors connector, ConnectorContextProvider connectorContextProvider, SitesService sitesService, ContentRepository contentRepository, ConnectorContentService connectorContentService) {
+    this.connector = connector;
+    this.connectorContextProvider = connectorContextProvider;
+    this.sitesService = sitesService;
+    this.contentRepository = contentRepository;
+    this.connectorContentService = connectorContentService;
+  }
+
+  @PostMapping("content/{" + SITE_ID_PARAM + "}")
+  public Content findContent(@PathVariable(SITE_ID_PARAM) String siteId,
+                             @RequestParam(FOLDER_PARAM) String folder,
+                             @RequestParam(ID_PARAM) String entityId) {
     try {
       ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
@@ -53,10 +62,9 @@ public class ConnectorContentServiceResource {
       Site site = sitesService.getSite(siteId);
 
       ConnectorEntity entity = null;
-      if(connectorId.isItemId()) {
+      if (connectorId.isItemId()) {
         entity = connection.getConnectorService().getItem(context, connectorId);
-      }
-      else {
+      } else {
         entity = connection.getConnectorService().getCategory(context, connectorId);
       }
 
@@ -67,12 +75,10 @@ public class ConnectorContentServiceResource {
     return null;
   }
 
-  @POST
-  @Path("create/{siteId:[^/]+}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Content create(@PathParam(SITE_ID_PARAM) String siteId,
-                        @FormParam(FOLDER_PARAM) String folder,
-                        @FormParam(ID_PARAM) String entityId) {
+  @PostMapping("create/{" + SITE_ID_PARAM + "}")
+  public Content create(@PathVariable(SITE_ID_PARAM) String siteId,
+                        @RequestParam(FOLDER_PARAM) String folder,
+                        @RequestParam(ID_PARAM) String entityId) {
     try {
       ConnectorId connectorId = ConnectorId.toId(entityId);
       return connectorContentService.createContent(connectorId, folder);
@@ -82,21 +88,18 @@ public class ConnectorContentServiceResource {
     return null;
   }
 
-  @POST
-  @Path("process/{siteId:[^/]+}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public String process(@FormParam(ID_PARAM) String entityId,
-                        @FormParam(CONTENT_ID_PARAM) String contentId) {
+  @PostMapping("process/{" + SITE_ID_PARAM + "}")
+  public String process(@RequestParam(ID_PARAM) String entityId,
+                        @RequestParam(CONTENT_ID_PARAM) String contentId) {
     try {
       ConnectorId connectorId = ConnectorId.toId(entityId);
       ConnectorConnection connection = getConnection(connectorId.getConnectionId());
       ConnectorService connectorService = connection.getConnectorService();
       ConnectorContext context = connection.getContext();
       ConnectorEntity entity = null;
-      if(connectorId.isItemId()) {
+      if (connectorId.isItemId()) {
         entity = connectorService.getItem(context, connectorId);
-      }
-      else {
+      } else {
         entity = connectorService.getCategory(context, connectorId);
       }
 
@@ -128,27 +131,22 @@ public class ConnectorContentServiceResource {
 
   //---------------------- Spring --------------------------------------------------------------------------------------
 
-  @Required
   public void setConnector(Connectors connector) {
     this.connector = connector;
   }
 
-  @Required
   public void setConnectorContextProvider(ConnectorContextProvider connectorContextProvider) {
     this.connectorContextProvider = connectorContextProvider;
   }
 
-  @Required
   public void setSitesService(SitesService sitesService) {
     this.sitesService = sitesService;
   }
 
-  @Required
   public void setContentRepository(ContentRepository contentRepository) {
     this.contentRepository = contentRepository;
   }
 
-  @Required
   public void setConnectorContentService(ConnectorContentService connectorContentService) {
     this.connectorContentService = connectorContentService;
   }

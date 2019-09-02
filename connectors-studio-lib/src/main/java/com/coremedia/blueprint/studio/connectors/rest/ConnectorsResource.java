@@ -2,32 +2,36 @@ package com.coremedia.blueprint.studio.connectors.rest;
 
 import com.coremedia.blueprint.connectors.impl.ConnectorType;
 import com.coremedia.blueprint.connectors.impl.Connectors;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * A resource to retrieve the basic information of all connectors.
  */
-@Produces(MediaType.APPLICATION_JSON)
-@Path("connector/connectors/")
+@RestController
+@RequestMapping(value = "connector/connectors/", produces = APPLICATION_JSON_VALUE)
 public class ConnectorsResource {
+
   private Connectors connector;
 
-  @GET
-  @Path("types")
+  public ConnectorsResource(Connectors connector) {
+    this.connector = connector;
+  }
+
+  @GetMapping("types")
   public List<ConnectorType> getRepresentation(@Context HttpServletRequest request) {
     return connector.getConnectorTypes();
   }
 
-  @Required
   public void setConnector(Connectors connector) {
     this.connector = connector;
   }
+
 }

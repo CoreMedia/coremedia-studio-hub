@@ -6,7 +6,6 @@ import com.coremedia.blueprint.studio.connectors.model.ConnectorId;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.editorContext;
-import com.coremedia.ui.context.ComponentContextManager;
 import com.coremedia.ui.data.Bean;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
@@ -102,20 +101,23 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
 
   }
 
+  private function getCollectionView():CollectionView {
+    return Ext.getCmp(CollectionView.COLLECTION_VIEW_ID) as CollectionView;
+  }
+
   internal function getSelectedNodeExpression():ValueExpression {
     if (!selectedNodeExpression) {
-      selectedNodeExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_FOLDER_VARIABLE_NAME);
+      selectedNodeExpression = getCollectionView().getSelectedFolderValueExpression();
     }
-
     return selectedNodeExpression;
   }
 
   internal function getSelectedItemsValueExpression():ValueExpression {
     if (!selectedItemsExpression) {
-      selectedItemsExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_REPOSITORY_ITEMS_VARIABLE_NAME);
+      selectedItemsExpression = getCollectionView().getSelectedRepositoryItemsValueExpression();
       selectedItemsExpression.addChangeListener(markAsRead);
     }
-    return ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_REPOSITORY_ITEMS_VARIABLE_NAME);
+    return selectedItemsExpression;
   }
 
   internal function markAsRead():void {

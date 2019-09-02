@@ -8,7 +8,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
 import com.coremedia.blueprint.connectors.canto.CantoConnectorServiceImpl;
 import com.coremedia.blueprint.connectors.canto.rest.entities.AssetEntity;
 import com.coremedia.blueprint.connectors.canto.rest.entities.CantoCategoryEntity;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

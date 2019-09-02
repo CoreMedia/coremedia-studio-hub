@@ -10,61 +10,52 @@ import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorEntityRepresentation;
 import com.coremedia.rest.linking.EntityResource;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> implements EntityResource<Entity> {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorEntityResource.class);
 
-  private static final String ID = "id";
+  protected static final String ID = "id";
 
   private String decodedId;
   private ConnectorContextProvider connectorContextProvider;
   private Connectors connector;
 
-  @Override
   public Entity getEntity() {
     return doGetEntity();
   }
 
   protected abstract Entity doGetEntity();
 
-  @Override
   public void setEntity(Entity entity) {
     setId(entity.getConnectorId().toString());
   }
 
-  @PathParam(ID)
   public void setId(@Nullable String id) {
-    try {
-      if (id != null) {
-        this.decodedId = URLDecoder.decode(id, "utf8");
-      }
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    if (id != null) {
+      this.decodedId = URLDecoder.decode(id, StandardCharsets.UTF_8);
     }
   }
 
   public String getId() {
-    try {
-      if (decodedId != null) {
-        return URLEncoder.encode(decodedId, "utf8");
-      }
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    if (decodedId != null) {
+      return URLEncoder.encode(decodedId, StandardCharsets.UTF_8);
     }
     return null;
   }
@@ -73,9 +64,11 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     return decodedId;
   }
 
-  @GET
-  public ConnectorEntityRepresentation get() {
+  @GetMapping
+  public ConnectorEntityRepresentation get(@PathVariable(ID) String id) {
     try {
+      setId(id);
+
       return getRepresentation();
     } catch (URISyntaxException e) {
       LOGGER.error("Error creating entity representation " + getEntity() + ": " + e.getMessage(), e);
@@ -84,8 +77,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   }
 
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
+  @DeleteMapping
   public boolean delete() {
     ConnectorEntity entity = getEntity();
     return entity.delete();
@@ -98,7 +90,7 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     //fill data
     ConnectorContextImpl context = (ConnectorContextImpl) getContext(entity.getConnectorId());
     String siteId = context.getSiteId();
-    if(siteId == null) {
+    if (siteId == null) {
       siteId = ConnectorResource.siteDefault;
     }
     ConnectorModel model = new ConnectorModel(getContext(entity.getConnectorId()).getType(), siteId, Collections.emptyList());
@@ -142,4 +134,14 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   public void setConnectorContextProvider(ConnectorContextProvider connectorContextProvider) {
     this.connectorContextProvider = connectorContextProvider;
   }
+
+  @NonNull
+  @Override
+  public Map<String, String> getPathVariables(@NonNull Entity entity) {
+    Map<String, String> vars = new HashMap<>();
+    String id = entity.getConnectorId().toString();
+    vars.put("id", URLEncoder.encode(id, StandardCharsets.UTF_8));
+    return vars;
+  }
+
 }

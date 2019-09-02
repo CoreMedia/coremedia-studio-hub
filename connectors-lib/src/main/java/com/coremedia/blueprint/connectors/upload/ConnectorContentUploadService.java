@@ -49,7 +49,7 @@ public class ConnectorContentUploadService {
 
         if (connectorContentUploadInterceptors != null && !connectorContentUploadInterceptors.isEmpty()) {
           for (ConnectorContentUploadInterceptor interceptor : connectorContentUploadInterceptors) {
-            if (interceptor.getConnectionId() == null || interceptor.getConnectionId().equals(context.getConnectionId())) {
+            if (interceptor.getConnectionId().equals(context.getConnectionId())) {
               interceptors.add(interceptor);
             }
           }

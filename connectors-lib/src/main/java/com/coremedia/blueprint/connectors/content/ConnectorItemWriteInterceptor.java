@@ -33,7 +33,6 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  * that has already been created before the interceptors is executed.
  */
 public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
-  //TODO hard coded property
   private static final String LOCAL_SETTINGS = "localSettings";
 
   public final static String CONNECTOR_ENTITY = "connectorEntity";

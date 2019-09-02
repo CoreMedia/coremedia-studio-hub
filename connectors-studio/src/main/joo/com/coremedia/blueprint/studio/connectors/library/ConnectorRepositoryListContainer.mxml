@@ -6,14 +6,22 @@
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:preview="com.coremedia.blueprint.studio.connectors.library.preview.*"
         itemId="{VIEW_CONTAINER_ITEM_ID}"
-        activeItemValueExpression="{getActiveViewExpression()}">
+        activeItemValueExpression="{activeItemValueExpression}">
+
   <fx:Script><![CDATA[
     import com.coremedia.cms.editor.sdk.collectionview.CollectionViewConstants;
+    import com.coremedia.cms.editor.sdk.collectionview.CollectionViewModel;
+    import com.coremedia.ui.data.ValueExpressionFactory;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.library.connectorRepositoryListContainer";
 
     private var config:ConnectorRepositoryListContainer;
     public static const VIEW_CONTAINER_ITEM_ID:String = "connectorRepositoryContainer";
+
+    // called by generated constructor code
+    private function __initialize__(config:ConnectorRepositoryListContainer):void {
+      activeItemValueExpression = ValueExpressionFactory.create(CollectionViewModel.VIEW_PROPERTY, config.collectionView.getCollectionViewModel().getMainStateBean());
+    }
 
     public native function ConnectorRepositoryListContainer(config:ConnectorRepositoryListContainer = null);
     ]]></fx:Script>
@@ -26,7 +34,7 @@
                                           itemId="connectorRepositoryList"/>
         <preview:ConnectorPreviewPanel region="south"
                                        flex="1"
-                                       selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+                                       selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </items>
       <layout>
         <editor:ExtendedBorderLayout/>
@@ -38,7 +46,7 @@
                                                 flex="1"/>
         <preview:ConnectorPreviewPanel region="south"
                                        flex="1"
-                                       selectedItemsValueExpression="{getSelectedItemsValueExpression()}"/>
+                                       selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
       </items>
       <layout>
         <editor:ExtendedBorderLayout/>

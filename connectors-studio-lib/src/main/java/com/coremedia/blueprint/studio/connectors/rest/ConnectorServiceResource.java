@@ -13,26 +13,27 @@ import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSe
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSuggestionRepresentation;
 import com.coremedia.blueprint.studio.connectors.rest.representation.ConnectorSuggestionResultRepresentation;
 import com.coremedia.cap.content.ContentType;
-import com.coremedia.cap.multisite.SitesService;
-import org.springframework.beans.factory.annotation.Required;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Produces(MediaType.APPLICATION_JSON)
-@Path("connector/service")
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+@RestController
+@RequestMapping(value = "connector/service", produces = APPLICATION_JSON_VALUE)
 public class ConnectorServiceResource {
+
   private static final String SEARCH_PARAM_QUERY = "query";
   private static final String SEARCH_PARAM_LIMIT = "limit";
+  private static final String DEFAULT_LIMIT = "50";
   private static final String SEARCH_PARAM_ORDER_BY = "orderBy";
   private static final String SEARCH_PARAM_SEARCH_TYPE = "searchType";
   private static final String SEARCH_PARAM_CATEGORY = "category";
@@ -43,19 +44,22 @@ public class ConnectorServiceResource {
 
   private Connectors connector;
   private ConnectorContextProvider connectorContextProvider;
-  private SitesService sitesService;
 
-  @GET
-  @Path("search/{connectorType}/{connectorConnectionId:[^/]+}/{siteId:[^/]+}")
+  public ConnectorServiceResource(Connectors connector, ConnectorContextProvider connectorContextProvider) {
+    this.connector = connector;
+    this.connectorContextProvider = connectorContextProvider;
+  }
+
+  @GetMapping("search/{connectorType}/{connectorConnectionId}/{siteId}")
   @Nullable
-  public ConnectorSearchResultRepresentation search(@PathParam(CONNECTOR_TYPE) String connectorType,
-                                                    @PathParam(CONNECTOR_CONNECTION_ID) String connectionId,
-                                                    @PathParam(SITE_ID_PARAM) String siteId,
-                                                    @QueryParam(SEARCH_PARAM_QUERY) String query,
-                                                    @QueryParam(SEARCH_PARAM_LIMIT) int limit,
-                                                    @QueryParam(SEARCH_PARAM_ORDER_BY) String orderBy,
-                                                    @QueryParam(SEARCH_PARAM_CATEGORY) String categoryId,
-                                                    @QueryParam(SEARCH_PARAM_SEARCH_TYPE) String searchType) {
+  public ConnectorSearchResultRepresentation search(@PathVariable(CONNECTOR_TYPE) String connectorType,
+                                                    @PathVariable(CONNECTOR_CONNECTION_ID) String connectionId,
+                                                    @PathVariable(SITE_ID_PARAM) String siteId,
+                                                    @RequestParam(SEARCH_PARAM_QUERY) String query,
+                                                    @RequestParam(value = SEARCH_PARAM_LIMIT, required = false, defaultValue = DEFAULT_LIMIT) int limit,
+                                                    @RequestParam(value = SEARCH_PARAM_ORDER_BY, required = false) String orderBy,
+                                                    @RequestParam(SEARCH_PARAM_CATEGORY) String categoryId,
+                                                    @RequestParam(SEARCH_PARAM_SEARCH_TYPE) String searchType) {
     ConnectorId id = null;
     if (categoryId != null) {
       id = ConnectorId.toId(categoryId);
@@ -65,16 +69,15 @@ public class ConnectorServiceResource {
     return new ConnectorSearchResultRepresentation(searchResult.getSearchResult(), searchResult.getTotalCount());
   }
 
-  @GET
-  @Path("suggestions/{connectorType}/{connectorConnectionId:[^/]+}/{siteId:[^/]+}")
+  @GetMapping("suggestions/{connectorType}/{connectorConnectionId}/{siteId}")
   @NonNull
-  public ConnectorSuggestionResultRepresentation searchSuggestions(@PathParam(CONNECTOR_TYPE) String connectorType,
-                                                                   @PathParam(CONNECTOR_CONNECTION_ID) String connectionId,
-                                                                   @PathParam(SITE_ID_PARAM) String siteId,
-                                                                   @QueryParam(SEARCH_PARAM_QUERY) String query,
-                                                                   @QueryParam(SEARCH_PARAM_LIMIT) int limit,
-                                                                   @QueryParam(SEARCH_PARAM_SEARCH_TYPE) String searchType,
-                                                                   @QueryParam(SEARCH_PARAM_CATEGORY) String categoryId) {
+  public ConnectorSuggestionResultRepresentation searchSuggestions(@PathVariable(CONNECTOR_TYPE) String connectorType,
+                                                                   @PathVariable(CONNECTOR_CONNECTION_ID) String connectionId,
+                                                                   @PathVariable(SITE_ID_PARAM) String siteId,
+                                                                   @RequestParam(SEARCH_PARAM_QUERY) String query,
+                                                                   @RequestParam(value = SEARCH_PARAM_LIMIT, required = false, defaultValue = DEFAULT_LIMIT) int limit,
+                                                                   @RequestParam(SEARCH_PARAM_SEARCH_TYPE) String searchType,
+                                                                   @RequestParam(SEARCH_PARAM_CATEGORY) String categoryId) {
     ConnectorId connectorId = null;
     if (categoryId != null) {
       connectorId = ConnectorId.toId(categoryId);
@@ -143,24 +146,6 @@ public class ConnectorServiceResource {
 
     searchResult.getSearchResult().sort((o1, o2) -> o2.getClass().getName().compareTo(o1.getClass().getName()));
     return searchResult;
-  }
-
-  //---------------------- Spring --------------------------------------------------------------------------------------
-
-  @Required
-  public void setConnector(Connectors connector) {
-    this.connector = connector;
-  }
-
-
-  @Required
-  public void setConnectorContextProvider(ConnectorContextProvider connectorContextProvider) {
-    this.connectorContextProvider = connectorContextProvider;
-  }
-
-  @Required
-  public void setSitesService(SitesService sitesService) {
-    this.sitesService = sitesService;
   }
 
 }

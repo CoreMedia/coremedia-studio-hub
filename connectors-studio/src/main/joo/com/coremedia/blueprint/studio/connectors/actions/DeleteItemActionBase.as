@@ -2,9 +2,7 @@ package com.coremedia.blueprint.studio.connectors.actions {
 import com.coremedia.blueprint.studio.connectors.library.ConnectorRepositoryList;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorObject;
-import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
 import com.coremedia.cms.editor.sdk.util.MessageBoxUtil;
-import com.coremedia.ui.context.ComponentContextManager;
 import com.coremedia.ui.data.ValueExpression;
 
 import ext.Action;
@@ -73,7 +71,7 @@ public class DeleteItemActionBase extends Action {
     for each(var entity:ConnectorEntity in selection) {
       entity.deleteEntity(function ():void {
         count--;
-        if(count === 0) {
+        if (count === 0) {
           Ext.getCmp(ConnectorRepositoryList.ID).setDisabled(false);
           owner.setDisabled(false);
         }
@@ -91,13 +89,13 @@ public class DeleteItemActionBase extends Action {
 
   private static function clearSelection():void {
     var repoList:ConnectorRepositoryList = Ext.getCmp('connectorRepositoryList') as ConnectorRepositoryList;
-    ComponentContextManager.getInstance().getContextExpression(repoList, CollectionView.SELECTED_REPOSITORY_ITEMS_VARIABLE_NAME).setValue(null);
+    repoList.selectedItemsValueExpression.setValue(null);
   }
 
   private function selectionChanged(ve:ValueExpression):void {
     setDisabled(true);
     var selections:Array = ve.getValue();
-    if(selections == null) {
+    if (selections == null) {
       return;
     }
 

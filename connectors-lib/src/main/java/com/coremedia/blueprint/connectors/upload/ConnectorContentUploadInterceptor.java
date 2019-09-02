@@ -4,7 +4,6 @@ import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.cap.content.Content;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface ConnectorContentUploadInterceptor {
    * Returns the connection id this interceptor is applicable for.
    * If null is returned, the interceptor will be used for all uploads.
    */
-  @Nullable
+  @NonNull
   String getConnectionId();
 
   /**

@@ -30,6 +30,10 @@ public class ConnectorNotificationService {
 
   private ContentRepository contentRepository;
 
+  public ConnectorNotificationService(ContentRepository contentRepository) {
+    this.contentRepository = contentRepository;
+  }
+
   /**
    * Sends the notifications that have been created during
    * the connector service invalidation.

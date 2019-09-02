@@ -18,8 +18,16 @@ import java.util.Set;
  *
  */
 public class ConnectorCategoryInvalidator extends SimpleInvalidationSource implements ConnectorCategoryChangeListener, InitializingBean {
+
   private Linker linker;
   private Connectors connectors;
+
+  public ConnectorCategoryInvalidator(String id, Connectors connectors, Linker linker) {
+    super();
+    setId(id);
+    this.connectors = connectors;
+    this.linker = linker;
+  }
 
   @Override
   public void categoryChanged(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {

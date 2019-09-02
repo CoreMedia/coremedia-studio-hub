@@ -31,6 +31,11 @@
       <artifactId>cap-unified-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>jakarta.activation</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>

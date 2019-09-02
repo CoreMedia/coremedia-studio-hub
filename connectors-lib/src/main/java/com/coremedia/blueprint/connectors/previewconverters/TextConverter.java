@@ -20,7 +20,7 @@ public class TextConverter implements ConnectorPreviewConverter {
   private static final Logger LOGGER = LoggerFactory.getLogger(TextConverter.class);
 
   @Override
-  public boolean test(ConnectorItem item) {
+  public boolean include(ConnectorItem item) {
     String type = item.getItemType();
     return type.startsWith("text/");
   }

@@ -1,21 +1,25 @@
 package com.coremedia.blueprint.studio.connectors.library.preview {
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
-import com.coremedia.ui.context.ComponentContextManager;
+import com.coremedia.cms.editor.sdk.collectionview.ICollectionView;
 import com.coremedia.cms.editor.sdk.editorContext;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.skins.LoadMaskSkin;
+
+import ext.Ext;
 
 import ext.LoadMask;
 import ext.form.field.DisplayField;
 import ext.panel.Panel;
 
 public class ConnectorPreviewPanelBase extends Panel {
+
   private var activePreviewExpression:ValueExpression;
   private var loadMask:LoadMask;
   private const videoDelayMillis:Number = 500;
   private const videoPreviewTimeout:Number = 10000;
+
 
   //additional ignored doctypes for previewing that are not part of the editorContext
   private const IGNORED_DOCTYPES:Array = ["CMExternalLink"];
@@ -26,6 +30,7 @@ public class ConnectorPreviewPanelBase extends Panel {
   public var selectedItemValueExpression:ValueExpression;
   public var selectedNodeExpression:ValueExpression;
   public var metadataValueExpression:ValueExpression;
+
 
   public function ConnectorPreviewPanelBase(config:ConnectorPreviewPanel = null) {
     super(config);
@@ -49,10 +54,13 @@ public class ConnectorPreviewPanelBase extends Panel {
 
   internal function getSelectedNodeExpression():ValueExpression {
     if (!selectedNodeExpression) {
-      selectedNodeExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_FOLDER_VARIABLE_NAME);
+      selectedNodeExpression = getCollectionView().getSelectedFolderValueExpression();
     }
-
     return selectedNodeExpression;
+  }
+
+  private function getCollectionView():CollectionView {
+    return Ext.getCmp(CollectionView.COLLECTION_VIEW_ID) as CollectionView;
   }
 
   protected function getSelectedItemExpression():ValueExpression {
@@ -77,7 +85,7 @@ public class ConnectorPreviewPanelBase extends Panel {
 
     if (selection is ConnectorEntity) {
       var entity:ConnectorEntity = selection as ConnectorEntity;
-      if(!isPreviewable(entity)){
+      if (!isPreviewable(entity)) {
         getDisplayField().setValue(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_preview'));
         return;
       }
@@ -91,26 +99,22 @@ public class ConnectorPreviewPanelBase extends Panel {
         if (result || metadata) {
           if (metadata) {
             metadataValueExpression.setValue(metadata);
-          }
-          else {
+          } else {
             metadataValueExpression.setValue({});
           }
 
           if (result) {
             getDisplayField().setValue(result);
-          }
-          else {
+          } else {
             getDisplayField().setValue(resourceManager.getString('com.coremedia.blueprint.studio.connectors.ConnectorsStudioPlugin', 'empty_preview'));
           }
 
           refreshLayout();
-        }
-        else {
+        } else {
           getActivePreviewExpression().setValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
         }
       });
-    }
-    else {
+    } else {
       getActivePreviewExpression().setValue(ConnectorPreviewPanel.EMPTY_PREVIEW);
     }
   }
@@ -124,17 +128,17 @@ public class ConnectorPreviewPanelBase extends Panel {
     var columnValues:Array = entity.getColumnValues();
 
     //still loading?
-    if(!columnValues) {
+    if (!columnValues) {
       return false;
     }
 
     for each(var cValue:Object in columnValues) {
-      if(cValue.dataIndex === "docType") {
+      if (cValue.dataIndex === "docType") {
         var docType:String = cValue.value;
-        if(editorContext.getDocumentTypesWithoutPreview().indexOf(docType) !== -1) {
+        if (editorContext.getDocumentTypesWithoutPreview().indexOf(docType) !== -1) {
           return false;
         }
-        if(IGNORED_DOCTYPES.indexOf(docType) !== -1) {
+        if (IGNORED_DOCTYPES.indexOf(docType) !== -1) {
           return false;
         }
       }
@@ -173,8 +177,7 @@ public class ConnectorPreviewPanelBase extends Panel {
   private function waitForMedia(video:*, timeoutMillis:Number = 0):void {
     if (video.readyState === 4 || timeoutMillis > videoPreviewTimeout) {
       refreshPreviewLayout();
-    }
-    else {
+    } else {
       window.setTimeout(function ():void {
         waitForMedia(video, (timeoutMillis + videoDelayMillis));
       }, videoDelayMillis);

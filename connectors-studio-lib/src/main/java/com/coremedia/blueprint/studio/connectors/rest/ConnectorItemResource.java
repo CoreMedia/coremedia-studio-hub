@@ -17,18 +17,18 @@ import com.coremedia.mimetype.MimeTypeService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,12 +40,16 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.coremedia.blueprint.studio.connectors.rest.ConnectorEntityResource.ID;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  * A resource to receive pictures.
  */
-@Produces(MediaType.APPLICATION_JSON)
-@Path("connector/item/{id:[^/]+}")
+@RestController
+@RequestMapping(value = "connector/item/{" + ID + ":.+}")
 public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem> {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorItemResource.class);
 
   private List<ConnectorPreviewConverter> connectorPreviewConverters;
@@ -56,6 +60,14 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
 
   private enum QueryMode {
     STREAM, DOWNLOAD, OPEN
+  }
+
+  public ConnectorItemResource(List<ConnectorPreviewConverter> connectorPreviewConverters, List<ConnectorMetaDataResolver> connectorMetaDataResolvers, MimeTypeService mimeTypeService, ContentRepository contentRepository, TempFileCacheService tempFileCacheService) {
+    this.connectorPreviewConverters = connectorPreviewConverters;
+    this.connectorMetaDataResolvers = connectorMetaDataResolvers;
+    this.mimeTypeService = mimeTypeService;
+    this.contentRepository = contentRepository;
+    this.tempFileCacheService = tempFileCacheService;
   }
 
   @Override
@@ -69,10 +81,10 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     return null;
   }
 
-  @GET
-  @Path("data")
-  public Response data(@QueryParam("mode") String mode,
-                       @Context HttpServletResponse response) {
+  @GetMapping(value = "data", produces = MediaType.ALL_VALUE)
+  public ResponseEntity<InputStreamResource> data(@PathVariable(ID) String id, @RequestParam("mode") String mode, HttpServletResponse response) {
+    setId(id);
+
     QueryMode queryMode = QueryMode.valueOf(mode.toUpperCase());
     //TODO differ here between preview and actual download, change caching accordingly
     switch (queryMode) {
@@ -91,10 +103,10 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     }
   }
 
-  @GET
-  @Path("preview")
-  @Produces(MediaType.APPLICATION_JSON)
-  public ConnectorPreviewRepresentation preview() {
+  @GetMapping(value = "preview", produces = APPLICATION_JSON_VALUE)
+  public ConnectorPreviewRepresentation preview(@PathVariable(ID) String id) {
+    setId(id);
+
     ConnectorPreviewRepresentation representation = new ConnectorPreviewRepresentation();
     try {
       //check for custom templates
@@ -123,48 +135,57 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
    *
    * @param response       the response to write to
    * @param streamResponse true if the request should be a stream
+   * @param setFilename    true to add file name to response entity
    */
-  private Response writeResponse(HttpServletResponse response, boolean streamResponse, boolean setFilename) {
+  private ResponseEntity<InputStreamResource> writeResponse(HttpServletResponse response, boolean streamResponse, boolean setFilename) {
+    ResponseEntity result = null;
+
     try {
       ConnectorItem item = getEntity();
       String filename = getFilename(item);
       String mimeType = item.getMimeType();
       if (mimeType == null) {
-        mimeType = mimeTypeService.detectMimeType(null, filename, MediaType.APPLICATION_OCTET_STREAM);
+        mimeType = mimeTypeService.detectMimeType(null, filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
       }
+
       //we can't return json as mime type since jersey would try to deserialize it.
-      if (mimeType.equals(MediaType.APPLICATION_JSON)) {
-        mimeType = MediaType.TEXT_PLAIN;
+      if (mimeType.equals(APPLICATION_JSON_VALUE)) {
+        mimeType = MediaType.TEXT_PLAIN_VALUE;
       }
 
       //make sure to encode text as utf8
-      mimeType = mimeType + "; charset=utf-8";
+      //mimeType = mimeType + "; charset=utf-8";
 
-      response.setHeader("Content-Type", mimeType);
-      response.setHeader("X-Frame-Options", "SAMEORIGIN");
+//      response.setHeader("Content-Type", mimeType);
+//      response.setHeader("X-Frame-Options", "SAMEORIGIN");
 
       //do not set for open in tab
-      if (setFilename) {
-        response.setHeader("content-disposition", "attachment; filename = " + filename);
-      }
+//      if (setFilename) {
+//        response.setHeader("content-disposition", "attachment; filename = " + filename);
+//      }
 
       InputStream is = getStreamInputStream(item, streamResponse);
+
       if (streamResponse) {
         if (is != null) {
-          StreamingOutput stream = output -> {
-            try {
-              readAndWrite(is, output);
-            } catch (Exception e) {
-              LOGGER.warn("Error during streaming: " + e.getMessage());
-            }
-          };
-          return Response.ok(stream).build();
+          InputStreamResource inputStreamResource = new InputStreamResource(is);
+
+          result = ResponseEntity.ok()
+                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
+                  .contentType(MediaType.parseMediaType(mimeType))
+                  .header("X-Frame-Options", "SAMEORIGIN")
+                  .body(inputStreamResource);
+
         }
+      } else {
+        result = ResponseEntity.ok(is);
       }
-      return Response.ok(is).type(mimeType).build();
+
     } catch (IOException e) {
-      throw new WebApplicationException(e);
+      result = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
     }
+
+    return result;
   }
 
   @Override
@@ -198,12 +219,10 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     TempFile tempFile = tempFileCacheService.findTempFile(item, usePreviewVariant);
     if (tempFile != null) {
       is = tempFile.stream();
-    }
-    else {
-      if(usePreviewVariant) {
+    } else {
+      if (usePreviewVariant) {
         is = item.stream();
-      }
-      else {
+      } else {
         is = item.download();
       }
     }
@@ -214,7 +233,7 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
    * Additional preview processing such as preview formatting and additional metadata retrieval
    */
   private void formatPreview(ConnectorPreviewRepresentation representation, ConnectorItem item) throws IOException {
-    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.test(item)).collect(Collectors.toList());
+    List<ConnectorPreviewConverter> applicableConverters = connectorPreviewConverters.stream().filter(entry -> entry.include(item)).collect(Collectors.toList());
     List<ConnectorMetaDataResolver> applicableMetaDataResolvers = connectorMetaDataResolvers.stream().filter(entry -> entry.test(item)).collect(Collectors.toList());
 
     if (!applicableConverters.isEmpty() || !applicableMetaDataResolvers.isEmpty()) {
@@ -291,33 +310,4 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     return name;
   }
 
-  //------------------------------------- Spring -----------------------------------------------------------------------
-  @Required
-  public void setTempFileCacheService(TempFileCacheService tempFileCacheService) {
-    this.tempFileCacheService = tempFileCacheService;
-  }
-
-  @Required
-  public void setMimeTypeService(MimeTypeService mimeTypeService) {
-    this.mimeTypeService = mimeTypeService;
-  }
-
-  public void setConnectorPreviewConverters(List<ConnectorPreviewConverter> connectorPreviewConverters) {
-    this.connectorPreviewConverters = connectorPreviewConverters;
-  }
-
-  @Required
-  public ContentRepository getContentRepository() {
-    return contentRepository;
-  }
-
-  @Required
-  public void setContentRepository(ContentRepository contentRepository) {
-    this.contentRepository = contentRepository;
-  }
-
-  @Required
-  public void setConnectorMetaDataResolvers(List<ConnectorMetaDataResolver> connectorMetaDataResolvers) {
-    this.connectorMetaDataResolvers = connectorMetaDataResolvers;
-  }
 }

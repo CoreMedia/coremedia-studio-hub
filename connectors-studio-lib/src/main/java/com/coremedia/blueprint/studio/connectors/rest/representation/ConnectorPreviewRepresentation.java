@@ -1,7 +1,6 @@
 package com.coremedia.blueprint.studio.connectors.rest.representation;
 
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,6 @@ public class ConnectorPreviewRepresentation {
   private String html;
   private Map<String, Object> metaData = new HashMap<>();
 
-  @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
   public String getHtml() {
     return html;
   }

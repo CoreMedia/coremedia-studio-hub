@@ -1,5 +1,5 @@
 package com.coremedia.blueprint.studio.connectors.actions {
-import com.coremedia.blueprint.base.components.quickcreate.QuickCreateDialog;
+import com.coremedia.cms.editor.sdk.quickcreate.QuickCreateDialog;
 import com.coremedia.blueprint.studio.connectors.helper.ContentCreationHelper;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorEntity;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;

@@ -1,13 +1,17 @@
 package com.coremedia.blueprint.studio.connectors.library {
+
 import com.coremedia.blueprint.studio.connectors.helper.ConnectorHelper;
 import com.coremedia.cms.editor.sdk.collectionview.CollectionView;
-import com.coremedia.ui.context.ComponentContextManager;
+import com.coremedia.cms.editor.sdk.collectionview.ICollectionView;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
+
+import ext.Ext;
 
 import ext.container.Container;
 
 public class ConnectorRepositoryThumbnailsBase extends Container {
+
   private var selectedNodeExpression:ValueExpression;
   private var selectedItemsValueExpression:ValueExpression;
 
@@ -23,17 +27,21 @@ public class ConnectorRepositoryThumbnailsBase extends Container {
 
   protected function getSelectedItemsValueExpression():ValueExpression {
     if (!selectedItemsValueExpression) {
-      selectedItemsValueExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_REPOSITORY_ITEMS_VARIABLE_NAME);
+      selectedItemsValueExpression = getCollectionView().getSelectedRepositoryItemsValueExpression();
     }
     return selectedItemsValueExpression;
   }
 
   internal function getSelectedNodeExpression():ValueExpression {
     if (!selectedNodeExpression) {
-      selectedNodeExpression = ComponentContextManager.getInstance().getContextExpression(this, CollectionView.SELECTED_FOLDER_VARIABLE_NAME);
+      selectedNodeExpression = getCollectionView().getSelectedFolderValueExpression();
     }
-
     return selectedNodeExpression;
   }
+
+  private function getCollectionView():CollectionView {
+    return Ext.getCmp(CollectionView.COLLECTION_VIEW_ID) as CollectionView;
+  }
+
 }
 }

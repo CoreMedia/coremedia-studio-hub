@@ -51,8 +51,9 @@ import static com.coremedia.blueprint.connectors.impl.ConnectorPropertyNames.CON
  * it is locked by the webserver.
  */
 public class ConnectorContentService implements InitializingBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ConnectorContentService.class);
-  //TODO hard coded property
+
   public static final String LOCAL_SETTINGS = "localSettings";
 
   private ExecutorService service = Executors.newCachedThreadPool();
@@ -65,6 +66,13 @@ public class ConnectorContentService implements InitializingBean {
   @Autowired
   private List<ContentWriteInterceptor> contentWriteInterceptors;
   private ConnectorContextProvider connectorContextProvider;
+
+  public ConnectorContentService(Connectors connectors, ConnectorContextProvider connectorContextProvider, ContentRepository contentRepository, SolrSearchService solrSearchService) {
+    this.contentRepository = contentRepository;
+    this.connectors = connectors;
+    this.solrSearchService = solrSearchService;
+    this.connectorContextProvider = connectorContextProvider;
+  }
 
   @Nullable
   public Content createContent(@NonNull ConnectorId connectorId, @NonNull String folder) {
@@ -110,10 +118,12 @@ public class ConnectorContentService implements InitializingBean {
     try {
       ConnectorContext context = connectorContextProvider.createContext(entity.getConnectorId().getConnectionId());
       ConnectorContentServiceCallable callable = new ConnectorContentServiceCallable(context, content, entity, contentWriteInterceptors, solrSearchService);
-      Future<Void> submit = service.submit(callable);
+      //TODO async execution with same rights
+     /* Future<Void> submit = service.submit(callable);
       if (wait) {
         submit.get(timeoutSeconds, TimeUnit.SECONDS);
-      }
+      }*/
+      callable.call();
     } catch (Exception e) {
       LOG.error("Error submitting connector content callable for " + entity + ": " + e.getMessage(), e);
     }
@@ -193,7 +203,6 @@ public class ConnectorContentService implements InitializingBean {
     String contentScope = context.getContentScope();
 
     Content root = contentRepository.getRoot();
-
     if (site != null && contentScope != null) {
       if (contentScope.equals(ConnectorContextImpl.CONTENT_SCOPE_SITE)) {
         root = site.getSiteRootFolder();

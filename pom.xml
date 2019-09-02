@@ -4,16 +4,13 @@
 
   <parent>
     <groupId>com.coremedia.blueprint</groupId>
-    <artifactId>extensions</artifactId>
+    <artifactId>centralized-extensions.blueprint-parent</artifactId>
     <version>1-SNAPSHOT</version>
+    <relativePath>../blueprint-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>connectors</artifactId>
   <packaging>pom</packaging>
-
-  <properties>
-    <workspace.configuration.dir>../../../../workspace-configuration</workspace.configuration.dir>
-  </properties>
 
   <modules>
     <module>connectors-studio-lib</module>
@@ -28,7 +25,6 @@
     <module>connectors-lib-filesystem</module>
     <module>connectors-lib-rss</module>
     <module>connectors-lib-s3</module>
-    <module>connectors-lib-s7</module>
     <module>connectors-lib-typeform</module>
     <module>connectors-lib-youtube</module>
     <module>connectors-api</module>
@@ -37,18 +33,6 @@
 
   <dependencyManagement>
     <dependencies>
-
-      <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache</artifactId>
-        <version>2.9.0</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.atlassian.commonmark</groupId>
-        <artifactId>commonmark</artifactId>
-        <version>0.11.0</version>
-      </dependency>
 
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
@@ -60,6 +44,18 @@
             <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>2.9.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.atlassian.commonmark</groupId>
+        <artifactId>commonmark</artifactId>
+        <version>0.11.0</version>
       </dependency>
 
     </dependencies>

@@ -1,9 +1,9 @@
 package com.coremedia.blueprint.studio.connectors.helper {
-import com.coremedia.blueprint.base.components.quickcreate.processing.ProcessingData;
 import com.coremedia.blueprint.studio.connectors.model.ConnectorItem;
 import com.coremedia.blueprint.studio.connectors.model.ContentMappings;
 import com.coremedia.blueprint.studio.connectors.service.ConnectorContentService;
 import com.coremedia.cap.content.Content;
+import com.coremedia.cms.editor.sdk.quickcreate.processing.ProcessingData;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 

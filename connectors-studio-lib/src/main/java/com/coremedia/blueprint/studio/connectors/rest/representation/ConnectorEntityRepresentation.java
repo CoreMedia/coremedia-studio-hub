@@ -4,8 +4,6 @@ import com.coremedia.blueprint.connectors.api.ConnectorCategory;
 import com.coremedia.blueprint.connectors.api.ConnectorColumnValue;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.studio.connectors.rest.model.ConnectorModel;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +23,6 @@ public class ConnectorEntityRepresentation {
   private boolean deleteable;
   private List<ConnectorColumnValue> columnValues;
 
-  @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
   public Date getLastModified() {
     return lastModified;
   }

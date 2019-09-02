@@ -5,6 +5,7 @@ import com.coremedia.cap.content.ContentType;
 import com.coremedia.mimetype.MimeTypeService;
 import com.coremedia.springframework.xml.ResourceAwareXmlBeanDefinitionReader;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -35,5 +36,14 @@ public class ConnectorContentConfiguration {
     connectorItemWriteInterceptor.setPriority(0);
     connectorItemWriteInterceptor.setType(contentType);
     return connectorItemWriteInterceptor;
+  }
+
+  @Bean
+  public ContentTagger connectorContentTagger(@NonNull ContentRepository contentRepository,
+                                              @NonNull @Value("${connectors.taxonomies.path:/Settings/Taxonomies}") String taxonomyPath) {
+    ContentTagger contentTagger = new ContentTagger();
+    contentTagger.setContentRepository(contentRepository);
+    contentTagger.setTaxonomyPath(taxonomyPath);
+    return contentTagger;
   }
 }

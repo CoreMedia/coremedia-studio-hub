@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Responsible for scheduling connector invalidations.
  */
 public class ConnectorInvalidator extends SimpleInvalidationSource implements ConnectorConnectionListener {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorInvalidator.class);
 
   private Connectors connectors;
@@ -32,6 +33,15 @@ public class ConnectorInvalidator extends SimpleInvalidationSource implements Co
 
   private List<ServiceInvalidationThread> tasks = new ArrayList<>();
   private ConnectorNotificationService connectorNotificationService;
+
+  public ConnectorInvalidator(String id, Connectors connector, Linker linker, ConnectorNotificationService connectorNotificationService) {
+    super();
+
+    this.setId(id);
+    this.connectors = connector;
+    this.linker = linker;
+    this.connectorNotificationService = connectorNotificationService;
+  }
 
   @Override
   public void initialized(ConnectorConnection connection) {
