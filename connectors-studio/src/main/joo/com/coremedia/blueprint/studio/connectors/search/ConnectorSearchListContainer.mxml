@@ -9,6 +9,7 @@
         activeItemValueExpression="{getActiveItemExpression()}">
   <fx:Script><![CDATA[
     import com.coremedia.cms.editor.sdk.collectionview.CollectionViewConstants;
+    import com.coremedia.cms.editor.sdk.collectionview.ICollectionView;
     import com.coremedia.ui.data.ValueExpression;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.connectors.search.connectorSearchListContainer";
@@ -24,6 +25,9 @@
 
     [Bindable]
     public var selectedItemsValueExpression:ValueExpression;
+
+    [Bindable]
+    public var collectionView:ICollectionView;
     ]]></fx:Script>
 
   <search2:items>

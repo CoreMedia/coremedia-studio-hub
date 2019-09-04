@@ -2,10 +2,12 @@
 <ui:NestedRulesPlugin
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns:ui="exml:com.coremedia.ui.config"
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:seachTb="com.coremedia.blueprint.studio.connectors.search.toolbar.*"
         xmlns:toolbar2="com.coremedia.blueprint.studio.connectors.library.toolbar.*"
+        xmlns:library2="com.coremedia.blueprint.studio.connectors.library.*"
         xmlns:library2="com.coremedia.blueprint.studio.connectors.library.*"
         xmlns:push="com.coremedia.blueprint.studio.connectors.push.*"
         xmlns:search2="com.coremedia.blueprint.studio.connectors.search.*">
@@ -25,20 +27,22 @@
 
   <ui:rules>
     <editor:FolderContentSwitchingContainer>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
-            <library2:ConnectorRepositoryListContainer/>
+            <library2:ConnectorRepositoryListContainer collectionView="{selectionHolder}"
+                                                       selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"/>
           </ui:items>
         </ui:AddItemsPlugin>
       </editor:plugins>
     </editor:FolderContentSwitchingContainer>
 
     <editor:SearchSwitchingContainer>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
             <search2:ConnectorSearchListContainer
+                    collectionView="{selectionHolder}"
                     searchResultHitsValueExpression="{selectionHolder.getSearchResultHitsValueExpression()}"
                     selectedItemsValueExpression="{selectionHolder.getSelectedSearchItemsValueExpression()}"/>
           </ui:items>
@@ -47,19 +51,20 @@
     </editor:SearchSwitchingContainer>
 
     <editor:RepositoryToolbarSwitchingContainer>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
             <toolbar2:ConnectorRepositoryToolbarContainer
                     createdContentValueExpression="{selectionHolder.getCreatedContentValueExpression()}"
-                    selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"/>
+                    selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"
+                    selectedFolderValueExpression="{selectionHolder.getSelectedFolderValueExpression()}"/>
           </ui:items>
         </ui:AddItemsPlugin>
       </editor:plugins>
     </editor:RepositoryToolbarSwitchingContainer>
 
     <editor:SearchToolbarSwitchingContainer>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
             <seachTb:ConnectorSearchToolbarContainer
@@ -70,7 +75,7 @@
     </editor:SearchToolbarSwitchingContainer>
 
     <editor:RepositoryToolbar>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
             <push:PushButton scale="small" selectedItemsValueExpression="{selectionHolder.getSelectedItemsValueExpression()}"/>
@@ -84,7 +89,7 @@
     </editor:RepositoryToolbar>
 
     <editor:SearchToolbar>
-      <editor:plugins>
+      <editor:plugins exml:mode="append">
         <ui:AddItemsPlugin>
           <ui:items>
             <push:PushButton scale="small" selectedItemsValueExpression="{selectionHolder.getSelectedSearchItemsValueExpression()}"/>

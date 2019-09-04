@@ -28,11 +28,16 @@
      */
     [Bindable]
     public var selectedItemsValueExpression:ValueExpression;
+
+    [Bindable]
+    public var selectedFolderValueExpression:ValueExpression;
+
     ]]></fx:Script>
 
   <items>
     <local:ConnectorRepositoryToolbar createdContentValueExpression="{config.createdContentValueExpression}"
-                                        selectedItemsValueExpression="{config.selectedItemsValueExpression}">
+                                      selectedItemsValueExpression="{config.selectedItemsValueExpression}"
+                                      selectedFolderValueExpression="{config.selectedFolderValueExpression}">
       <local:items exml:mode="append">
         <TbFill/>
         <editor:SwitchViewButtonsContainer scope="{this}"/>
