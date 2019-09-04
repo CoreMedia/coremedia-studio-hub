@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -78,7 +81,12 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
 
 
   @DeleteMapping
-  public boolean delete() {
+  public boolean delete(HttpServletRequest request) {
+    UriComponents build = UriComponentsBuilder.fromUriString(request.getRequestURI()).build();
+    String[] segments = build.getPath().split("/");
+    String id = segments[segments.length-1];
+    id = URLDecoder.decode(id, StandardCharsets.UTF_8);
+    setId(id);
     ConnectorEntity entity = getEntity();
     return entity.delete();
   }
