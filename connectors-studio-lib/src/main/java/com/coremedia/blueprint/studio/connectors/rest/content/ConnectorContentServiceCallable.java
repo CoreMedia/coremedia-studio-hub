@@ -4,6 +4,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.content.ConnectorItemWriteInterceptor;
 import com.coremedia.cap.common.CapPropertyDescriptor;
+import com.coremedia.cap.common.CapSession;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentType;
@@ -36,13 +37,16 @@ class ConnectorContentServiceCallable implements Callable<Void> {
   private final ConnectorEntity entity;
   private List<ContentWriteInterceptor> contentWriteInterceptors;
   private SolrSearchService solrSearchService;
+  private CapSession session;
   private final Content content;
 
-  ConnectorContentServiceCallable(ConnectorContext context,
-                           Content content,
-                           ConnectorEntity entity,
-                           List<ContentWriteInterceptor> contentWriteInterceptors,
-                           SolrSearchService solrSearchService) {
+  ConnectorContentServiceCallable(CapSession session,
+                                  ConnectorContext context,
+                                  Content content,
+                                  ConnectorEntity entity,
+                                  List<ContentWriteInterceptor> contentWriteInterceptors,
+                                  SolrSearchService solrSearchService) {
+    this.session = session;
     this.content = content;
     this.context = context;
     this.entity = entity;
@@ -52,6 +56,7 @@ class ConnectorContentServiceCallable implements Callable<Void> {
 
   @Override
   public Void call() {
+    CapSession oldSession = session.activate();
     try {
       Thread.currentThread().setName("Connector Content Service Callable for " + entity);
       if (content.isDocument() && !content.isCheckedOut()) {
@@ -81,6 +86,9 @@ class ConnectorContentServiceCallable implements Callable<Void> {
       if (content.isDocument() && content.isCheckedOut()) {
         content.checkIn();
       }
+      //this oldSession the original session
+      oldSession.getConnection().flush();
+      oldSession.activate();
     }
     return null;
   }

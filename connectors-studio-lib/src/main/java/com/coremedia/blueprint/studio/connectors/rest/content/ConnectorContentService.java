@@ -11,6 +11,7 @@ import com.coremedia.blueprint.connectors.impl.ConnectorContextProvider;
 import com.coremedia.blueprint.connectors.impl.Connectors;
 import com.coremedia.cap.common.CapPropertyDescriptor;
 import com.coremedia.cap.common.CapPropertyDescriptorType;
+import com.coremedia.cap.common.CapSession;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.content.ContentType;
@@ -117,13 +118,13 @@ public class ConnectorContentService implements InitializingBean {
                              boolean wait) {
     try {
       ConnectorContext context = connectorContextProvider.createContext(entity.getConnectorId().getConnectionId());
-      ConnectorContentServiceCallable callable = new ConnectorContentServiceCallable(context, content, entity, contentWriteInterceptors, solrSearchService);
-      //TODO async execution with same rights
-     /* Future<Void> submit = service.submit(callable);
+
+      CapSession session = contentRepository.getConnection().getSession();
+      ConnectorContentServiceCallable callable = new ConnectorContentServiceCallable(session, context, content, entity, contentWriteInterceptors, solrSearchService);
+      Future<Void> submit = service.submit(callable);
       if (wait) {
         submit.get(timeoutSeconds, TimeUnit.SECONDS);
-      }*/
-      callable.call();
+      }
     } catch (Exception e) {
       LOG.error("Error submitting connector content callable for " + entity + ": " + e.getMessage(), e);
     }
