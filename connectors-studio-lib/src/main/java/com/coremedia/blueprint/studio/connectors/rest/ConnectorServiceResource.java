@@ -58,8 +58,8 @@ public class ConnectorServiceResource {
                                                     @RequestParam(SEARCH_PARAM_QUERY) String query,
                                                     @RequestParam(value = SEARCH_PARAM_LIMIT, required = false, defaultValue = DEFAULT_LIMIT) int limit,
                                                     @RequestParam(value = SEARCH_PARAM_ORDER_BY, required = false) String orderBy,
-                                                    @RequestParam(SEARCH_PARAM_CATEGORY) String categoryId,
-                                                    @RequestParam(SEARCH_PARAM_SEARCH_TYPE) String searchType) {
+                                                    @RequestParam(value = SEARCH_PARAM_CATEGORY, required = false) String categoryId,
+                                                    @RequestParam(value = SEARCH_PARAM_SEARCH_TYPE, required = false) String searchType) {
     ConnectorId id = null;
     if (categoryId != null) {
       id = ConnectorId.toId(categoryId);
@@ -76,8 +76,8 @@ public class ConnectorServiceResource {
                                                                    @PathVariable(SITE_ID_PARAM) String siteId,
                                                                    @RequestParam(SEARCH_PARAM_QUERY) String query,
                                                                    @RequestParam(value = SEARCH_PARAM_LIMIT, required = false, defaultValue = DEFAULT_LIMIT) int limit,
-                                                                   @RequestParam(SEARCH_PARAM_SEARCH_TYPE) String searchType,
-                                                                   @RequestParam(SEARCH_PARAM_CATEGORY) String categoryId) {
+                                                                   @RequestParam(value = SEARCH_PARAM_SEARCH_TYPE, required = false) String searchType,
+                                                                   @RequestParam(value = SEARCH_PARAM_CATEGORY, required = false) String categoryId) {
     ConnectorId connectorId = null;
     if (categoryId != null) {
       connectorId = ConnectorId.toId(categoryId);

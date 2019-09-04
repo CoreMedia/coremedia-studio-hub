@@ -89,13 +89,13 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     //TODO differ here between preview and actual download, change caching accordingly
     switch (queryMode) {
       case OPEN: {
-        return writeResponse(response, false, false);
+        return writeResponse(response, true, false);
       }
       case STREAM: {
         return writeResponse(response, true, true);
       }
       case DOWNLOAD: {
-        return writeResponse(response, false, true);
+        return writeResponse(response, true, true);
       }
       default: {
         return writeResponse(response, false, true);
@@ -170,14 +170,22 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
         if (is != null) {
           InputStreamResource inputStreamResource = new InputStreamResource(is);
 
-          result = ResponseEntity.ok()
-                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
-                  .contentType(MediaType.parseMediaType(mimeType))
-                  .header("X-Frame-Options", "SAMEORIGIN")
-                  .body(inputStreamResource);
-
+          if (setFilename) {
+            result = ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
+                    .header("X-Frame-Options", "SAMEORIGIN")
+                    .body(inputStreamResource);
+          }
+          else {
+            result = ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .header("X-Frame-Options", "SAMEORIGIN")
+                    .body(inputStreamResource);
+          }
         }
-      } else {
+      }
+      else {
         result = ResponseEntity.ok(is);
       }
 
@@ -219,10 +227,12 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
     TempFile tempFile = tempFileCacheService.findTempFile(item, usePreviewVariant);
     if (tempFile != null) {
       is = tempFile.stream();
-    } else {
+    }
+    else {
       if (usePreviewVariant) {
         is = item.stream();
-      } else {
+      }
+      else {
         is = item.download();
       }
     }

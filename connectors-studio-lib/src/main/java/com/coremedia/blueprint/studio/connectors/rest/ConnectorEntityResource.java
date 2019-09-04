@@ -80,6 +80,9 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
   }
 
 
+  /**
+   * //TODO a delete request is not part of an entity mapping, therefore we don't have an id
+   */
   @DeleteMapping
   public boolean delete(HttpServletRequest request) {
     UriComponents build = UriComponentsBuilder.fromUriString(request.getRequestURI()).build();

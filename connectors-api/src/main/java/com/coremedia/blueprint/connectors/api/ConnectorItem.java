@@ -172,7 +172,7 @@ public interface ConnectorItem extends ConnectorEntity {
     if (type == null) {
       return true;
     }
-    if (type.equals(DEFAULT_TYPE)) {
+    if (type.equals(DEFAULT_TYPE) || type.equals("Content_")) {
       return true;
     }
 
