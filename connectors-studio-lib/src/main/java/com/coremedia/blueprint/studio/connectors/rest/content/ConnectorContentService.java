@@ -22,15 +22,16 @@ import com.coremedia.cap.struct.StructService;
 import com.coremedia.rest.cap.content.search.SearchServiceResult;
 import com.coremedia.rest.cap.content.search.solr.SolrSearchService;
 import com.coremedia.rest.cap.intercept.ContentWriteInterceptor;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -67,6 +68,12 @@ public class ConnectorContentService implements InitializingBean {
   @Autowired
   private List<ContentWriteInterceptor> contentWriteInterceptors;
   private ConnectorContextProvider connectorContextProvider;
+
+  @Value("${repository.user}")
+  private String repositoryUser;
+
+  @Value("${repository.password}")
+  private String repositoryPassword;
 
   public ConnectorContentService(Connectors connectors, ConnectorContextProvider connectorContextProvider, ContentRepository contentRepository, SolrSearchService solrSearchService) {
     this.contentRepository = contentRepository;
