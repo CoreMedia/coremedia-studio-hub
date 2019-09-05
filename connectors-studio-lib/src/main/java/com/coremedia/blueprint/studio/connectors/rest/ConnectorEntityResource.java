@@ -15,13 +15,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -78,22 +74,6 @@ abstract public class ConnectorEntityResource<Entity extends ConnectorEntity> im
     }
     return null;
   }
-
-
-  /**
-   * //TODO a delete request is not part of an entity mapping, therefore we don't have an id
-   */
-  @DeleteMapping
-  public boolean delete(HttpServletRequest request) {
-    UriComponents build = UriComponentsBuilder.fromUriString(request.getRequestURI()).build();
-    String[] segments = build.getPath().split("/");
-    String id = segments[segments.length-1];
-    id = URLDecoder.decode(id, StandardCharsets.UTF_8);
-    setId(id);
-    ConnectorEntity entity = getEntity();
-    return entity.delete();
-  }
-
 
   protected void fillRepresentation(ConnectorEntity entity, ConnectorEntityRepresentation representation) {
     representation.setDeleteable(entity.isDeleteable());

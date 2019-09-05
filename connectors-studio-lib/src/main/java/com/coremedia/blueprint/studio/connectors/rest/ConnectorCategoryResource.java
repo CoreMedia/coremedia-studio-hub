@@ -17,6 +17,7 @@ import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.rest.linking.ResponseLocationHeaderLinker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -58,6 +58,13 @@ public class ConnectorCategoryResource extends ConnectorEntityResource<Connector
     this.tempFileCacheService = tempFileCacheService;
     this.contentRepository = contentRepository;
     this.connectorUploadService = connectorUploadService;
+  }
+
+  @DeleteMapping
+  public boolean delete(@PathVariable(ID) String id) {
+    setId(id);
+    ConnectorEntity entity = getEntity();
+    return entity.delete();
   }
 
   @Override

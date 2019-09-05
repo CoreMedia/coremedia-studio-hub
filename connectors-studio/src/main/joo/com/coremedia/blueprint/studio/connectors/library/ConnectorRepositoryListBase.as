@@ -71,7 +71,9 @@ public class ConnectorRepositoryListBase extends AbstractConnectorList {
 
   override public function setDisabled(disabled:Boolean):void {
     super.setDisabled(disabled);
-    loadMask.setVisible(disabled);
+    if(loadMask) {
+      loadMask.setVisible(disabled);
+    }
   }
 
   /**

@@ -2,6 +2,7 @@ package com.coremedia.blueprint.studio.connectors.rest;
 
 import com.coremedia.blueprint.connectors.api.ConnectorConnection;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
+import com.coremedia.blueprint.connectors.api.ConnectorEntity;
 import com.coremedia.blueprint.connectors.api.ConnectorId;
 import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorMetaData;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,6 +81,13 @@ public class ConnectorItemResource extends ConnectorEntityResource<ConnectorItem
       return connection.getConnectorService().getItem(context, id);
     }
     return null;
+  }
+
+  @DeleteMapping
+  public boolean delete(@PathVariable(ID) String id) {
+    setId(id);
+    ConnectorEntity entity = getEntity();
+    return entity.delete();
   }
 
   @GetMapping(value = "data", produces = MediaType.ALL_VALUE)

@@ -65,8 +65,10 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
     }
 
     var listView:ConnectorRepositoryList = Ext.getCmp(ConnectorRepositoryList.ID) as ConnectorRepositoryList;
+    var thumbsView:ConnectorRepositoryThumbnails = Ext.getCmp(ConnectorRepositoryThumbnails.ID) as ConnectorRepositoryThumbnails;
     UploadManager.bulkUpload(settings, null, files, function (result:Array):void {
       listView.setDisabled(true);
+      thumbsView.setDisabled(true);
       ValueExpressionFactory.createFromFunction(function ():Array {
         var items:Array = [];
         for each(var wrapper:FileWrapper in result) {
@@ -83,10 +85,12 @@ public class ConnectorCollectionViewExtension implements CollectionViewExtension
           if (!item.getParent()) {
             trace('[ERROR]', "Parent model not set for connector item " + item.getUriPath());
             listView.setDisabled(false);
+            thumbsView.setDisabled(false);
           }
           else {
             item.getParent().refresh(function ():void {
               listView.setDisabled(false);
+              thumbsView.setDisabled(false);
             });
             return;
           }
