@@ -3,7 +3,7 @@
 
   <parent>
     <groupId>com.coremedia.blueprint</groupId>
-    <artifactId>connectors</artifactId>
+    <artifactId>coremedia-studio-hub</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
 

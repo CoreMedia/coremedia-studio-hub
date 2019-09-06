@@ -23,35 +23,7 @@ https://github.com/CoreMedia/coremedia-studio-hub/issues
 
 ### Installation
 
-Add our submodules to the extensions folder
-
-```
-git submodule add https://github.com/CoreMedia/coremedia-studio-hub.git modules/extensions/connectors
-```
-
-Add modules to modules/extensions/pom.xml
-
-```
-<module>connectors</module>
-```
-
-Add extension to the list of managed extensions at the end of workspace-config/extensions/managed-extensions.txt:
-
-```
-echo "connectors" >> workspace-configuration/extensions/managed-extensions.txt
-```
-
-Download the extension tool:
-
-```
-mvn dependency:copy -Dartifact=com.coremedia.tools.extensions:extensions:LATEST:jar:all -DlocalRepositoryDirectory=extensions-tool -Dtransitive=false -DoutputDirectory=tool -Dmdep.stripVersion=true -Dmdep.stripClassifier=true
-```
-
-Execute the extension tool:
-
-```
-java -jar tool/extensions.jar --task synchronize --extension-config-file  workspace-configuration/extensions/extension-config.properties --task-input-file workspace-configuration/extensions/managed-extensions.txt
-```
+//TODO
 
 For the IDEA import:
 - Ignore folder ".remote-package"
