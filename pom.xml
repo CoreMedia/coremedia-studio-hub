@@ -25,7 +25,6 @@
     <module>connectors-lib-filesystem</module>
     <module>connectors-lib-rss</module>
     <module>connectors-lib-s3</module>
-    <module>connectors-lib-shutterstock</module>
     <module>connectors-lib-typeform</module>
     <module>connectors-lib-youtube</module>
     <module>connectors-api</module>
