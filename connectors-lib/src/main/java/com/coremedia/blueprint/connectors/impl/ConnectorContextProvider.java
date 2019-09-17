@@ -3,6 +3,7 @@ package com.coremedia.blueprint.connectors.impl;
 import com.coremedia.blueprint.base.settings.SettingsService;
 import com.coremedia.blueprint.connectors.api.ConnectorContext;
 import com.coremedia.cache.Cache;
+import com.coremedia.cap.common.CapSession;
 import com.coremedia.cap.content.ContentRepository;
 import com.coremedia.cap.multisite.SitesService;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -56,11 +57,19 @@ public class ConnectorContextProvider {
   public List<ConnectorContext> getContexts() {
     List<ConnectorContext> allContexts = new ArrayList<>();
 
-    ConnectorContextCacheKey cacheKey = new ConnectorContextCacheKey(contentRepository, settingsService, sitesService, getSiteConfigPath(), getGlobalConfigPath());
-    allContexts.addAll(cache.get(cacheKey));
+    CapSession originalSession = contentRepository.getConnection().getConnectionSession().activate();
+    try {
+      //execute with privileges
+      ConnectorContextCacheKey cacheKey = new ConnectorContextCacheKey(contentRepository, settingsService, sitesService, getSiteConfigPath(), getGlobalConfigPath());
+      allContexts.addAll(cache.get(cacheKey));
 
-    ConnectorContextHomeCacheKey cacheKeyHome = new ConnectorContextHomeCacheKey(contentRepository, settingsService, getGlobalConfigPath());
-    allContexts.addAll(cache.get(cacheKeyHome));
+      ConnectorContextHomeCacheKey cacheKeyHome = new ConnectorContextHomeCacheKey(contentRepository, settingsService, getGlobalConfigPath());
+      allContexts.addAll(cache.get(cacheKeyHome));
+    } finally {
+      //activate the original user session
+      originalSession.activate();
+    }
+
     return allContexts;
   }
 
