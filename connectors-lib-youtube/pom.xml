@@ -41,7 +41,6 @@
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
-      <version>1-SNAPSHOT</version>
     </dependency>
 
 

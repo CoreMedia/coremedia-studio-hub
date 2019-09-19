@@ -21,7 +21,6 @@
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
-      <version>1-SNAPSHOT</version>
     </dependency>
     <!-- PROJECT dependencies -->
     <dependency>
@@ -89,5 +88,16 @@
     </dependency>
   </dependencies>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>connectors-third-party-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
 

@@ -13,6 +13,10 @@
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <cms.version>1907.1</cms.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
 
@@ -26,6 +30,12 @@
             <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.coremedia.cms</groupId>
+        <artifactId>cap-rest-plugins</artifactId>
+        <version>${cms.version}</version>
       </dependency>
 
       <dependency>
