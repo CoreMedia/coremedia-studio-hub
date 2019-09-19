@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.coremedia.blueprint</groupId>
-    <artifactId>coremedia-studio-hub</artifactId>
+    <artifactId>middle.extensions</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -33,6 +33,7 @@
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
+      <version>1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 

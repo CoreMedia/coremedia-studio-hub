@@ -2,15 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.coremedia.blueprint</groupId>
-    <artifactId>centralized-extensions.blueprint-parent</artifactId>
-    <version>1-SNAPSHOT</version>
-    <relativePath>../blueprint-parent/pom.xml</relativePath>
-  </parent>
-
   <artifactId>coremedia-studio-hub</artifactId>
   <packaging>pom</packaging>
+  <groupId>com.coremedia.blueprint</groupId>
+  <version>1-SNAPSHOT</version>
 
   <modules>
     <module>connectors-studio-lib</module>
@@ -29,37 +24,9 @@
     <module>connectors-lib-youtube</module>
     <module>connectors-api</module>
     <module>connectors-cae</module>
+    <module>connectors-third-party-bom</module>
   </modules>
 
-  <dependencyManagement>
-    <dependencies>
-
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox</artifactId>
-        <version>2.0.16</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>commons-logging</artifactId>
-            <groupId>commons-logging</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache</artifactId>
-        <version>2.9.0</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.atlassian.commonmark</groupId>
-        <artifactId>commonmark</artifactId>
-        <version>0.11.0</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <plugins>
