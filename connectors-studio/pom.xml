@@ -5,6 +5,7 @@
     <groupId>com.coremedia.blueprint</groupId>
     <artifactId>studio-client.extensions</artifactId>
     <version>1-SNAPSHOT</version>
+    <relativePath>../../../../apps/studio-client/modules/extensions/pom.xml</relativePath>
   </parent>
 
   <artifactId>connectors-studio</artifactId>
