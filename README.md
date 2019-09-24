@@ -23,7 +23,10 @@ https://github.com/CoreMedia/coremedia-studio-hub/issues
 
 ### Installation
 
-//TODO
+- Create the new top level folders in your workspace: _/modules/extensions/_
+- Clone this repository into the extensions folder. (/modules/extensions>_git clone https://github.com/CoreMedia/coremedia-studio-hub_)
+- Link the project into your workspace using the extension tool: _mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub_
+- Rebuild the workspace
 
 For the IDEA import:
 - Ignore folder ".remote-package"
