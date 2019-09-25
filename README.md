@@ -23,11 +23,37 @@ https://github.com/CoreMedia/coremedia-studio-hub/issues
 
 ### Installation
 
-- Create the new top level folders in your workspace: _/modules/extensions/_
-- Clone this repository as submodule into the extensions folder. (/modules/extensions>_git submodule add https://github.com/CoreMedia/coremedia-studio-hub_)
-- Checkout the branch that matches your workspace version, e.g.: _git checkout 1907.1_
-- Link the project into your workspace using the extension tool: _mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub_
+- Create the new top level folders in your workspace.
+ ```
+ [PROJECT_ROOT]>mkdir modules/extensions/
+ ```
+ 
+- Clone this repository as submodule into the extensions folder. 
+```
+ [PROJECT_ROOT]>git submodule add https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/
+```
+
+- Checkout the branch that matches your workspace version.
+```
+ [PROJECT_ROOT]/modules/extensions/coremedia-studio-hub>git checkout 1907.1
+```
+
+- Link the project into your workspace using the extension tool.
+ ```
+ [PROJECT_ROOT]>mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub
+```
+
 - Rebuild the workspace
+
+For CI runs:
+- Ensure that the matching branch name is set in the _.gitmodules_ file, e.g.:
+
+```
+[submodule "modules/extensions/coremedia-studio-hub"]
+	path = modules/extensions/coremedia-studio-hub
+	url = https://github.com/CoreMedia/coremedia-studio-hub.git
+	branch = 1907.1
+```
 
 For the IDEA import:
 - Ignore folder ".remote-package"
