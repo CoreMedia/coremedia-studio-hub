@@ -56,5 +56,5 @@ For CI runs:
 ```
 
 For the IDEA import:
-- Ignore folder ".remote-package"
+- Ignore folder _.remote-package_
 - Disable "Settings > Compiler > Clear output directory on rebuild"
