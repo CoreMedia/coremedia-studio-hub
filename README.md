@@ -38,7 +38,7 @@ https://github.com/CoreMedia/coremedia-studio-hub/issues
 [PROJECT_ROOT]/modules/extensions/coremedia-studio-hub>git checkout 1907.1
 ```
 
-- Link the project into your workspace using the extension tool.
+- Use the extension tool in the root folder of the project to link the modules into your workspace.
  ```
 [PROJECT_ROOT]>mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub
 ```
