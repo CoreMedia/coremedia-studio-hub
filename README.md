@@ -30,7 +30,7 @@ https://github.com/CoreMedia/coremedia-studio-hub/issues
  
 - Clone this repository as submodule into the extensions folder. 
 ```
- [PROJECT_ROOT]>git submodule add https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/
+ [PROJECT_ROOT]>git submodule add https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/coremedia-studio-hub
 ```
 
 - Checkout the branch that matches your workspace version.
