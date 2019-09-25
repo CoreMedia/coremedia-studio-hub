@@ -22,25 +22,25 @@ https://github.com/CoreMedia/coremedia-studio-hub/tree/master/documentation
 https://github.com/CoreMedia/coremedia-studio-hub/issues
 
 ### Installation
-
-- Create the new top level folders in your workspace.
- ```
- [PROJECT_ROOT]>mkdir modules/extensions/
- ```
  
 - Clone this repository as submodule into the extensions folder. 
 ```
- [PROJECT_ROOT]>git submodule add https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/coremedia-studio-hub
+[PROJECT_ROOT]>git submodule add https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/coremedia-studio-hub
+```
+
+- Change to the submodule folder.
+```
+[PROJECT_ROOT]>cd modules/extensions/coremedia-studio-hub
 ```
 
 - Checkout the branch that matches your workspace version.
 ```
- [PROJECT_ROOT]/modules/extensions/coremedia-studio-hub>git checkout 1907.1
+[PROJECT_ROOT]/modules/extensions/coremedia-studio-hub>git checkout 1907.1
 ```
 
 - Link the project into your workspace using the extension tool.
  ```
- [PROJECT_ROOT]>mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub
+[PROJECT_ROOT]>mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=coremedia-studio-hub
 ```
 
 - Rebuild the workspace
