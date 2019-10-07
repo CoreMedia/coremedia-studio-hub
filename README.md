@@ -6,7 +6,6 @@
 
 # CoreMedia Studio Hub
 
-
 The CoreMedia Studio Hub allows to integrate various external and asset 
 management systems into the Studio library and to preview items of these 
 systems. It allows you to integrate just about any external system or platform 
