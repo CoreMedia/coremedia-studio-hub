@@ -42,7 +42,7 @@ For CI runs:
 [submodule "modules/extensions/coremedia-studio-hub"]
 	path = modules/extensions/coremedia-studio-hub
 	url = https://github.com/CoreMedia/coremedia-studio-hub.git
-	branch = 1907.1
+	branch = 1907.2
 ```
 
 For the IDEA import:
