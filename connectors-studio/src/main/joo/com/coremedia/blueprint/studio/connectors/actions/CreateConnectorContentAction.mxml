@@ -3,8 +3,8 @@
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:local="com.coremedia.blueprint.studio.connectors.actions.*"
         iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'create_content')}"
-        text="{config.tooltip || resourceManager.getString('com.coremedia.blueprint.base.components.quickcreate.QuickCreate', 'quick_create_tooltip')}"
-        tooltip="{config.tooltip || resourceManager.getString('com.coremedia.blueprint.base.components.quickcreate.QuickCreate', 'quick_create_tooltip')}">
+        text="{config.tooltip || resourceManager.getString('com.coremedia.cms.editor.sdk.quickcreate.QuickCreate', 'quick_create_tooltip')}"
+        tooltip="{config.tooltip || resourceManager.getString('com.coremedia.cms.editor.sdk.quickcreate.QuickCreate', 'quick_create_tooltip')}">
   <fx:Script><![CDATA[
     private var config:CreateConnectorContentAction;
 
