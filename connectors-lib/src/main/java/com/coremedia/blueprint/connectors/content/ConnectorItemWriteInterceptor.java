@@ -97,6 +97,7 @@ public class ConnectorItemWriteInterceptor extends ContentWriteInterceptorBase {
     if (description != null) {
       description = description.replaceAll("\\<.*?\\s*.*?\\>", "").replaceAll("&nbsp;", "");
       description = StringEscapeUtils.unescapeHtml4(description);
+      description = description.replaceAll("&", "&amp;");
       String markup = "<?xml version=\"1.0\" ?><div xmlns=\"http://www.coremedia.com/2003/richtext-1.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><p>" + description + "</p></div>";
       return MarkupFactory.fromString(markup);
     }
