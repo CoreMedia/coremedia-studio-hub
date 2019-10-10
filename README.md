@@ -6,7 +6,6 @@
 
 # CoreMedia Studio Hub
 
-
 The CoreMedia Studio Hub allows to integrate various external and asset 
 management systems into the Studio library and to preview items of these 
 systems. It allows you to integrate just about any external system or platform 
@@ -42,7 +41,7 @@ For CI runs:
 [submodule "modules/extensions/coremedia-studio-hub"]
 	path = modules/extensions/coremedia-studio-hub
 	url = https://github.com/CoreMedia/coremedia-studio-hub.git
-	branch = 1907.1
+	branch = 1907.2
 ```
 
 For the IDEA import:
