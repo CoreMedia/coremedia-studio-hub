@@ -43,7 +43,6 @@
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-rest-plugins</artifactId>
-      <version>1907.3</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
@@ -328,4 +327,18 @@ Found Banned Dependency: com.sun.activation:javax.activation:jar:1.2.0 -->
 
     </plugins>
   </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>connectors-third-party-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
 </project>
