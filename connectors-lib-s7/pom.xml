@@ -17,10 +17,6 @@
   </properties>
 
   <dependencies>
-    <!-- Workspace Dependencies -->
-
-
-    <!-- PROJECT dependencies -->
     <dependency>
       <groupId>com.coremedia.blueprint</groupId>
       <artifactId>connectors-api</artifactId>
@@ -179,12 +175,12 @@
       <version>${cxf.version}</version>
       <exclusions>
         <exclusion>
-          <artifactId>javax.annotation</artifactId>
-          <groupId>javax.annotation-api</groupId>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
         </exclusion>
         <exclusion>
-          <artifactId>com.sun.activation</artifactId>
-          <groupId>javax.activation</groupId>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
         </exclusion>
         <exclusion>
           <artifactId>asm</artifactId>
@@ -196,6 +192,16 @@
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-databinding-jaxb</artifactId>
       <version>${cxf.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
@@ -203,16 +209,20 @@
       <version>${cxf.version}</version>
       <exclusions>
         <exclusion>
-          <artifactId>org.glassfish.jaxb</artifactId>
-          <groupId>jaxb-runtime</groupId>
+          <groupId>org.glassfish.jaxb</groupId>
+          <artifactId>jaxb-runtime</artifactId>
         </exclusion>
         <exclusion>
-          <artifactId>org.jvnet.staxex</artifactId>
-          <groupId>stax-ex</groupId>
+          <groupId>org.jvnet.staxex</groupId>
+          <artifactId>stax-ex</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>jakarta.activation</groupId>
-          <artifactId>jakarta.activation-api</artifactId>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -221,12 +231,32 @@
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-transports-http</artifactId>
       <version>${cxf.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-features-logging</artifactId>
       <version>${cxf.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -324,7 +354,6 @@ Found Banned Dependency: com.sun.activation:javax.activation:jar:1.2.0 -->
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 
