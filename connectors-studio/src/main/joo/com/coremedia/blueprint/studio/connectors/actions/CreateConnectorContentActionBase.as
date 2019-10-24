@@ -103,7 +103,7 @@ public class CreateConnectorContentActionBase extends Action {
 
     var config:Object = {
       contentTypeExpression: contentTypeExpression,
-      skipInitializers: false,
+      skipInitializers: true,
       onSuccess: onSuccess,
       processingDataFactory: processingDataFactory,
       defaultNameExpression: defaultNameExpression
