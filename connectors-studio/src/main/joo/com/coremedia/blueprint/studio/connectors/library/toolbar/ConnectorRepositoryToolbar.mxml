@@ -64,6 +64,12 @@
         <TbSeparator/>
         <ui:IconButton>
           <ui:baseAction>
+            <connectorAction:FakeImportAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+        <TbSeparator/>
+        <ui:IconButton>
+          <ui:baseAction>
             <connectorAction:DeleteItemAction selectedItemsValueExpression="{config.selectedItemsValueExpression}"/>
           </ui:baseAction>
         </ui:IconButton>
