@@ -9,6 +9,7 @@ import com.coremedia.blueprint.connectors.api.ConnectorItem;
 import com.coremedia.blueprint.connectors.api.ConnectorService;
 import com.coremedia.blueprint.connectors.api.search.ConnectorSearchResult;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -27,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +44,10 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeConnectorServiceImpl.class);
   private static final String CACHE_MANAGER = "cacheManagerYouTube";
   private static final String HTTPS_WWW_GOOGLEAPIS_COM_AUTH_YOUTUBE_FORCE_SSL = "https://www.googleapis.com/auth/youtube.force-ssl";
+
+  private static final String PROPERTY_PROXY_TYPE = "proxyType";
+  private static final String PROPERTY_PROXY_HOST = "proxyHost";
+  private static final String PROPERTY_PROXY_PORT = "proxyPort";
 
   private YouTubeConnectorCategory rootCategory;
   private YouTubeService youTubeService;
@@ -64,10 +71,12 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
       if (credential.createScopedRequired()) {
         credential = credential.createScoped(scopes);
       }
-      YouTube youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName("youtubeProvider").build();
+
+      HttpTransport httpTransport = getHttpTransport(context);
+      YouTube youTube = new YouTube.Builder(httpTransport, new JacksonFactory(), credential).setApplicationName("youtubeProvider").build();
       youTubeConnector = new YouTubeConnector(youTube);
       this.youTubeService.setConnector(youTubeConnector);
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ConnectorException(e);
     }
     return true;
@@ -78,6 +87,9 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   public ConnectorItem getItem(@NonNull ConnectorContext context, @NonNull ConnectorId id) throws ConnectorException {
     Playlist playlist = getPlaylist(context, id.getParentId().getExternalId());
     Video video = youTubeService.getVideo(context.getConnectionId(), id.getExternalId());
+    if (video == null) {
+      return null;
+    }
     ConnectorId categoryId = ConnectorId.createRootId(context.getConnectionId());
     ConnectorCategory parent = rootCategory;
 
@@ -131,7 +143,10 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
           if (name.toLowerCase().contains(query.toLowerCase()) || query.trim().length() == 0) {
             String videoId = video.getSnippet().getResourceId().getVideoId();
             ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), videoId);
-            result.add(getItem(context, itemId));
+            ConnectorItem item = getItem(context, itemId);
+            if (item != null) {
+              result.add(item);
+            }
           }
         }
       }
@@ -143,7 +158,10 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
           for (com.google.api.services.youtube.model.SearchResult searchResult : searchResults) {
             String videoId = searchResult.getId().getVideoId();
             ConnectorId itemId = ConnectorId.createItemId(rootCategory.getConnectorId(), videoId);
-            result.add(getItem(context, itemId));
+            ConnectorItem item = getItem(context, itemId);
+            if (item != null) {
+              result.add(item);
+            }
           }
         }
       }
@@ -154,6 +172,7 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
   }
 
   public boolean refresh(@NonNull ConnectorContext context, @NonNull ConnectorCategory category) {
+    this.rootCategory = null;
     CacheManager cacheManager = CacheManager.getCacheManager(CACHE_MANAGER);
     cacheManager.getCache("youTubePlayListByUserCache").removeAll();
     cacheManager.getCache("youTubePlayListByChannelCache").removeAll();
@@ -234,7 +253,10 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
         List<Video> videos = youTubeService.getVideos(context.getConnectionId(), channelId);
         for (Video video : videos) {
           ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), video.getId());
-          result.add(getItem(context, itemId));
+          ConnectorItem item = getItem(context, itemId);
+          if (item != null) {
+            result.add(item);
+          }
         }
       }
     }
@@ -243,9 +265,46 @@ public class YouTubeConnectorServiceImpl implements ConnectorService {
       for (PlaylistItem playlistItem : playlistItems) {
         String vId = playlistItem.getSnippet().getResourceId().getVideoId();
         ConnectorId itemId = ConnectorId.createItemId(category.getConnectorId(), vId);
-        result.add(getItem(context, itemId));
+        ConnectorItem item = getItem(context, itemId);
+        if (item != null) {
+          result.add(item);
+        }
       }
     }
     return result;
+  }
+
+  /**
+   * Checks the context configuration for a proxy setting.
+   * Returns the corresponding HttpTransport instance used for the YouTube connection
+   * @param context the context for the connection
+   */
+  private HttpTransport getHttpTransport(@NonNull ConnectorContext context) {
+    HttpTransport httpTransport = new NetHttpTransport();
+
+    String proxyHost = context.getProperty(PROPERTY_PROXY_HOST);
+    String proxyPort = context.getProperty(PROPERTY_PROXY_PORT);
+    if(!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
+      LOGGER.info("Using YouTube proxy connection {}:{}", proxyHost, proxyPort);
+
+      Proxy.Type proxyType = Proxy.Type.HTTP;
+      String proxyTypeName = context.getProperty(PROPERTY_PROXY_TYPE);
+      if(!StringUtils.isEmpty(proxyTypeName)) {
+        if(proxyTypeName.equalsIgnoreCase(Proxy.Type.DIRECT.name())) {
+          proxyType = Proxy.Type.DIRECT;
+        }
+        else if(proxyTypeName.equalsIgnoreCase(Proxy.Type.SOCKS.name())) {
+          proxyType = Proxy.Type.SOCKS;
+        }
+        else if(proxyTypeName.equalsIgnoreCase(Proxy.Type.HTTP.name())) {
+          proxyType = Proxy.Type.HTTP;
+        }
+      }
+
+      Proxy proxy = new Proxy(proxyType, new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort)));
+      httpTransport = new NetHttpTransport.Builder().setProxy(proxy).build();
+    }
+
+    return httpTransport;
   }
 }
