@@ -425,6 +425,9 @@ The videos to show can also be resolved by using the YouTube username instead of
   <StringProperty Name="connectionId">youtubeUserChannel</StringProperty>
   <StringProperty Name="credentialsJson">enter JSON here</StringProperty>
   <StringProperty Name="user">youtube-username</StringProperty>
+  <StringProperty Name="proxyType">HTTP/SOCKS/DIRECT (optional, HTTP is the default)</StringProperty>
+  <StringProperty Name="proxyHost">enter proxy host here (optional)</StringProperty>
+  <StringProperty Name="proxyPort">enter proxy port here (optional)</StringProperty>            
   <BooleanProperty Name="enabled">true</BooleanProperty>
 </Struct>
 ```
