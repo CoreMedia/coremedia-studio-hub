@@ -411,6 +411,9 @@ property _studio.security.csp.frameSrc_.
   <StringProperty Name="connectionId">youtubeChef</StringProperty>
   <StringProperty Name="credentialsJson">enter JSON here</StringProperty>
   <StringProperty Name="channelId">enter channel id here</StringProperty>
+  <StringProperty Name="proxyType">HTTP/SOCKS/DIRECT (optional, HTTP is the default)</StringProperty>
+  <StringProperty Name="proxyHost">enter proxy host here (optional)</StringProperty>
+  <StringProperty Name="proxyPort">enter proxy port here (optional)</StringProperty>            
   <BooleanProperty Name="enabled">true</BooleanProperty>
 </Struct>
 ```
