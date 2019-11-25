@@ -58,6 +58,7 @@ class ConnectorContentServiceCallable implements Callable<Void> {
   public Void call() {
     CapSession oldSession = session.activate();
     try {
+      LOG.info("Executing Connector Content Service Callable for " + entity);
       Thread.currentThread().setName("Connector Content Service Callable for " + entity);
       if (content.isDocument() && !content.isCheckedOut()) {
         content.checkOut();
@@ -128,9 +129,11 @@ class ConnectorContentServiceCallable implements Callable<Void> {
    * @param request the write request that contains all data
    */
   private void executeInterceptors(ContentWriteRequest request) {
+    LOG.info("Executing " + contentWriteInterceptors.size() + " connector write interceptors.");
     //let all interceptors run on the newly created item content
     for (ContentWriteInterceptor contentWriteInterceptor : new ArrayList<>(contentWriteInterceptors)) {
       try {
+        LOG.info("Executing connector write interceptor " + contentWriteInterceptor.getClass().getSimpleName());
         ContentType contentType = contentWriteInterceptor.getType();
         if (content.getType().isSubtypeOf(contentType)) {
           contentWriteInterceptor.intercept(request);
