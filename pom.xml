@@ -12,6 +12,7 @@
     <module>connectors-studio</module>
     <module>connectors-lib</module>
     <module>connectors-lib-canto</module>
+    <module>connectors-lib-celum</module>
     <module>connectors-lib-cloudinary</module>
     <module>connectors-lib-coremedia</module>
     <module>connectors-lib-coremedia-navigation</module>
