@@ -57,6 +57,13 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>connectors-lib-celum</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>connectors-lib-coremedia</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
